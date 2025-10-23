@@ -1,6 +1,5 @@
 import { SignOut } from "@/components/sign-out";
 import { auth } from "@/lib/auth";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
@@ -12,6 +11,7 @@ const Page = async () => {
         <p className="text-gray-600">Signed in as: {session.user?.name}</p>
         <p className="text-gray-600">{session.user?.email}</p>
         <p className="text-gray-600"> {session.user?.id}</p>
+        <p className="text-gray-600"> {JSON.stringify(session.user)}</p>
         <p className="font-medium">TODO</p>
       </div>
 
