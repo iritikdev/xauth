@@ -26,7 +26,7 @@ const SignInForm = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setError(null);
     const res = await signIn("credentials", {
-      email: data.email,
+      username: data.username,
       password: data.password,
       redirect: false,
     });
@@ -41,13 +41,13 @@ const SignInForm = () => {
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <Input
-        {...register("email")}
-        placeholder="Email"
-        type="email"
-        autoComplete="email"
+        {...register("username")}
+        placeholder="Username"
+        type="text"
+        autoComplete="username"
       />
-      {errors.email && (
-        <p className="text-sm text-red-500">{errors.email.message}</p>
+      {errors.username && (
+        <p className="text-sm text-red-500">{errors.username.message}</p>
       )}
 
       <Input
