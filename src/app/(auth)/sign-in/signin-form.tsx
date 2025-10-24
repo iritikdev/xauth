@@ -1,44 +1,69 @@
 "use client";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signIn } from "next-auth/react";
+import { loginSchema } from "@/lib/validations/login";
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 const SignInForm = () => {
-  const handleCredentialAction = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    await signIn("credentials", { email, password });
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
+    setError(null);
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      setError("Invalid credentials");
+    } else {
+      router.push("/");
+    }
   };
 
   return (
-    <form
-      className="space-y-4"
-      action={handleCredentialAction}
-      // action={async (formData: FormData) => {
-      //   "use server";
-      //   await executeAction({
-      //     actionFn: async () => {
-      //       await signIn("credentials", formData);
-      //     },
-      //   });
-      // }}
-    >
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <Input
-        name="email"
+        {...register("email")}
         placeholder="Email"
         type="email"
-        required
         autoComplete="email"
       />
+      {errors.email && (
+        <p className="text-sm text-red-500">{errors.email.message}</p>
+      )}
+
       <Input
-        name="password"
+        {...register("password")}
         placeholder="Password"
         type="password"
-        required
         autoComplete="current-password"
       />
-      <Button className="w-full" type="submit">
-        Sign In
+      {errors.password && (
+        <p className="text-sm text-red-500">{errors.password.message}</p>
+      )}
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
+
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting ? "Signing in..." : "Sign In"}
       </Button>
     </form>
   );
