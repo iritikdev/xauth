@@ -9,8 +9,16 @@ datasource db {
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String?   @unique
-  username  String   @unique
   name      String?
+  username  String   @unique
+  mobile    String   @unique
   password  String
+  email     String?   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Counter {
+  id     String @id @default("userId") @map("_id")
+  value  Int
 }
