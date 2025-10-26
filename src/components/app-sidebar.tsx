@@ -1,22 +1,21 @@
-
-import * as React from "react"
+'use client'
+import * as React from "react";
 import {
-  BookOpen,
-  Bot,
-  Command,
+  CoinsIcon,
   Frame,
   LifeBuoy,
   Map,
   PieChart,
+  PiggyBank,
   Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+  TreePalm,
+  User2Icon,
+} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -25,99 +24,67 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import Image from "next/image";
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "Amaze Ayurveda Pvt. Ltd.",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/aalogoc.png",
   },
   navMain: [
     {
-      title: "Playground",
+      title: "Profile",
       url: "#",
-      icon: SquareTerminal,
+      icon: User2Icon,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Welcome Letter",
+          url: "/dashboard/welcome-letter",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "ID Card",
+          url: "/dashboard/id-card",
         },
         {
-          title: "Settings",
+          title: "View Profile",
+          url: "/dashboard/profile",
+        },
+        {
+          title: "KYC Verification",
+          url: "/dashboard/kycVerification",
+        },
+      ],
+    },
+    {
+      title: "Generology",
+      url: "#",
+      icon: TreePalm,
+      items: [
+        {
+          title: "View",
+          url: "/dashboard/generology",
+        },
+      ],
+    },
+    {
+      title: "E-Wallet",
+      url: "#",
+      icon: PiggyBank,
+      items: [
+        {
+          title: "Account Statement",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Income Report",
       url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
+      icon: CoinsIcon,
+      items: [],
     },
   ],
   navSecondary: [
@@ -134,7 +101,7 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Marketing Plan",
       url: "#",
       icon: Frame,
     },
@@ -149,7 +116,7 @@ const data = {
       icon: Map,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -162,12 +129,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
+                <div className=" text-sidebar-primary-foreground flex aspect-square items-center justify-center rounded-lg">
+                  <Image
+                    src={"/aalogoc.png"}
+                    width={40}
+                    height={50}
+                    alt="logo"
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-medium">Amaze Ayurveda</span>
+                  <span className="truncate text-xs">Pvt. Ltd.</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -183,5 +155,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
