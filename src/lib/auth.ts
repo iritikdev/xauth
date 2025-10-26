@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 
+import prisma from "@/lib/prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub, Credentials({
@@ -10,24 +11,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       password:{}
     },
     authorize: async (credentials) => {
-      const dbUser = {
-        id: "1",
-        name: "Ritik Sharma",
-        email: "AMZ251000001@example.com",
-        username: "AMZ251000001",
-        password: "1234"
-      }
-      if(dbUser.username === credentials?.username && dbUser.password === credentials?.password){
-        // Return user object conforming to NextAuth User interface
+
+      const user = await prisma.user.findFirst({
+        where: { username: credentials?.username as string },
+      })
+      if(!user) return null;
+      // Make sure `user` exists and has the expected properties before returning.
+      if (
+        user.username === credentials?.username &&
+        user.password === credentials?.password
+      ) {
+        // Return a user object that definitely has a string `id` (no undefined).
         return {
-          id: dbUser.id,
-          name: dbUser.name,
-          email: dbUser.email,
-          username: dbUser.username
+          id: user.id,
+          name: user.name as string,
+          email: user.email as string,
+          username: user.username as string,
         }
-      }else{
-        return null; // NextAuth expects null for failed auth
       }
+
+      // Auth failed
+      return null
     }
   })],
   callbacks: {

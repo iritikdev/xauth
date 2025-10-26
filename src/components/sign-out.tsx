@@ -1,11 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
-
+import { toast } from "sonner"
 
 const SignOut = () => {
   const handleSignOut = async () => {
-    await signOut()
+    await signOut();
+    toast.success("Logged out successfully");
   };
 
   return (

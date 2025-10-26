@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,8 +34,10 @@ const SignInForm = () => {
 
     if (res?.error) {
       setError("Invalid credentials");
+      toast.error("Invalid credentials");
     } else {
-      router.push("/");
+      toast.success("Logged in successfully");
+      router.push("/dashboard");
     }
   };
 
