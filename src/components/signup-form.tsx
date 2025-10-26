@@ -77,7 +77,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
 
               <div className="grid gap-3">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Amit Singh" {...register("name")} />
+                <Input id="name" placeholder="Satyam Singh" {...register("name")} />
                 {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
               </div>
 
