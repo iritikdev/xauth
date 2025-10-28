@@ -1,9 +1,5 @@
-import React from 'react'
+import KYCUpload from '@/components/KYCUpload';
 
-function page() {
-    return (
-        <div>page</div>
-    )
+export default function Page() {
+    return <KYCUpload />;
 }
-
-export default page
