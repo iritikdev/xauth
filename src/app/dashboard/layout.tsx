@@ -12,12 +12,12 @@ type LayoutProps = {
 
 function Layout({ children }: LayoutProps) {
   return (
-     <div className="[--header-height:--spacing(14)]">
+    <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 overflow-y-auto">
+          <SidebarInset className="flex-1 overflow-y-auto mx-6 my-8">
             {children}
           </SidebarInset>
         </div>
