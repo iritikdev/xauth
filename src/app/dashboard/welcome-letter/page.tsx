@@ -5,9 +5,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { useSession } from 'next-auth/react';
 
 const WelcomeLetter = () => {
     const contentRef = useRef<HTMLDivElement>(null);
+    const { data: session, status } = useSession()
+
     const handlePrint = useReactToPrint({ contentRef });
 
     return (
@@ -18,12 +21,12 @@ const WelcomeLetter = () => {
             <CardContent ref={contentRef}>
                 <p className="mb-4">
                     <strong>To,</strong><br />
-                    SUDHANSHU KUMAR<br />
+                    {session?.user.name}<br />
                     BISARPATTI RUPAULI-843106<br />
                     Muzaffarpur
                 </p>
 
-                <h2 className="text-xl font-semibold mb-2 text-green-600">Welcome SUDHANSHU KUMAR!</h2>
+                <h2 className="text-xl font-semibold mb-2 text-green-600">Welcome {session?.user.name}!</h2>
 
                 <p className="mb-4">
                     Congratulations on your decision to join <strong>Amaze Ayurveda Pvt. Ltd.</strong> — a vibrant and visionary platform dedicated to transforming lives through holistic wellness and entrepreneurial empowerment.
@@ -42,8 +45,8 @@ const WelcomeLetter = () => {
                 </p>
 
                 <div className="bg-gray-100 p-4 rounded-md mb-4">
-                    <p><strong>Your ID:</strong> 596723</p>
-                    <p><strong>Name:</strong> SUDHANSHU KUMAR</p>
+                    <p><strong>Your ID:</strong> {session?.user.username}</p>
+                    <p><strong>Name:</strong> {session?.user.name}</p>
                     <p><strong>Sponsor ID:</strong> 851247</p>
                 </div>
 

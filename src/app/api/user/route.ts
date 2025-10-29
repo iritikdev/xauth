@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     if (!name || !mobile || !password) {
         return NextResponse.json({ message: 'All fields are required' }, { status: 400 });
     }
-    
+
     const existingUser = await prisma.user.findUnique({ where: { mobile } });
     if (existingUser) {
         return NextResponse.json({ message: 'Mobile No already in use' }, { status: 400 });
@@ -46,18 +46,21 @@ export async function POST(request: Request) {
                 password: hashedPassword,
             },
         });
-        return NextResponse.json({ message: 'User registered successfully',username,name }, { status: 201 });
+        return NextResponse.json({ message: 'User registered successfully', username, name }, { status: 201 });
     } catch (error) {
         console.error('Error registering user:', error);
         return NextResponse.json({ message: 'Server error' }, { status: 500 });
     }
 }
 
+
+
+
 interface User {
     id: string;
     name: string | null;
     mobile: string;
-    username: string ;
+    username: string;
 }
 
 

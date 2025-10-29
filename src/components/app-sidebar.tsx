@@ -26,6 +26,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const data = {
   user: {
@@ -55,6 +56,10 @@ const data = {
         {
           title: "KYC Verification",
           url: "/dashboard/kycVerification",
+        },
+        {
+          title: "Your Sponsor",
+          url: "/dashboard/sponsor",
         },
       ],
     },
@@ -119,6 +124,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session, status } = useSession()
+
   return (
     <Sidebar
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
@@ -152,7 +159,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {/* <NavUser user={session?.user} /> */}
+        {session?.user && <NavUser user={{
+          name: session?.user.name ?? "",
+          email: session?.user.email ?? "",
+          image: session?.user.image ?? "",
+          username: session?.user.username
+        }} />}
       </SidebarFooter>
     </Sidebar>
   );

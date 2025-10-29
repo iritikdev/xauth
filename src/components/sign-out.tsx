@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { LogOutIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner"
 
@@ -10,8 +11,10 @@ const SignOut = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <Button variant="destructive" onClick={handleSignOut}>
+    <div>
+
+      <Button variant="ghost" onClick={handleSignOut}>
+        <LogOutIcon />
         Sign Out
       </Button>
     </div>
