@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     return new Response(JSON.stringify(user), { status: 200 });
 }
 
-export async function POST(req: Request, context: { params: { username: string } }) {
+export async function POST(req: Request) {
     try {
         const body = await req.json();
         const parsed = kycSchema.parse(body);
@@ -30,8 +30,8 @@ export async function POST(req: Request, context: { params: { username: string }
             return new Response(JSON.stringify({ error: 'Invalid username' }), { status: 400 });
         }
 
-        console.log("parsed data", body);
-        console.log("params", username);
+        // console.log("parsed data", body);
+        // console.log("params", username);
 
         const user = await prisma.user.findFirst({
             where: { username },
