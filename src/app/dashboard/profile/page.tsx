@@ -1,8 +1,9 @@
-import React from 'react'
+import KYCForm from '@/components/register-user'
+
 
 function page() {
     return (
-        <div>page</div>
+        <KYCForm />
     )
 }
 

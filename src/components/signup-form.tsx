@@ -14,6 +14,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { signUpSchema } from "@/lib/validations/signup"
+import { Spinner } from "./ui/spinner"
 
 
 type FormData = z.infer<typeof signUpSchema>
@@ -83,7 +84,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
 
               <div className="grid gap-3">
                 <Label htmlFor="mobile">Mobile No</Label>
-                <Input id="mobile" placeholder="9876543210" {...register("mobile")} maxLength={10}/>
+                <Input id="mobile" placeholder="9876543210" {...register("mobile")} maxLength={10} />
                 {errors.mobile && <p className="text-sm text-red-500">{errors.mobile.message}</p>}
               </div>
 
@@ -98,7 +99,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="mt-4">
+                {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? "Registering..." : "Register"}
               </Button>
 

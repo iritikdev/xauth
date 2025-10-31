@@ -7,18 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// model User {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   name      String?
+//   username  String   @unique
+//   mobile    String   @unique
+//   password  String
+//   email     String?  
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String?
-  username  String   @unique
-  mobile    String   @unique
-  password  String
-  email     String?  
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // Personal Details
+  name       String?
+  fatherName String?
+  motherName String?
+
+  address  String?
+  district String?
+  state    String?
+  pincode  String?
+
+  accountNo String  @unique
+  branch    String?
+  ifsc      String?
+
+  email     String @unique
+  mobile    String @unique
+  panNumber String @unique
+  aadharNo  String @unique
+
+  // Credentials
+  username String @unique
+  password String
+
+  // MLM Hierarchy
+  sponsorId String? // ID of the user who referred this user
+  sponsor   User?   @relation("SponsorRelation", fields: [sponsorId], references: [username], onDelete: NoAction, onUpdate: NoAction)
+  downlines User[]  @relation("SponsorRelation")
+
+  // Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Counter {
-  id     String @id @default("userId") @map("_id")
-  value  Int
+  id    String @id @default("userId") @map("_id")
+  value Int
 }

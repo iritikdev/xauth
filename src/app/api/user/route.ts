@@ -41,9 +41,23 @@ export async function POST(request: Request) {
         const newUser: User = await prisma.user.create({
             data: {
                 name,
+                fatherName: "",
+                motherName: "",
+
+                address: "",
+                district: "",
+                pincode: "",
+                state: "",
+
+                email: "",
                 mobile,
+                accountNo: "",
+                aadharNo: "",
+                panNumber: "",
+
                 username,
                 password: hashedPassword,
+
             },
         });
         return NextResponse.json({ message: 'User registered successfully', username, name }, { status: 201 });

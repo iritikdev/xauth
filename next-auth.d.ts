@@ -7,6 +7,7 @@ declare module "next-auth" {
       email?: string
       image?: string
       username: string // ✅ Add this
+      mobile: string // ✅ Add this
     }
   }
 
@@ -15,6 +16,7 @@ declare module "next-auth" {
     name?: string
     email?: string
     username: string // ✅ Add this
+    mobile: string // ✅ Add this
   }
 
   interface JWT {
