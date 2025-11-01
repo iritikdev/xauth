@@ -40,52 +40,10 @@ export function SiteHeader() {
           <SidebarIcon />
         </Button>
         <Separator orientation="vertical" className="mr-2 h-4" />
-        {/* Implement Breadcrumb */}
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
 
-            {breadcrumbs.map((crumb, index) => (
-              <div key={index} className="flex items-center">
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  {index === breadcrumbs.length - 1 ? (
-                    <span className="text-muted-foreground">{capitalizeFirstLetter(crumb.label)}</span>
-                  ) : (
-                    <BreadcrumbLink asChild>
-                      <Link href={crumb.href}>{capitalizeFirstLetter(crumb.label)}</Link>
-                    </BreadcrumbLink>
-                  )}
-                </BreadcrumbItem>
-              </div>
-            ))}
-          </BreadcrumbList>
-        </Breadcrumb>
-
-
-        {/* <Breadcrumb className="hidden sm:block">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="#">
-                Building Your Application
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb> */}
         <SearchForm className="w-full sm:ml-auto sm:w-auto" />
       </div>
     </header>
   )
 }
 
-function capitalizeFirstLetter(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}

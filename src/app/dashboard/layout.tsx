@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar'
+import AppBreadcrumb from '@/components/breadcrumb';
 import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import React, { ReactNode } from 'react'
@@ -18,6 +19,7 @@ function Layout({ children }: LayoutProps) {
         <div className="flex flex-1">
           <AppSidebar />
           <SidebarInset className="flex-1 overflow-y-auto mx-6 my-8">
+            <AppBreadcrumb />
             {children}
           </SidebarInset>
         </div>
