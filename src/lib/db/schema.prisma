@@ -31,14 +31,14 @@ model User {
   state    String?
   pincode  String?
 
-  accountNo String  @unique
+  accountNo String
   branch    String?
   ifsc      String?
 
-  email     String @unique
+  email     String
   mobile    String @unique
-  panNumber String @unique
-  aadharNo  String @unique
+  panNumber String
+  aadharNo  String
 
   // Credentials
   username String @unique

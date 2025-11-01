@@ -41,21 +41,23 @@ export default function page() {
         },
     })
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        toast("You submitted the following values:", {
-            description: (
-                <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
-                    <code>{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-            position: "bottom-right",
-            classNames: {
-                content: "flex flex-col gap-2",
-            },
-            style: {
-                "--border-radius": "calc(var(--radius)  + 4px)",
-            } as React.CSSProperties,
-        })
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        try {
+            console.log("Data", data)
+            const res = await fetch(`/api/user/${data.username}`);
+            console.log("Data", res)
+            if (!res.ok) throw new Error("Failed to fetch sponsor");
+
+            const result = await res.json();
+
+            toast.success("Sponsor found!", {
+                description: `Sponsor Name: ${result.name}`,
+                position: "bottom-right",
+            });
+        } catch (err) {
+            console.error("Error fetching sponsor:", err);
+            toast.error("Unable to fetch sponsor. Please try again.");
+        }
     }
 
     return (
