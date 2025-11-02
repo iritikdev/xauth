@@ -18,7 +18,7 @@ function Layout({ children }: LayoutProps) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 overflow-y-auto mx-6 my-8">
+          <SidebarInset className="flex-1 overflow-y-auto mx-6 mt-6">
             <AppBreadcrumb />
             {children}
           </SidebarInset>
