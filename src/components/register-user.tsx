@@ -133,8 +133,6 @@ export default function KYCForm() {
             <Button type="submit" className="mt-4">
                 {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? "Submitting..." : "Submit"}
-
-
             </Button>
         </form>
     )

@@ -25,7 +25,11 @@ export async function getUserByUsername(username: string) {
             email: true,
             aadharNo: true,
             panNumber: true,
-            createdAt: true
+            createdAt: true,
+
+            sponsorId: true,
+            sponsor: true,
+            downlines: true
         }
     })
 

@@ -8,11 +8,12 @@ interface RegisterRequestBody {
     mobile: string;
     password: string;
     username: string;
+    sponsorId: string;
 }
 
 export async function POST(request: Request) {
     const body: RegisterRequestBody = await request.json();
-    const { name, mobile, password } = body;
+    const { name, mobile, password, sponsorId } = body;
 
     // Get and increment counter
     const counter = await prisma.counter.upsert({
@@ -55,6 +56,7 @@ export async function POST(request: Request) {
                 aadharNo: "",
                 panNumber: "",
 
+                sponsorId,
                 username,
                 password: hashedPassword,
 

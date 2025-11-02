@@ -3,26 +3,52 @@
 import { SignOut } from "@/components/sign-out";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import { IndianRupee } from "lucide-react";
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 
 export default function Page() {
   const { data: session, status } = useSession();
+  const [userData, setUserData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const router = useRouter();
 
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`/api/user/${session?.user.username}`)
+        if (!res.ok) throw new Error("Failed to fetch user")
+        const data = await res.json()
+        setUserData(data)
+      } catch (err) {
+        console.error("Error:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUser()
+  }, [session?.user.username])
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/sign-in");
     }
   }, [status, router]);
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading") return <Spinner />;
+
+
+
+
+  if (loading || !userData) return <Spinner />
+
 
   return (
 
@@ -62,6 +88,32 @@ export default function Page() {
             <p className="text-base text-green-600 font-semibold">Active</p>
             <p className="text-base text-green-600 font-semibold">{session?.user.email}</p>
           </div>
+
+          {/* --------------------------------------- */}
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold">User Info</h2>
+            <p><strong>Username:</strong> {userData.username}</p>
+            <p><strong>Name:</strong> {userData.name}</p>
+            <p><strong>Email:</strong> {userData.email}</p>
+            {userData.sponsor && (
+              <p><strong>Sponsor:</strong> {userData.sponsor.username} - {userData.sponsor.name}</p>
+            )}
+            {userData.downlines?.length > 0 && (
+              <div>
+                <strong>Downlines:</strong>
+                <ul className="list-disc ml-6">
+                  {userData.downlines.map((d: any) => (
+
+                    <li key={d.id}>{d.username} | {d.name}</li>
+
+
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* --------------------------------------- */}
         </CardContent>
       </Card>
     </main>

@@ -22,8 +22,9 @@ const WelcomeLetter = () => {
                 <p className="mb-4">
                     <strong>To,</strong><br />
                     {session?.user.name}<br />
-                    BISARPATTI RUPAULI-843106<br />
-                    Muzaffarpur
+                    {"address..."}
+                    <br />
+
                 </p>
 
                 <h2 className="text-xl font-semibold mb-2 text-green-600">Welcome {session?.user.name}!</h2>
@@ -47,7 +48,7 @@ const WelcomeLetter = () => {
                 <div className="bg-gray-100 p-4 rounded-md mb-4">
                     <p><strong>Your ID:</strong> {session?.user.username}</p>
                     <p><strong>Name:</strong> {session?.user.name}</p>
-                    <p><strong>Sponsor ID:</strong> 851247</p>
+                    <p><strong>Sponsor ID:</strong> </p>
                 </div>
 
                 <p className="mb-4">

@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   CoinsIcon,
   Frame,
+  LayoutDashboard,
   LifeBuoy,
   Map,
   PieChart,
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { FaDashcube } from "react-icons/fa";
 
 const data = {
   user: {
@@ -35,6 +37,12 @@ const data = {
     avatar: "/aalogoc.png",
   },
   navMain: [
+    {
+      title: "Dashboard",
+      icon: LayoutDashboard,
+      url: "/dashboard",
+    },
+
     {
       title: "Profile",
       url: "#",
@@ -57,10 +65,7 @@ const data = {
           title: "KYC Verification",
           url: "/dashboard/kycVerification",
         },
-        {
-          title: "Your Sponsor",
-          url: "/dashboard/sponsor",
-        },
+
       ],
     },
     {
