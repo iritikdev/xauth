@@ -61,7 +61,7 @@ export default function Page() {
           <IndianRupee className="text-green-600" />
         </CardHeader>
         <CardContent>
-          <p className="text-4xl font-bold text-green-800">₹{12000}</p>
+          <p className="text-4xl font-bold text-green-800">₹{"NIL"}</p>
           <p className="text-sm text-muted-foreground">Updated this month</p>
         </CardContent>
       </Card>
