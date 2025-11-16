@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import {  Inter, Poppins } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "@/app/globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
+import AppLoader from "@/components/Loader";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,8 +35,10 @@ const Layout = ({ children }: LayoutProps) => {
         className={`${inter.className} ${poppins.variable} antialiased`}
       >
         <SessionProvider>
-          <Toaster position="top-right" />
-          {children}
+          <AppLoader>
+            <Toaster position="top-right" />
+            {children}
+          </AppLoader>
         </SessionProvider>
       </body>
     </html>
