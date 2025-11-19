@@ -1,5 +1,6 @@
 "use client";
 
+import DistributorProfile from "@/components/DistributorProfile";
 import { SignOut } from "@/components/sign-out";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -54,8 +55,9 @@ export default function Page() {
 
 
     <main className="container mx-auto px-4 py-6 space-y-6">
+      <DistributorProfile />
       {/* Earnings Card */}
-      <Card className="bg-gradient-to-r from-green-100 to-green-50 shadow-sm">
+      {/* <Card className="bg-gradient-to-r from-green-100 to-green-50 shadow-sm">
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="text-green-700">Total Earnings</CardTitle>
           <IndianRupee className="text-green-600" />
@@ -64,7 +66,7 @@ export default function Page() {
           <p className="text-4xl font-bold text-green-800">₹{"NIL"}</p>
           <p className="text-sm text-muted-foreground">Updated this month</p>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* User Info Card */}
       <Card className="shadow-sm">
