@@ -13,6 +13,7 @@ import {
   CheckCircle,
   Leaf
 } from "lucide-react";
+import Link from 'next/link';
 
 const AboutUsPage = () => {
   const fadeIn = {
@@ -161,9 +162,12 @@ const AboutUsPage = () => {
                 Join a community where people grow, support each other, and transform their health and wealth.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <button className="bg-white text-emerald-700 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-xl">
-                  Become a Partner
-                </button>
+               
+                <Link href="/sign-up">
+                  <button className="bg-white text-emerald-700 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-xl">
+                    Become a Partner
+                  </button>
+                </Link>
                 <button className="bg-emerald-700/50 backdrop-blur-sm border border-emerald-400/30 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700/80 transition-colors">
                   Contact Us
                 </button>

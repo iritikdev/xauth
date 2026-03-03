@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, UserPlus, ArrowRight, Sparkles } from "lucide-react";
+import Link from 'next/link';
 
 const BusinessOpportunity = () => {
   const steps = [
@@ -99,6 +100,7 @@ const BusinessOpportunity = () => {
                 transition={{ delay: 1 }}
                 className="flex flex-col items-center md:items-start gap-4 pt-4"
               >
+                <Link href="/sign-up">
                 <Button 
                   size="lg" 
                   className="group w-full md:w-auto bg-slate-900 hover:bg-emerald-600 text-white text-lg h-16 px-10 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105"
@@ -107,6 +109,7 @@ const BusinessOpportunity = () => {
                   Become a Member
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
+                </Link>
                 <p className="text-xs text-slate-400 font-medium tracking-widest uppercase">
                   Instant Activation • Start Earning Today
                 </p>
