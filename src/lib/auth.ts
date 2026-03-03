@@ -14,6 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
+
         const user = await prisma.user.findFirst({
           where: { username: credentials?.username as string },
         });
@@ -29,6 +30,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             id: user.id,
             name: user.name as string,
             email: user.email as string,
+            mobile: user.mobile as string,
             username: user.username as string,
           };
         }
@@ -42,12 +44,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.username = user.username as string;
+        token.mobile = user.mobile as string;
       }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
       if (token?.username) {
         session.user.username = token.username;
+        session.user.mobile = token.mobile;
       }
       return session;
     },

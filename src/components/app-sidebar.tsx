@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   CoinsIcon,
   Frame,
+  LayoutDashboard,
   LifeBuoy,
   Map,
   PieChart,
@@ -26,6 +27,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { FaDashcube } from "react-icons/fa";
 
 const data = {
   user: {
@@ -34,6 +37,12 @@ const data = {
     avatar: "/aalogoc.png",
   },
   navMain: [
+    {
+      title: "Dashboard",
+      icon: LayoutDashboard,
+      url: "/dashboard",
+    },
+
     {
       title: "Profile",
       url: "#",
@@ -56,6 +65,7 @@ const data = {
           title: "KYC Verification",
           url: "/dashboard/kycVerification",
         },
+
       ],
     },
     {
@@ -119,6 +129,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session, status } = useSession()
+
   return (
     <Sidebar
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
@@ -152,7 +164,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {/* <NavUser user={session?.user} /> */}
+        {session?.user && <NavUser user={{
+          name: session?.user.name ?? "",
+          email: session?.user.email ?? "",
+          image: session?.user.image ?? "",
+          username: session?.user.username
+        }} />}
       </SidebarFooter>
     </Sidebar>
   );

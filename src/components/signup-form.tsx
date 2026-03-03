@@ -12,8 +12,9 @@ import { toast } from "sonner"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { signUpSchema } from "@/lib/validations/signup"
+import { Spinner } from "./ui/spinner"
 
 
 type FormData = z.infer<typeof signUpSchema>
@@ -23,6 +24,10 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
   const [loading, setLoading] = useState(false)
   const [signupSuccess, setSignupSuccess] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  // ------------------------------------
+  const [sponsorInfo, setSponsorInfo] = useState<{ name: string; mobile: string } | null>(null)
+  const [sponsorLoading, setSponsorLoading] = useState(false)
+  // ------------------------------------
 
   const {
     register,
@@ -32,6 +37,29 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
   } = useForm<FormData>({
     resolver: zodResolver(signUpSchema),
   })
+
+  // --------------------------
+  const handleSponsorBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const id = e.target.value.trim()
+    if (!id) return
+
+    setSponsorLoading(true)
+    try {
+      const res = await fetch(`/api/user/${id}`)
+      const data = await res.json()
+      if (res.ok) {
+        setSponsorInfo({ name: data.name, mobile: data.mobile })
+      } else {
+        setSponsorInfo(null)
+        toast.error(data.message || "Sponsor not found.")
+      }
+    } catch {
+      setSponsorInfo(null)
+      toast.error("Failed to fetch sponsor info.")
+    } finally {
+      setSponsorLoading(false)
+    }
+  }
 
   const onSubmit = async (form: FormData) => {
     setLoading(true)
@@ -76,14 +104,31 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
               </div>
 
               <div className="grid gap-3">
+                <Label htmlFor="sponsorId">Sponsor Id</Label>
+                <Input
+                  id="sponsorId"
+                  placeholder="AMZ251100123"
+                  {...register("sponsorId")}
+                  onBlur={handleSponsorBlur}
+                />
+                {errors.sponsorId && <p className="text-sm text-red-500">{errors.sponsorId.message}</p>}
+                {sponsorLoading && <Spinner className="h-4 w-4 animate-spin" />}
+                {sponsorInfo && (
+                  <div className="text-sm text-muted-foreground">
+                    <p>👤 Sponsor Name: {sponsorInfo.name}</p>
+                    <p>📱 Mobile No: {sponsorInfo.mobile}</p>
+                  </div>
+                )}
+              </div>
+              <div className="grid gap-3">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Satyam Singh" {...register("name")} />
+                <Input id="name" placeholder="Enter your name" {...register("name")} />
                 {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
               </div>
 
               <div className="grid gap-3">
                 <Label htmlFor="mobile">Mobile No</Label>
-                <Input id="mobile" placeholder="9876543210" {...register("mobile")} maxLength={10}/>
+                <Input id="mobile" placeholder="Enter your mobile no." {...register("mobile")} maxLength={10} />
                 {errors.mobile && <p className="text-sm text-red-500">{errors.mobile.message}</p>}
               </div>
 
@@ -98,7 +143,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="mt-4" disabled={!sponsorInfo || loading}>
+                {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
                 {loading ? "Registering..." : "Register"}
               </Button>
 

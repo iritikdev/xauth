@@ -1,5 +1,9 @@
 import { AppSidebar } from '@/components/app-sidebar'
+<<<<<<< HEAD
 import { BackButton } from '@/components/back-button';
+=======
+import AppBreadcrumb from '@/components/breadcrumb';
+>>>>>>> 52d82472271f0f53f5919ae5b028d724f38db1d7
 import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import React, { ReactNode } from 'react'
@@ -13,13 +17,18 @@ type LayoutProps = {
 
 function Layout({ children }: LayoutProps) {
   return (
-     <div className="[--header-height:--spacing(14)]">
+    <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
+<<<<<<< HEAD
           <SidebarInset className="flex-1 overflow-y-auto px-10 py-8">
             <BackButton />
+=======
+          <SidebarInset className="flex-1 overflow-y-auto mx-6 mt-6">
+            <AppBreadcrumb />
+>>>>>>> 52d82472271f0f53f5919ae5b028d724f38db1d7
             {children}
           </SidebarInset>
         </div>
