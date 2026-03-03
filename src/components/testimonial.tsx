@@ -1,131 +1,113 @@
-import Link from "next/link";
-import React, { ComponentProps } from "react";
+"use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Marquee } from "@/components/ui/marquee";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    id: 1,
-    name: "John Doe",
-    designation: "Software Engineer",
-    company: "TechCorp",
-    testimonial:
-      "This product has completely transformed the way we work. The efficiency and ease of use are unmatched!",
-    avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+    name: "Rajesh Kumar",
+    rank: "Diamond Member",
+    image: "/api/placeholder/100/100",
+    text: "Joining Amaze Ayurveda changed my life. Within 6 months, I grew a team of 200+ and achieved financial independence while promoting wellness.",
+    rating: 5
   },
   {
-    id: 2,
-    name: "Sophia Lee",
-    designation: "Data Analyst",
-    company: "InsightTech",
-    testimonial:
-      "This tool has saved me hours of work! The analytics and reporting features are incredibly powerful.",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+    name: "Priya Sharma",
+    rank: "Star Diamond",
+    image: "/api/placeholder/100/100",
+    text: "The 15-level plan is truly revolutionary. The transparency in payouts and the quality of Ayurvedic products make it so easy to share with others.",
+    rating: 5
   },
   {
-    id: 3,
-    name: "Michael Johnson",
-    designation: "UX Designer",
-    company: "DesignPro",
-    testimonial:
-      "An amazing tool that simplifies complex tasks. Highly recommended for professionals in the industry.",
-    avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-  },
-  {
-    id: 4,
-    name: "Emily Davis",
-    designation: "Marketing Specialist",
-    company: "BrandBoost",
-    testimonial:
-      "I've seen a significant improvement in our team's productivity since we started using this service.",
-    avatar: "https://randomuser.me/api/portraits/women/4.jpg",
-  },
-  {
-    id: 5,
-    name: "Daniel Martinez",
-    designation: "Full-Stack Developer",
-    company: "CodeCrafters",
-    testimonial:
-      "The best investment we've made! The support team is also super responsive and helpful.",
-    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-  },
-  {
-    id: 6,
-    name: "Jane Smith",
-    designation: "Product Manager",
-    company: "InnovateX",
-    testimonial:
-      "The user experience is top-notch! The interface is clean, intuitive, and easy to navigate.",
-    avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-  },
+    name: "Amit Patel",
+    rank: "Super Star",
+    image: "/api/placeholder/100/100",
+    text: "I started with just a ₹499 purchase. Today, my passive income covers all my monthly expenses. The support system here is incredible.",
+    rating: 5
+  }
 ];
 
-const Testimonial = () => (
-  <div className="min-h-screen flex justify-center items-center py-12">
-    <div className="h-full w-full">
-      <h2 className="text-5xl font-semibold text-center tracking-[-0.03em] px-6 text-pretty">
-        Success Stories
-      </h2>
-      <p className="mt-3 text-center text-muted-foreground text-xl">
-        Real stories from people who use and love our product every day
-      </p>
-      <div className="mt-14 relative">
-        <div className="z-10 absolute left-0 inset-y-0 w-[15%] bg-linear-to-r from-background to-transparent" />
-        <div className="z-10 absolute right-0 inset-y-0 w-[15%] bg-linear-to-l from-background to-transparent" />
-        <Marquee pauseOnHover className="[--duration:20s]">
-          <TestimonialList />
-        </Marquee>
-        <Marquee pauseOnHover reverse className="mt-0 [--duration:20s]">
-          <TestimonialList />
-        </Marquee>
-      </div>
-    </div>
-  </div>
-);
+const SuccessStories = () => {
+  const [index, setIndex] = useState(0);
 
-const TestimonialList = () =>
-  testimonials.map((testimonial) => (
-    <div
-      key={testimonial.id}
-      className="min-w-96 max-w-sm bg-accent rounded-xl p-6"
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Avatar>
-            <AvatarFallback className="text-xl font-medium bg-primary text-primary-foreground">
-              {testimonial.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-lg font-semibold">{testimonial.name}</p>
-            <p className="text-sm text-gray-500">{testimonial.designation}</p>
+  const next = () => setIndex((prev) => (prev + 1) % testimonials.length);
+  const prev = () => setIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+
+  return (
+    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="space-y-4">
+            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-4 py-1">
+              Testimonials
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+              Real Stories, <span className="text-emerald-600">Real Success</span>
+            </h2>
+          </div>
+          
+          <div className="flex gap-3">
+            <button onClick={prev} className="p-4 rounded-full border border-slate-200 hover:bg-slate-50 transition-all">
+              <ChevronLeft className="w-6 h-6 text-slate-600" />
+            </button>
+            <button onClick={next} className="p-4 rounded-full bg-slate-900 hover:bg-emerald-600 transition-all group">
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
           </div>
         </div>
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="#" target="_blank">
-            <TwitterLogo className="w-4 h-4" />
-          </Link>
-        </Button>
+
+        <div className="relative h-[400px] md:h-[300px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="absolute inset-0"
+            >
+              <Card className="h-full border-none shadow-[0_20px_50px_rgba(0,0,0,0.05)] bg-slate-50/50 rounded-3xl">
+                <CardContent className="p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center h-full">
+                  <div className="relative">
+                    <Avatar className="h-32 w-32 border-4 border-white shadow-xl">
+                      <AvatarImage src={testimonials[index].image} />
+                      <AvatarFallback className="bg-emerald-500 text-white text-2xl">
+                        {testimonials[index].name[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-2 -right-2 bg-white p-2 rounded-full shadow-lg">
+                      <Quote className="w-4 h-4 text-emerald-600 fill-emerald-600" />
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-4 text-center md:text-left">
+                    <div className="flex justify-center md:justify-start gap-1">
+                      {[...Array(testimonials[index].rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-xl md:text-2xl text-slate-700 italic font-medium leading-relaxed">
+                      "{testimonials[index].text}"
+                    </p>
+                    <div>
+                      <h4 className="text-xl font-bold text-slate-900">{testimonials[index].name}</h4>
+                      <p className="text-emerald-600 font-semibold tracking-wide uppercase text-sm">
+                        {testimonials[index].rank}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
-      <p className="mt-5 text-[17px]">{testimonial.testimonial}</p>
-    </div>
-  ));
+    </section>
+  );
+};
 
-const TwitterLogo = (props: ComponentProps<"svg">) => (
-  <svg
-    role="img"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <title>X</title>
-    <path
-      fill="currentColor"
-      d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-    />
-  </svg>
-);
-
-export default Testimonial;
+export default SuccessStories;

@@ -1,77 +1,79 @@
-import Image from "next/image";
-import { FaTwitter, FaInstagram, FaGithub, FaYoutube } from "react-icons/fa";
+import { Github, Instagram, Twitter, Youtube, Send } from "lucide-react";
 
-export default function Footer() {
+export const Footer = () => {
   return (
-    <footer className="bg-white border-t mt-10">
-      <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row md:justify-between">
-        {/* Brand and description */}
-        <div className="mb-8 md:mb-0 flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Image src={"/aalogoc.png"} alt="Amaze Ayurveda Pvt. Ltd." width={48} height={48} />
-            <span className="text-xl font-bold">Amaze Ayurveda Pvt. Ltd.</span>
+    <footer className="bg-slate-50 border-t border-slate-200 pt-12 pb-8 md:pt-16">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Main Grid Structure */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-y-10 gap-x-8 md:gap-12">
+          
+          {/* Brand Column - Full width on mobile, 4/12 on desktop */}
+          <div className="col-span-1 sm:col-span-2 md:col-span-4 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="shrink-0 w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm">A</div>
+              <h3 className="text-xl font-bold text-slate-900 leading-tight">
+                Amaze Ayurveda<br/><span className="text-emerald-600">Pvt. Ltd.</span>
+              </h3>
+            </div>
+            <p className="text-slate-500 leading-relaxed max-w-md">
+              Empowering people with pure Ayurvedic products and business opportunities. Join us to build better health, wealth, and a sustainable future.
+            </p>
+            <div className="flex gap-5 text-slate-400">
+              <Github className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
+              <Instagram className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
+              <Twitter className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
+              <Youtube className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
+            </div>
           </div>
-          <p className="text-gray-600 max-w-xs">
-            Empowering people with pure Ayurvedic products and business opportunities.
-            Join us to build better health, wealth, and a sustainable future.
-          </p>
-          <div className="flex items-center gap-4 mt-4">
-            <a href="#" aria-label="GitHub" className="text-gray-500 hover:text-black"><FaGithub size={20} /></a>
-            <a href="#" aria-label="Instagram" className="text-gray-500 hover:text-black"><FaInstagram size={20} /></a>
-            <a href="#" aria-label="Twitter" className="text-gray-500 hover:text-black"><FaTwitter size={20} /></a>
-            <a href="#" aria-label="YouTube" className="text-gray-500 hover:text-black"><FaYoutube size={20} /></a>
+
+          {/* Links Columns - Side by side on small screens */}
+          <div className="col-span-1 md:col-span-2 space-y-5">
+            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Company</h4>
+            <ul className="space-y-3 text-slate-500 text-sm">
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">About</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Features</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Works</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Career</li>
+            </ul>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 space-y-5">
+            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Help</h4>
+            <ul className="space-y-3 text-slate-500 text-sm">
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Customer Support</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Delivery Details</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Terms & Conditions</li>
+              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Privacy Policy</li>
+            </ul>
+          </div>
+
+          {/* Newsletter Column - Full width on tablet/mobile */}
+          <div className="col-span-1 sm:col-span-2 md:col-span-4 space-y-5">
+            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Subscribe to newsletter</h4>
+            <div className="relative group max-w-sm md:max-w-none">
+              <input 
+                type="email" 
+                placeholder="Your email..."
+                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all shadow-sm text-sm"
+              />
+              <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-900 text-white px-4 rounded-lg hover:bg-emerald-600 transition-all flex items-center justify-center">
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-400">By subscribing, you agree to our Privacy Policy.</p>
           </div>
         </div>
-        {/* Company links */}
-        <div className="mb-8 md:mb-0 flex-1">
-          <h3 className="font-semibold mb-2">Company</h3>
-          <ul className="text-gray-600">
-            <li className="mb-2"><a href="#" className="hover:text-black">About</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-black">Features</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-black">Works</a></li>
-            <li><a href="#" className="hover:text-black">Career</a></li>
-          </ul>
+
+        {/* Bottom Bar */}
+        <div className="mt-12 md:mt-16 pt-8 border-t border-slate-200">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center text-slate-400 text-xs md:text-sm">
+            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | All Rights Reserved</p>
+            <p className="flex items-center gap-1.5">
+              Made with <span className="text-red-500 animate-pulse">❤️</span> for better health
+            </p>
+          </div>
         </div>
-        {/* Help links */}
-        <div className="mb-8 md:mb-0 flex-1">
-          <h3 className="font-semibold mb-2">Help</h3>
-          <ul className="text-gray-600">
-            <li className="mb-2"><a href="#" className="hover:text-black">Customer Support</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-black">Delivery Details</a></li>
-            <li className="mb-2"><a href="#" className="hover:text-black">Terms & Conditions</a></li>
-            <li><a href="#" className="hover:text-black">Privacy Policy</a></li>
-          </ul>
-        </div>
-        {/* Newsletter */}
-        <div className="flex-1">
-          <h3 className="font-semibold mb-2">Subscribe to newsletter</h3>
-          <form className="flex items-center mb-4">
-            <input
-              className="py-2 px-4 flex-grow rounded-l-lg border focus:outline-none"
-              placeholder="Your email..."
-              type="email"
-            />
-            <button
-              className="bg-black text-white px-4 py-2 rounded-r-lg flex items-center justify-center"
-              type="submit"
-            >
-              &rarr;
-            </button>
-          </form>
-          {/* <div className="flex flex-wrap gap-4 text-gray-500 text-sm">
-            <span>bestofjs</span>
-            <span>Product Hunt</span>
-            <span>reddit</span>
-            <span>Medium</span>
-            <span>Y Combinator</span>
-            <span>🚀</span>
-          </div> */}
-        </div>
-      </div>
-      {/* Bottom copyright */}
-      <div className="border-t pt-4 pb-2 text-center text-gray-500 text-sm">
-        © {new Date().getFullYear()} Amaze Ayurveda Pvt. Ltd. | All Rights Reserved, Made with <span className="text-red-500">♥</span>
       </div>
     </footer>
   );
-}
+};
