@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/app-sidebar'
+import { BackButton } from '@/components/back-button';
 import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import React, { ReactNode } from 'react'
@@ -17,7 +18,8 @@ function Layout({ children }: LayoutProps) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset className="flex-1 overflow-y-auto">
+          <SidebarInset className="flex-1 overflow-y-auto px-10 py-8">
+            <BackButton />
             {children}
           </SidebarInset>
         </div>

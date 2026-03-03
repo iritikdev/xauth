@@ -28,7 +28,7 @@ const Home = (props: Props) => {
       <Marquee items={messages} />
       <Categories />
       <AboutUs />
-      <OurProducts />
+      {/* <OurProducts /> */}
       <BusinessOpportunity />
       <LeadershipDesignations />
       <Testimonial />
