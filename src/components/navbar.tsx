@@ -40,7 +40,7 @@ export const Navbar = () => {
           <img 
             src="/amaze-logo.png" 
             alt="Amaze Ayurveda" 
-            className="h-12 w-12 object-contain" 
+            className="h-16 w-16 object-contain" 
           />
           <span className="hidden font-bold text-slate-900 lg:inline-block leading-tight">
             Amaze Ayurveda<br/><span className="text-emerald-600 text-sm">Pvt. Ltd.</span>
@@ -77,16 +77,16 @@ export const Navbar = () => {
         {/* Mobile View Navigation */}
         <div className="flex items-center gap-4 lg:hidden">
           <Button variant="ghost" size="icon" className="text-slate-500">
-            <Search className="h-5 w-5" />
+            <Search className="h-8 w-8" />
           </Button>
           
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
+                <Menu className="h-8 w-8" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full sm:w-[350px]">
+            <SheetContent side="right" className="px-10 w-full sm:w-[350px]">
               <div className="flex flex-col gap-8 py-8">
                 <div className="space-y-4">
                   <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Account</p>
