@@ -99,15 +99,19 @@ export const Navbar = () => {
                   <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
                     Account
                   </p>
+                  <Link href="/sign-in" className="mb-8">
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-3 rounded-xl h-12"
                   >
                     <LogIn className="h-5 w-5" /> Login
                   </Button>
+                  </Link>
+                  <Link href="/sign-up">
                   <Button className="w-full justify-start gap-3 rounded-xl h-12 bg-slate-900">
                     <User className="h-5 w-5" /> Sign Up
                   </Button>
+                    </Link>
                 </div>
 
                 <div className="space-y-4">
