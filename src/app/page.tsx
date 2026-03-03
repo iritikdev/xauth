@@ -9,6 +9,7 @@ import OurProducts from "@/components/products";
 import Testimonial from "@/components/testimonial";
 import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
 import {Footer} from "@/components/footer";
+import LatestReleases from "@/components/LatestReleases";
 
 interface Props {
   companyName?: string;
@@ -26,13 +27,13 @@ const Home = (props: Props) => {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
-      <Marquee items={messages} />
-      <Categories />
+      <LatestReleases />
+      {/* <Categories /> */}
       <AboutUs />
       {/* <OurProducts /> */}
       <AmazeAyurvedaPlan /> {/* New Interactive Plan Component */}
       <BusinessOpportunity />
-      <LeadershipDesignations />
+      {/* <LeadershipDesignations /> */}
       <Testimonial />
       <Footer />
     </div>
