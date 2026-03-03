@@ -4,12 +4,12 @@ import Categories from "@/components/categories";
 import Hero from "@/components/hero";
 import LeadershipDesignations from "@/components/leader-designation";
 import Marquee from "@/components/flash-marquee";
-import Navbar from "@/components/navbar";
 import OurProducts from "@/components/products";
 import Testimonial from "@/components/testimonial";
 import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
 import {Footer} from "@/components/footer";
 import LatestReleases from "@/components/LatestReleases";
+import { Navbar } from "@/components/navbar";
 
 interface Props {
   companyName?: string;
@@ -28,12 +28,9 @@ const Home = (props: Props) => {
       <Navbar />
       <Hero />
       <LatestReleases />
-      {/* <Categories /> */}
       <AboutUs />
-      {/* <OurProducts /> */}
-      <AmazeAyurvedaPlan /> {/* New Interactive Plan Component */}
+      <AmazeAyurvedaPlan />
       <BusinessOpportunity />
-      {/* <LeadershipDesignations /> */}
       <Testimonial />
       <Footer />
     </div>
