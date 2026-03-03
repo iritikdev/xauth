@@ -1,12 +1,9 @@
-import { AppSidebar } from '@/components/app-sidebar'
-<<<<<<< HEAD
-import { BackButton } from '@/components/back-button';
-=======
-import AppBreadcrumb from '@/components/breadcrumb';
->>>>>>> 52d82472271f0f53f5919ae5b028d724f38db1d7
-import { SiteHeader } from '@/components/site-header'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import React, { ReactNode } from 'react'
+import { AppSidebar } from "@/components/app-sidebar";
+import { BackButton } from "@/components/back-button";
+import AppBreadcrumb from "@/components/breadcrumb";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import React, { ReactNode } from "react";
 
 export const iframeHeight = "800px";
 
@@ -22,19 +19,15 @@ function Layout({ children }: LayoutProps) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-<<<<<<< HEAD
-          <SidebarInset className="flex-1 overflow-y-auto px-10 py-8">
-            <BackButton />
-=======
+          <BackButton />
           <SidebarInset className="flex-1 overflow-y-auto mx-6 mt-6">
             <AppBreadcrumb />
->>>>>>> 52d82472271f0f53f5919ae5b028d724f38db1d7
             {children}
           </SidebarInset>
         </div>
       </SidebarProvider>
     </div>
-  )
+  );
 }
 
-export default Layout
+export default Layout;
