@@ -1,75 +1,112 @@
-import { Github, Instagram, Twitter, Youtube, Send } from "lucide-react";
+import { Github, Instagram, Twitter, Youtube, Send, MapPin, Phone, Mail } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export const Footer = () => {
   return (
-    <footer className="bg-slate-50 border-t border-slate-200 pt-12 pb-8 md:pt-16">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Main Grid Structure */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-y-10 gap-x-8 md:gap-12">
+    <footer className="relative bg-green-50 border-t border-slate-100 overflow-hidden pt-16 pb-8 md:pt-24">
+      
+      {/* --- Swadeshi Background Graphics Overlay --- */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
+        {/* Simplified Vector of Red Fort (Left) */}
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/1/12/Red_Fort_New_Delhi_Vector.svg" 
+          alt="Red Fort Graphic"
+          className="absolute -left-20 bottom-0 h-[300px] w-auto text-slate-900 grayscale"
+        />
+        {/* Simplified Vector of Taj Mahal (Center-Right) */}
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Taj_Mahal_Vector.svg" 
+          alt="Taj Mahal Graphic"
+          className="absolute right-1/4 top-10 h-[250px] w-auto grayscale"
+        />
+        {/* Simplified Vector of Qutub Minar (Right) */}
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/3/30/Qutub_Minar_Vector.svg" 
+          alt="Qutub Minar Graphic"
+          className="absolute right-0 bottom-[-50px] h-[400px] w-auto grayscale"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8 md:gap-12 mb-16">
           
-          {/* Brand Column - Full width on mobile, 4/12 on desktop */}
+          {/* Brand & Mission Column */}
           <div className="col-span-1 sm:col-span-2 md:col-span-4 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="shrink-0 w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm">A</div>
-              <h3 className="text-xl font-bold text-slate-900 leading-tight">
-                Amaze Ayurveda<br/><span className="text-emerald-600">Pvt. Ltd.</span>
+              <img src="/amaze-logo.png" alt="Logo" className="shrink-0 w-12 h-12 object-contain" />
+              <h3 className="text-2xl font-black text-slate-900 leading-none tracking-tight">
+                Amaze Ayurveda<br/><span className="text-emerald-600 text-lg font-bold">Pvt. Ltd.</span>
               </h3>
             </div>
-            <p className="text-slate-500 leading-relaxed max-w-md">
-              Empowering people with pure Ayurvedic products and business opportunities. Join us to build better health, wealth, and a sustainable future.
+            <p className="text-slate-600 leading-relaxed max-w-md">
+              Aatmanirbhar Bharat begins with wellness. We empower the nation with authentic Ayurvedic wisdom and sustainable business opportunities.
             </p>
-            <div className="flex gap-5 text-slate-400">
-              <Github className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
-              <Instagram className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
-              <Twitter className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
-              <Youtube className="w-5 h-5 hover:text-emerald-600 cursor-pointer transition-colors" />
+            <div className="flex gap-4 text-slate-400">
+              {[Github, Instagram, Twitter, Youtube].map((Icon, i) => (
+                <Icon key={i} className="w-5 h-5 hover:text-emerald-600 hover:scale-110 cursor-pointer transition-all" />
+              ))}
             </div>
           </div>
 
-          {/* Links Columns - Side by side on small screens */}
-          <div className="col-span-1 md:col-span-2 space-y-5">
-            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Company</h4>
-            <ul className="space-y-3 text-slate-500 text-sm">
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">About</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Features</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Works</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Career</li>
+          {/* Contact & Location (Replaces standard links for stronger trust) */}
+          <div className="col-span-1 md:col-span-3 space-y-6">
+            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">Reach Us</h4>
+            <ul className="space-y-4 text-slate-700 text-sm">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <span>Saraiya, Bihar, India 843106</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>+91 98765 43210</span>
+              </li>
+              <li className="flex items-center gap-3 hover:text-emerald-600 cursor-pointer transition-colors">
+                <Mail className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>contact@amazeayurveda.in</span>
+              </li>
             </ul>
           </div>
 
-          <div className="col-span-1 md:col-span-2 space-y-5">
-            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Help</h4>
-            <ul className="space-y-3 text-slate-500 text-sm">
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Customer Support</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Delivery Details</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Terms & Conditions</li>
-              <li className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">Privacy Policy</li>
+          {/* Quick Links */}
+          <div className="col-span-1 md:col-span-2 space-y-6">
+            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">Explore</h4>
+            <ul className="space-y-3 text-slate-600 text-sm font-medium">
+              {['About Us', 'Business Plan', 'Latest Products', 'Careers', 'Terms'].map(link => (
+                <li key={link} className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1">
+                  {link}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Newsletter Column - Full width on tablet/mobile */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-4 space-y-5">
-            <h4 className="font-bold text-slate-900 uppercase tracking-widest text-xs">Subscribe to newsletter</h4>
-            <div className="relative group max-w-sm md:max-w-none">
-              <input 
+          {/* Swadeshi Newsletter */}
+          <div className="col-span-1 sm:col-span-2 md:col-span-3 space-y-6">
+            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">Stay Connected</h4>
+            <p className="text-slate-600 text-sm leading-relaxed">Subscribe for Ayurvedic insights and exclusive Swadeshi offers.</p>
+            <div className="relative group">
+              <Input 
                 type="email" 
-                placeholder="Your email..."
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all shadow-sm text-sm"
+                placeholder="Support Local. Enter Email..."
+                className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all shadow-inner text-sm"
               />
-              <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-slate-900 text-white px-4 rounded-lg hover:bg-emerald-600 transition-all flex items-center justify-center">
+              <Button size="icon" className="absolute right-2 top-2 bottom-2 bg-slate-950 text-white rounded-lg hover:bg-emerald-600 transition-all h-10 w-10">
                 <Send className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
-            <p className="text-[11px] text-slate-400">By subscribing, you agree to our Privacy Policy.</p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 md:mt-16 pt-8 border-t border-slate-200">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center text-slate-400 text-xs md:text-sm">
-            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | All Rights Reserved</p>
-            <p className="flex items-center gap-1.5">
-              Made with <span className="text-red-500 animate-pulse">❤️</span> for better health
+        {/* Bottom Bar: Patriotism Focus */}
+        <div className="mt-16 pt-8 border-t border-slate-100">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center text-slate-500 text-xs md:text-sm">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-orange-500 fill-orange-500" />
+              <p>Headquartered in Bihar, India</p>
+            </div>
+            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U85100DL2026PTC000000</p>
+            <p className="flex items-center gap-1.5 font-medium text-slate-700">
+              Made in Bharat <span className="text-red-500 animate-pulse">🇮🇳</span> for Global Wellness
             </p>
           </div>
         </div>
