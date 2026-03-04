@@ -38,7 +38,7 @@ const SuccessStories = () => {
   const prev = () => setIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
+    <section className="py-44 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div className="space-y-4">
@@ -90,7 +90,7 @@ const SuccessStories = () => {
                         <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <p className="text-xl md:text-2xl text-slate-700 italic font-medium leading-relaxed">
+                    <p className="text-xl text-slate-700 italic font-medium leading-relaxed">
                       "{testimonials[index].text}"
                     </p>
                     <div>
