@@ -20,7 +20,7 @@ function Layout({ children }: LayoutProps) {
         <div className="flex flex-row">
           <AppSidebar />
           {/* <BackButton /> */}
-          <SidebarInset className="flex-1 overflow-y-auto mx-6 mt-6">
+          <SidebarInset className="flex-1 overflow-y-auto m-6">
             <AppBreadcrumb />
             {children}
           </SidebarInset>
