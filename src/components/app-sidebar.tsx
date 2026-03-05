@@ -55,7 +55,7 @@ const data = {
         },
         {
           title: "ID Card",
-          url: "/dashboard/id-card",
+          url: "/dashboard/partnerIdentityCard",
         },
         {
           title: "View Profile",
