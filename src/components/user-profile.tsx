@@ -122,7 +122,7 @@ export default function KYCForm() {
   )
 
   return (
-    <div className=" mx-auto py-12 px-6 bg-slate-50/30 rounded-[3rem]">
+    <div className="py-12 px-6 bg-slate-50/30 rounded-[3rem]">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 border-b border-slate-200/60 pb-10 px-4">
         <div>
           <h1 className="text-4xl font-black text-[#0f172a] tracking-tight">Your Profile</h1>

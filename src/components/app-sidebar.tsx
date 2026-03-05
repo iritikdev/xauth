@@ -71,8 +71,8 @@ const sidebarData = {
       icon: PiggyBank,
       items: [
         { title: "E-Wallet", url: "/dashboard/wallet", icon: ArrowRightLeft },
-        { title: "Income Reports", url: "/dashboard/income", icon: BarChart3 },
-        { title: "Payout Summary", url: "/dashboard/payouts" },
+        // { title: "Income Reports", url: "/dashboard/income", icon: BarChart3 },
+        // { title: "Payout Summary", url: "/dashboard/payouts" },
       ],
     },
   ],
@@ -81,8 +81,8 @@ const sidebarData = {
     { title: "Send Feedback", url: "#", icon: Send },
   ],
   marketing: [
-    { name: "Business Plan", url: "/plan", icon: FileText },
-    { name: "Marketing Kit", url: "/kit", icon: CoinsIcon },
+    { name: "Business Plan", url: "/dashboard/plan", icon: FileText },
+    { name: "Marketing Kit", url: "/dashboard/kit", icon: CoinsIcon },
   ],
 };
 
@@ -145,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={sidebarData.navSecondary} className="mt-auto pb-4" />
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-slate-100 p-2 bg-slate-50/50">
+      {/* <SidebarFooter className="border-t border-slate-100 p-2 bg-slate-50/50">
         {session?.user && (
           <NavUser user={{
             name: session.user.name ?? "Member",
@@ -154,7 +154,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             username: session.user.username
           }} />
         )}
-      </SidebarFooter>
+      </SidebarFooter> */}
     </Sidebar>
   );
 }
