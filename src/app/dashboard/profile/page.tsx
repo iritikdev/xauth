@@ -1,9 +1,9 @@
-import KYCForm from '@/components/register-user'
+import UserProfile from '@/components/user-profile'
 
 
 function page() {
     return (
-        <KYCForm />
+        <UserProfile />
     )
 }
 
