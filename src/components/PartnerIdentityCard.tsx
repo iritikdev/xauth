@@ -44,7 +44,7 @@ export const PartnerIdentityCard = ({ userData }: IDCardProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 py-10 bg-[#f8fafc] w-full px-4">
+    <div className="flex flex-col items-center gap-6 py-10  w-full px-4">
       {/* Action Header */}
       <div className="text-center space-y-2 mb-4">
         <h3 className="text-xl font-black text-slate-900">Partner Identity Card</h3>
