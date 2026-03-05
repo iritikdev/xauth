@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { BackButton } from "@/components/back-button";
 import AppBreadcrumb from "@/components/breadcrumb";
+import { NewsTicker } from "@/components/new-ticker";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React, { ReactNode } from "react";
@@ -17,10 +18,11 @@ function Layout({ children }: LayoutProps) {
     <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
         <SiteHeader />
+        <NewsTicker />
         <div className="flex flex-row">
           <AppSidebar />
           {/* <BackButton /> */}
-          <SidebarInset className="flex-1 overflow-y-auto m-6">
+          <SidebarInset className="flex-1 overflow-y-auto">
             <AppBreadcrumb />
             {children}
           </SidebarInset>

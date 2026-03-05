@@ -67,16 +67,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen bg-[#f8fafc] pb-12">
-      {/* Top Navigation / Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">A</div>
-            <span className="font-black text-slate-900 tracking-tight hidden sm:block">AMAZE AYURVEDA</span>
-          </div>
-          <SignOut />
-        </div>
-      </div>
+      
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Hero Section */}
