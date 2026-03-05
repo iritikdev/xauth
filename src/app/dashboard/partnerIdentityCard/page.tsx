@@ -14,7 +14,7 @@ export const dummyUserData = {
 };
 export default function OnboardingPreview() {
   return (
-    <div className="space-y-20 p-10 bg-slate-50">
+    <div>
       
       {/* Test the ID Card */}
       <PartnerIdentityCard userData={dummyUserData} />
