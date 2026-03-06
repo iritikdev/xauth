@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
+import QueryProvider from "@/app/providers/query-provider";
 import AppLoader from "@/components/Loader";
 
 const inter = Inter({
@@ -34,12 +35,14 @@ const Layout = ({ children }: LayoutProps) => {
       <body
         className={`${inter.className} ${poppins.variable} antialiased`}
       >
+        <QueryProvider>
         <SessionProvider>
           <AppLoader>
             <Toaster position="top-right" />
             {children}
           </AppLoader>
         </SessionProvider>
+        </QueryProvider>
       </body>
     </html>
   );
