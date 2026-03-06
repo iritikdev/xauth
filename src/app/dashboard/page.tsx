@@ -80,7 +80,7 @@ export default function Page() {
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative">
                 <Avatar className="h-24 w-24 ring-4 ring-emerald-500/30">
-                  <AvatarImage src="/aalogoc.png" />
+                  <AvatarImage src={userData.photoUrl} />
                   <AvatarFallback className="bg-emerald-100 text-emerald-700 font-bold text-xl">
                     {userData.name?.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
