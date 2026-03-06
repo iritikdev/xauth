@@ -176,7 +176,7 @@ export default function Page() {
             </Card>
 
             {/* Downline List Redesign */}
-            <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
+            {/* <Card className="rounded-[2.5rem] border-none shadow-sm bg-white overflow-hidden">
               <CardHeader className="px-8 pt-8">
                 <CardTitle className="text-xl font-black text-slate-900">Recent Downlines</CardTitle>
               </CardHeader>
@@ -205,7 +205,7 @@ export default function Page() {
                   </div>
                 )}
               </CardContent>
-            </Card>
+            </Card> */}
           </motion.div>
 
           {/* Right Column: Business Metrics */}

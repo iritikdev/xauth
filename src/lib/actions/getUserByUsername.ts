@@ -19,6 +19,11 @@ export async function getUserByUsername(username: string) {
             pincode: true,
 
             accountNo: true,
+            upiId: true,
+            nomineeName: true,
+            nomineeRelation: true,
+            nomineeMobile: true,
+            nomineeAadhaar: true,
             ifsc: true,
             branch: true,
             username: true,

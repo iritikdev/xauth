@@ -58,6 +58,12 @@ export async function POST(req: Request) {
                 accountNo: parsed.accountNo,
                 branch: parsed.branch,
                 ifsc: parsed.ifsc,
+                upiId: parsed.upiId,
+
+                nomineeName: parsed.nomineeName,
+                nomineeRelation: parsed.nomineeRelation,
+                nomineeMobile: parsed.nomineeMobile,
+                nomineeAadhaar: parsed.nomineeAadhaar,
 
                 email: parsed.email,
                 mobile: parsed.mobile,

@@ -35,6 +35,13 @@ model User {
   accountNo String
   branch    String?
   ifsc      String?
+  upiId           String?
+
+  // Nominee Additions
+  nomineeName     String?
+  nomineeRelation String?
+  nomineeMobile   String?
+  nomineeAadhaar  String?
 
   email     String
   mobile    String @unique

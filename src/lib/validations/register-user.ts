@@ -58,6 +58,15 @@ export const kycSchema = z.object({
     .string()
     .min(2, { message: "Branch name must be at least 2 characters" }),
 
+  // Validates standard UPI formats like name@bank, mobile@upi, etc.
+  upiId: z
+    .string()
+    .min(3, "UPI ID is required")
+    .regex(
+      /^[\w.-]+@[\w.-]+$/,
+      "Please enter a valid UPI ID (e.g., name@bank)",
+    ),
+
   panNumber: z
     .string()
     .length(10, { message: "PAN must be exactly 10 characters" })
@@ -70,4 +79,16 @@ export const kycSchema = z.object({
     .string()
     .length(12, { message: "Aadhar must be exactly 12 characters" })
     .regex(/^\d{12}$/, { message: "Aadhar must contain only digits" }),
+
+  nomineeName: z.string().min(3, "Nominee name is required"),
+  nomineeRelation: z.enum([
+    "Mother",
+    "Father",
+    "Son",
+    "Wife",
+    "Daughter",
+    "Husband",
+  ]),
+  nomineeMobile: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
+  nomineeAadhaar: z.string().length(12, "Aadhaar must be 12 digits"),
 });
