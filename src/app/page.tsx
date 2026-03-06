@@ -29,7 +29,7 @@ const Home = (props: Props) => {
       <Hero />
       <LatestReleases />
       <AboutUs />
-      <AmazeAyurvedaPlan />
+      {/* <AmazeAyurvedaPlan /> */}
       <BusinessOpportunity />
       <Testimonial />
       <Footer />
