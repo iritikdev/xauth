@@ -1,24 +1,21 @@
 "use client";
 
 import React, { useRef, useState } from 'react';
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Download, ShieldCheck, Flag, Award, Loader2 } from "lucide-react";
-// Switching to html2canvas-pro to handle modern CSS color functions
+import { Download, ShieldCheck, Flag, Award, Loader2, CheckCircle } from "lucide-react";
 import html2canvas from "html2canvas-pro"; 
 import jsPDF from "jspdf";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useUser } from "@/hooks/use-user";
+import { toast } from "sonner"; // Assuming you use sonner for toasts
 
-interface WelcomeLetterProps {
-  userData: {
-    name: string;
-    username: string;
-    joiningDate: string;
-    sponsorName: string;
-  };
-}
-
-const WelcomeLetter = ({ userData }: WelcomeLetterProps) => {
+const WelcomeLetter = () => {
+  const { data: session } = useSession();
+  const username = (session?.user as any)?.username;
+  const { data: userData, isLoading } = useUser(username);
+  
   const letterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -28,156 +25,173 @@ const WelcomeLetter = ({ userData }: WelcomeLetterProps) => {
 
     setIsDownloading(true);
     try {
-      // Pro version handles lab() and oklch() natively
       const canvas = await html2canvas(element, { 
-        scale: 3, // Increased scale for high-quality printing
+        scale: 3, 
         useCORS: true, 
-        backgroundColor: "#ffffff", // Use Hex to be safe
-        logging: false,
+        backgroundColor: "#ffffff",
+        windowWidth: 800, // Forces the renderer to see a consistent desktop width
       });
 
-      const imgData = canvas.toDataURL("image/png");
+      const imgData = canvas.toDataURL("image/png", 1.0);
       const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Amaze_Welcome_${userData?.username || 'Member'}.pdf`);
+      pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+      pdf.save(`Welcome_Letter_${userData?.username}.pdf`);
+
+      // --- SUCCESS TOAST ---
+      toast.success("Document Downloaded", {
+        description: "Your official onboarding letter is now saved.",
+        icon: <CheckCircle className="w-4 h-4 text-emerald-500" />,
+      });
+
     } catch (error) {
-      console.error("PDF generation failed:", error);
+      toast.error("Download Failed", { description: "Please try again or check your connection." });
     } finally {
       setIsDownloading(false);
     }
   };
 
+  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-emerald-600" /></div>;
+
   return (
-    <div className="flex flex-col items-center gap-8 py-12 min-h-screen">
+    <div className="flex flex-col items-center gap-8 py-12 min-h-screen bg-slate-50/50 px-4">
       {/* Action Bar */}
       <motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200"
+        className="flex items-center gap-6 bg-white p-5 rounded-3xl shadow-xl border border-slate-200 w-full max-w-[210mm]"
       >
-        <div className="text-sm font-medium text-slate-600">
-          Your official swadeshi onboarding document is ready.
+        <div className="flex-1">
+          <h2 className="text-sm font-black text-slate-900 uppercase tracking-tight">Onboarding Gateway</h2>
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Amaze Ayurveda Official Letter</p>
         </div>
         <Button 
           onClick={downloadPDF} 
           disabled={isDownloading}
-          className="bg-[#059669] hover:bg-[#047857] text-white gap-2 font-bold rounded-xl h-12 px-6 transition-all"
+          className="bg-[#059669] hover:bg-[#047857] text-white gap-3 font-black rounded-2xl h-14 px-8 shadow-lg shadow-emerald-200 transition-all active:scale-95"
         >
-          {isDownloading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Download className="w-4 h-4" />
-          )}
-          {isDownloading ? "Generating PDF..." : "Download Welcome Letter"}
+          {isDownloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+          {isDownloading ? "Capturing..." : "Download PDF"}
         </Button>
       </motion.div>
 
-      {/* --- Letter Canvas (A4 Dimensions) --- */}
-      {/* We use inline Hex styles to prevent CSS variable conflicts */}
-      <div 
-        ref={letterRef} 
-        style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
-        className="w-[210mm] min-h-[297mm] shadow-2xl p-[20mm] relative overflow-hidden border-[12px] border-[#ecfdf5]"
-      >
-        {/* Background Watermark */}
-        <div className="absolute top-0 right-0 opacity-[0.03] rotate-12 -translate-y-12 translate-x-12 pointer-events-none">
-            <img src="/amaze-logo.png" alt="watermark" className="w-[500px]" />
-        </div>
-        
-        {/* Header Section */}
-        <div className="flex justify-between items-start mb-16 relative z-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-16 h-16 relative">
-                <Image src="/amaze-logo.png" alt="Logo" fill className="object-contain" />
+      {/* --- Letter Canvas (Fixed Positioning) --- */}
+      <div className="w-full flex justify-center overflow-auto pb-20 no-scrollbar">
+        <div className="scale-[0.4] sm:scale-[0.8] md:scale-[0.8] lg:scale-100 origin-top shadow-2xl">
+          <div 
+            ref={letterRef} 
+            style={{ 
+              width: '210mm', 
+              height: '297mm',
+              backgroundColor: '#ffffff',
+              position: 'relative',
+              padding: '25mm',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* 1. Watermark (Pinned to Center) */}
+            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.03, pointerEvents: 'none' }}>
+                <img src="/amaze-logo.png" alt="watermark" style={{ width: '140mm' }} />
+            </div>
+
+            {/* 2. Header (Using Table for Perfect Alignment) */}
+            <table style={{ width: '100%', borderBottom: '2px solid #059669', paddingBottom: '20px', marginBottom: '40px' }}>
+              <tbody>
+                <tr>
+                  <td style={{ verticalAlign: 'top' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                       <img src="/amaze-logo.png" alt="Logo" style={{ width: '60px', height: '60px', objectFit: 'contain' }} />
+                       <div>
+                         <h1 style={{ fontSize: '28px', fontWeight: 900, color: '#0f172a', margin: 0, lineHeight: 1 }}>AMAZE AYURVEDA</h1>
+                         <p style={{ fontSize: '10px', fontWeight: 800, color: '#059669', letterSpacing: '4px', margin: '4px 0 0 0' }}>PRIVATE LIMITED</p>
+                       </div>
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'right', verticalAlign: 'top' }}>
+                    <div style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
+                      <p style={{ margin: 0 }}>CIN: U85100DL2026PTC000000</p>
+                      <p style={{ margin: '2px 0' }}>ISO 9001:2015 Certified</p>
+                      <p style={{ color: '#059669', textDecoration: 'underline', margin: 0 }}>www.amazeayurveda.in</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* 3. Recipient Details */}
+            <div style={{ marginBottom: '40px', borderLeft: '4px solid #059669', paddingLeft: '20px' }}>
+              <p style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '5px' }}>
+                DATE OF ISSUE: {userData?.joiningDate}
+              </p>
+              <h2 style={{ fontSize: '26px', fontWeight: 900, color: '#1e293b', margin: 0, textTransform: 'uppercase' }}>
+                TO, {userData?.name}
+              </h2>
+              <p style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', marginTop: '5px' }}>
+                ASSOCIATE ID: <span style={{ color: '#059669', fontWeight: 900 }}>{userData?.username}</span>
+              </p>
+            </div>
+
+            {/* 4. Letter Body */}
+            <div style={{ fontSize: '14px', lineHeight: '1.8', color: '#334155', textAlign: 'justify' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#0f172a', borderBottom: '1px solid #f1f5f9', paddingBottom: '10px', marginBottom: '20px' }}>
+                SUBJECT: OFFICIAL ONBOARDING & WELCOME LETTER
+              </h3>
+              
+              <p>Dear <span style={{ fontWeight: 800, color: '#0f172a' }}>{userData?.name}</span>,</p>
+              
+              <p>
+                We are proud to welcome you as a verified Independent Business Partner. At <strong>Amaze Ayurveda</strong>, 
+                we are committed to the <strong>Swadeshi Movement</strong>, empowering every Indian with health and prosperity.
+              </p>
+
+              {/* Info Box (Absolute Stability) */}
+              <div style={{ background: '#f8fafc', padding: '25px', borderRadius: '20px', border: '1px solid #e2e8f0', margin: '30px 0', display: 'table', width: '100%', boxSizing: 'border-box' }}>
+                <div style={{ display: 'table-cell', width: '50%' }}>
+                  <p style={{ fontSize: '9px', fontWeight: 900, color: '#94a3b8', letterSpacing: '1px', margin: 0 }}>SPONSOR</p>
+                  <p style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a', margin: '5px 0 0 0' }}>{userData?.sponsorName || 'DIRECT'}</p>
+                </div>
+                <div style={{ display: 'table-cell', width: '50%', textAlign: 'right' }}>
+                  <p style={{ fontSize: '9px', fontWeight: 900, color: '#059669', letterSpacing: '1px', margin: 0 }}>PLAN TYPE</p>
+                  <p style={{ fontSize: '16px', fontWeight: 800, color: '#065f46', margin: '5px 0 0 0' }}>15-LEVEL HYBRID</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-3xl font-black tracking-tight leading-none uppercase">Amaze Ayurveda</h1>
-                <p className="text-[#059669] font-bold uppercase tracking-widest text-xs mt-1">Private Limited</p>
-              </div>
+
+              <p>
+                Your partnership status is now <strong>Active</strong>. We encourage you to lead with integrity as you build your 
+                genealogy network and promote wellness across the nation.
+              </p>
+
+              <p style={{ fontWeight: 900, marginTop: '40px', color: '#0f172a', fontSize: '18px' }}>Be Indian • Buy Indian • Grow Indian</p>
             </div>
-            <div className="flex items-center gap-2 bg-[#fff7ed] text-[#c2410c] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-[#ffedd5] w-fit">
-              <Flag className="w-3 h-3 fill-current" /> Vocal for Local
+
+            {/* 5. Footer (Pinned to Bottom) */}
+            <div style={{ position: 'absolute', bottom: '30mm', left: '25mm', right: '25mm' }}>
+              <table style={{ width: '100%' }}>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#059669', marginBottom: '10px' }}>
+                        <ShieldCheck size={20} />
+                        <span style={{ fontSize: '11px', fontWeight: 900, letterSpacing: '1px' }}>VERIFIED PARTNER</span>
+                      </div>
+                      <p style={{ fontSize: '8px', color: '#94a3b8', maxWidth: '300px', lineHeight: 1.4 }}>
+                        *This is a computer-generated onboarding document. Valid without physical signature.
+                      </p>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <div style={{ width: '140px', height: '1px', background: '#0f172a', opacity: 0.2, margin: '0 auto 10px' }} />
+                      <p style={{ fontSize: '12px', fontWeight: 900, margin: 0 }}>Managing Director</p>
+                      <p style={{ fontSize: '8px', color: '#94a3b8', fontWeight: 700, margin: 0 }}>AMAZE AYURVEDA PVT. LTD.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </div>
-          
-          <div className="text-right text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
-            <p>CIN: U85100DL2026PTC000000</p>
-            <p>ISO 9001:2015 Certified Company</p>
-            <p className="mt-2 text-[#0f172a] underline decoration-[#059669]">www.amazeayurveda.in</p>
-          </div>
-        </div>
 
-        {/* Recipient Details */}
-        <div className="mb-12 space-y-1 relative z-10">
-          <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Date: {userData?.joiningDate}</p>
-          <h2 className="text-2xl font-bold text-[#1e293b]">To, {userData?.name}</h2>
-          <p className="text-slate-500 font-medium">Username ID: <span className="text-[#059669] font-black tracking-wider">{userData?.username}</span></p>
-        </div>
-
-        {/* Letter Body */}
-        <div className="space-y-6 text-[#334155] leading-relaxed relative z-10 text-sm">
-          <h3 className="text-xl font-black text-[#0f172a] mb-4 border-b pb-2 border-slate-100">
-            Subject: Official Onboarding & Welcome to the Swadeshi Movement
-          </h3>
-          
-          <p>Dear <span className="font-bold text-[#0f172a]">{userData?.name}</span>,</p>
-          
-          <p>
-            It is with great pride and joy that we welcome you to the <strong className="text-[#0f172a]">Amaze Ayurveda</strong> family. By joining us, you are not just starting a business; you are becoming a vital part of the **Aatmanirbhar Bharat** mission.
-          </p>
-
-          <p>
-            We are committed to empowering every Indian to build a sustainable future through the power of authentic Ayurveda. Your participation helps us strengthen the "Be Indian, Buy Indian" movement across the nation.
-          </p>
-
-          {/* Quick Info Box */}
-          <div className="grid grid-cols-2 gap-4 py-6">
-            <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
-              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Your Sponsor</p>
-              <p className="font-bold text-[#0f172a]">{userData?.sponsorName}</p>
-            </div>
-            <div className="bg-[#f0fdf4] p-5 rounded-2xl border border-[#dcfce7]">
-              <p className="text-[9px] font-black text-[#059669] uppercase tracking-widest mb-1">Plan Structure</p>
-              <p className="font-bold text-[#065f46]">15-Level Hybrid Plan</p>
+            {/* 6. Bottom Banner */}
+            <div style={{ position: 'absolute', bottom: '10mm', left: '0', right: '0', textAlign: 'center', opacity: 0.2 }}>
+               <p style={{ fontSize: '9px', fontWeight: 900, letterSpacing: '5px', color: '#000' }}>WWW.AMAZEAYURVEDA.IN</p>
             </div>
           </div>
-
-          <p>
-            Your account is now fully active. We encourage you to explore our flagship releases like <strong>SlimExpert</strong> and <strong>Josh Vital</strong> as you begin your journey toward financial freedom.
-          </p>
-
-          <p className="font-black text-[#0f172a] pt-4">Rising Together, Rising Strong.</p>
-        </div>
-
-        {/* Footer / Signatures */}
-        <div className="mt-24 flex justify-between items-end relative z-10">
-          <div className="space-y-4">
-             <div className="flex items-center gap-2 text-[#059669]">
-                <ShieldCheck className="w-5 h-5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Verified Swadeshi Partner</span>
-             </div>
-             <p className="text-[9px] text-slate-400 max-w-[320px] italic">
-               *This is a computer-generated document issued by the Onboarding Department and does not require a physical signature.
-             </p>
-          </div>
-          
-          <div className="text-center space-y-2">
-            <div className="w-32 h-[2px] bg-[#0f172a] mx-auto opacity-20" />
-            <p className="text-xs font-black uppercase tracking-tighter">Managing Director</p>
-            <p className="text-[9px] text-slate-500 font-bold">Amaze Ayurveda Pvt. Ltd.</p>
-          </div>
-        </div>
-
-        {/* Absolute Bottom Badge */}
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center opacity-20 pointer-events-none">
-           <div className="flex items-center gap-2 border-t border-slate-900 pt-2 w-[80%] justify-center">
-              <Award className="w-4 h-4" />
-              <span className="text-[9px] font-black uppercase tracking-[0.4em]">Be Indian • Buy Indian • Grow Indian</span>
-           </div>
         </div>
       </div>
     </div>
