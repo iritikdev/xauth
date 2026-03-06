@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useRef, useState } from "react"
-import { motion } from "framer-motion"
 import { 
   ShieldCheck, User, MapPin, Building2, 
   CheckCircle2, Printer, Edit3, Loader2,
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import html2canvas from "html2canvas-pro"
 import jsPDF from "jspdf"
-import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 interface UserProfileSummaryProps {
   userData: any;
@@ -33,7 +32,7 @@ export default function UserProfileSummary({ userData, onEdit }: UserProfileSumm
         scale: 3,
         useCORS: true,
         backgroundColor: "#ffffff",
-        windowWidth: 1200, // Locked width for PDF consistency
+        windowWidth: 1200, 
       })
 
       const imgData = canvas.toDataURL("image/png")
@@ -51,13 +50,13 @@ export default function UserProfileSummary({ userData, onEdit }: UserProfileSumm
   }
 
   return (
-    <div className=" px-4 md:p-8 space-y-8 pb-20">
+    <div className="px-4 md:p-8 space-y-8 pb-20">
       
       {/* --- Capturable Area Start --- */}
       <div ref={summaryRef} className="bg-white p-2 md:p-8 rounded-[3rem] border border-slate-100 shadow-sm">
         
         {/* Header Section */}
-        <header className="bg-[#0f172a] p-8 md:p-12 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl">
+        <header className="bg-[#0f172a] p-8 md:p-12 rounded-[2.5rem] text-white relative overflow-hidden shadow-2xl mb-16">
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="text-center md:text-left space-y-2">
               <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
@@ -73,20 +72,36 @@ export default function UserProfileSummary({ userData, onEdit }: UserProfileSumm
                 </p>
               </div>
             </div>
-            <div className="relative">
-                <div className="h-28 w-28 rounded-[2rem] bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/40 rotate-3">
-                    <ShieldCheck className="w-14 h-14 text-white" />
-                </div>
-                <CheckCircle2 className="absolute -bottom-2 -right-2 w-8 h-8 text-white bg-emerald-600 rounded-full p-1 border-4 border-[#0f172a]" />
+
+            {/* User Photo / Avatar Section */}
+            <div className="relative group">
+              <div className="h-32 w-32 md:h-40 md:w-40 rounded-[2.5rem] border-4 border-white shadow-2xl overflow-hidden bg-slate-100 relative transition-transform duration-500 group-hover:scale-105">
+                {userData?.photoUrl ? (
+                  <Image 
+                    src={userData.photoUrl} 
+                    alt="Profile" 
+                    fill 
+                    className="object-cover"
+                    priority
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center text-slate-300">
+                    <User size={64} />
+                  </div>
+                )}
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-2xl border-4 border-[#0f172a] shadow-lg">
+                <ShieldCheck size={20} />
+              </div>
             </div>
           </div>
+          
           {/* Decorative background glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] -mr-40 -mt-40" />
         </header>
 
         {/* Data Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-          
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <DataSection 
             title="Personal & Identity" 
             icon={Fingerprint} 
@@ -133,8 +148,6 @@ export default function UserProfileSummary({ userData, onEdit }: UserProfileSumm
         </div>
       </div>
       {/* --- Capturable Area End --- */}
-
-      
 
       {/* Action Buttons (Excluded from Ref) */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-6 no-print">

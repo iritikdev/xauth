@@ -11,6 +11,7 @@ export async function getUserByUsername(username: string) {
             name: true,
             fatherName: true,
             motherName: true,
+            photoUrl: true,
 
             address: true,
             district: true,

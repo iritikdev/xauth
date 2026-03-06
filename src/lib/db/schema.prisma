@@ -25,6 +25,7 @@ model User {
   name       String?
   fatherName String?
   motherName String?
+  photoUrl   String?
 
   address  String?
   district String?
