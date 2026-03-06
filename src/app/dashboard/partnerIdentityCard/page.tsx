@@ -17,7 +17,7 @@ export default function OnboardingPreview() {
     <div>
       
       {/* Test the ID Card */}
-      <PartnerIdentityCard userData={dummyUserData} />
+      <PartnerIdentityCard />
     </div>
   );
 }
