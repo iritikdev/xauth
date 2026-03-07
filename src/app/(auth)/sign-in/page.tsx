@@ -1,6 +1,5 @@
 "use server";
 
-import { GithubSignIn } from "@/components/github-sign-in";
 import SignInForm from "./signin-form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -47,35 +46,19 @@ const Page = async () => {
             </div>
             <div className="space-y-1">
               <h1 className="text-3xl font-black text-slate-900 tracking-tight">Welcome Back</h1>
-              <p className="text-slate-500 font-medium">Please enter your details to sign in.</p>
+              <p className="text-slate-500 font-medium">Please enter your credentials to access your portal.</p>
             </div>
           </div>
 
-          <div className="space-y-6">
-            {/* Social Sign In */}
-            <div className="grid gap-4">
-              <GithubSignIn />
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
-                <span className="bg-white px-4 text-slate-400">
-                  Or use email
-                </span>
-              </div>
-            </div>
-
+          <div className="space-y-8">
             {/* Main Login Form */}
             <div className="relative">
               <SignInForm />
             </div>
 
-            <div className="pt-4 text-center border-t border-slate-100">
-              <p className="text-sm text-slate-500 mb-2">Don't have an account yet?</p>
-              <Button asChild variant="outline" className="w-full h-12 rounded-xl border-emerald-100 hover:bg-emerald-50 hover:text-emerald-700 font-bold transition-all">
+            <div className="pt-6 text-center border-t border-slate-100">
+              <p className="text-sm text-slate-500 mb-3">Don't have an account yet?</p>
+              <Button asChild variant="outline" className="w-full h-14 rounded-2xl border-emerald-100 hover:bg-emerald-50 hover:text-emerald-700 font-black uppercase tracking-widest text-[11px] transition-all">
                 <Link href="/sign-up">Create Swadeshi Account</Link>
               </Button>
             </div>
@@ -85,7 +68,7 @@ const Page = async () => {
         {/* Bottom Security Badge */}
         <div className="mt-8 flex items-center justify-center gap-2 text-slate-400">
           <ShieldCheck className="h-4 w-4 text-emerald-500" />
-          <span className="text-xs font-semibold uppercase tracking-wider">Secure Indian Gateway</span>
+          <span className="text-xs font-bold uppercase tracking-widest opacity-60">Verified Secure Gateway</span>
         </div>
       </div>
     </div>
