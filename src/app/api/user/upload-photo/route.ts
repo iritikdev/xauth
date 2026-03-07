@@ -33,7 +33,6 @@ export async function POST(req: Request) {
     });
 
     // TODO: Save result.secure_url to your Database here!
-    console.log("Cloudinary URL:", result.secure_url);
     await prisma.user.update({ where: { username }, data: { photoUrl: result.secure_url } })
 
     return NextResponse.json({ url: result.secure_url });

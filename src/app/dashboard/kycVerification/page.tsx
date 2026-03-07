@@ -1,5 +1,4 @@
-import KYCUpload from '@/components/KYCUpload';
-
+import KYCVerification from "@/components/kyc-verification";
 export default function Page() {
-    return <KYCUpload />;
+    return <KYCVerification username="AMZ251100001" />;
 }

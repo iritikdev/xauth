@@ -38,7 +38,6 @@ export default function UserProfileForm({
   const [fetchingAddress, setFetchingAddress] = useState(false);
   const [fetchingBank, setFetchingBank] = useState(false);
 
-  console.log("Fetched user data:", userData); // Debug log to check fetched data
   const {
     register,
     handleSubmit,
