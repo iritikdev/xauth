@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { 
   ShieldCheck, UploadCloud, CreditCard, FileText, Building2, 
   CheckCircle2, Clock, AlertCircle, ArrowRight, Loader2,
-  Eye, ExternalLink, RefreshCw
+  Eye, RefreshCw, Smartphone
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import confetti from "canvas-confetti"
 
 interface KYCData {
-  aadharUrl?: string;
+  aadharFrontUrl?: string;
+  aadharBackUrl?: string;
   panUrl?: string;
   passbookUrl?: string;
   status: "NOT_SUBMITTED" | "PENDING" | "VERIFIED" | "REJECTED";
@@ -26,12 +27,13 @@ export default function KYCVerification({ username }: { username: string }) {
   const queryClient = useQueryClient();
   const [hasCelebrated, setHasCelebrated] = useState(false);
   const [uploads, setUploads] = useState({
-    aadhaar: "",
+    aadharFront: "",
+    aadharBack: "",
     pan: "",
     passbook: ""
   });
 
-  // 1. FETCH PERSISTED DATA FROM PRISMA
+  // 1. FETCH PERSISTED DATA
   const { data: kycData, isLoading } = useQuery<KYCData>({
     queryKey: ["kyc", username],
     queryFn: async () => {
@@ -41,39 +43,32 @@ export default function KYCVerification({ username }: { username: string }) {
     }
   });
 
-  // 2. SYNC LOCAL STATE WITH DB DATA
+  // 2. SYNC STATE
   useEffect(() => {
     if (kycData) {
       setUploads({
-        aadhaar: kycData.aadharUrl || "",
+        aadharFront: kycData.aadharFrontUrl || "",
+        aadharBack: kycData.aadharBackUrl || "",
         pan: kycData.panUrl || "",
         passbook: kycData.passbookUrl || ""
       });
     }
   }, [kycData]);
 
-  // 3. CELEBRATION LOGIC (Emerald & Gold Theme)
   const completedCount = Object.values(uploads).filter(Boolean).length;
-  
+  const progress = Math.round((completedCount / 4) * 100);
+
+  // 3. CELEBRATION
   useEffect(() => {
-    if (completedCount === 3 && !hasCelebrated) {
-      const duration = 3 * 1000;
-      const animationEnd = Date.now() + duration;
-      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-      const interval: any = setInterval(function() {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) return clearInterval(interval);
-
-        const particleCount = 50 * (timeLeft / duration);
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#10b981', '#fbbf24'] });
-        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#10b981', '#fbbf24'] });
-      }, 250);
-
+    if (completedCount === 4 && !hasCelebrated) {
+      confetti({ 
+        particleCount: 150, 
+        spread: 70, 
+        origin: { y: 0.6 }, 
+        colors: ['#10b981', '#fbbf24'] 
+      });
       setHasCelebrated(true);
-      toast.success("All documents synced!", { description: "Ready for final authentication." });
+      toast.success("All 4 documents synced successfully!");
     }
   }, [completedCount, hasCelebrated]);
 
@@ -95,7 +90,7 @@ export default function KYCVerification({ username }: { username: string }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kyc", username] });
     },
-    onError: (error: any) => toast.error(error.message || "Upload failed")
+    onError: (error: any) => toast.error("Upload failed. Max size 300KB.")
   });
 
   const handleFileSelect = (file: File, type: string) => {
@@ -106,25 +101,23 @@ export default function KYCVerification({ username }: { username: string }) {
     uploadMutation.mutate({ file, type });
   };
 
-  const progress = Math.round((completedCount / 3) * 100);
-
   if (isLoading) return (
     <div className="h-96 flex flex-col items-center justify-center gap-4">
       <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
-      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Verifying Security Session...</p>
+      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Securing Session...</p>
     </div>
   );
 
   return (
-    <div className="p-6 space-y-8 ">
-      {/* --- Header Section --- */}
+    <div className="p-4 md:p-6 space-y-8 ">
+      {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-[#0f172a] p-8 md:p-12 rounded-[3rem] text-white relative overflow-hidden shadow-2xl">
         <div className="relative z-10 space-y-2">
           <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-            Identity Protection
+            Security Protocol
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight">KYC Verification</h1>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Digital on-boarding for Swadeshi Associates</p>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight">Identity Verification</h1>
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest italic">Complete all 4 steps to activate your payout gateway</p>
         </div>
 
         <div className="relative z-10 flex items-center gap-4 bg-white/5 backdrop-blur-xl p-5 rounded-3xl border border-white/10">
@@ -135,62 +128,64 @@ export default function KYCVerification({ username }: { username: string }) {
             {kycData?.status === "VERIFIED" ? <ShieldCheck className="w-7 h-7" /> : <Clock className="w-7 h-7" />}
           </div>
           <div>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Current Status</p>
-            <p className="text-sm font-black uppercase tracking-tight">{kycData?.status || "NOT_SUBMITTED"}</p>
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">KYC Status</p>
+            <p className="text-sm font-black uppercase">{kycData?.status || "NOT_SUBMITTED"}</p>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] -mr-40 -mt-40" />
       </header>
 
-      {/* --- Progress --- */}
+      {/* Progress */}
       <div className="space-y-3 px-6">
         <div className="flex justify-between items-end">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">KYC Completion</span>
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verification Progress</span>
           <span className="text-sm font-black text-emerald-600">{progress}%</span>
         </div>
-        <Progress value={progress} className="h-2.5 bg-slate-100 rounded-full" />
+        <Progress value={progress} className="h-2.5 bg-slate-100 rounded-full overflow-hidden" />
       </div>
 
-      {/* --- Cards Grid --- */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 4-Card Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <KYCUploadCard 
-          title="Aadhaar Card" 
-          desc="Front & Back (Max 300KB)" 
-          icon={CreditCard} 
-          fileUrl={uploads.aadhaar}
-          isPending={uploadMutation.isPending && uploadMutation.variables?.type === "aadhaar"}
-          onFileSelect={(file: File) => handleFileSelect(file, "aadhaar")}
-          onReplace={() => setUploads(p => ({ ...p, aadhaar: "" }))}
+          title="Aadhaar Front" desc="Photo & Name Side" icon={CreditCard} 
+          fileUrl={uploads.aadharFront}
+          isPending={uploadMutation.isPending && uploadMutation.variables?.type === "aadharFront"}
+          onFileSelect={(f: File) => handleFileSelect(f, "aadharFront")}
+          onReplace={() => setUploads(p => ({ ...p, aadharFront: "" }))}
         />
         <KYCUploadCard 
-          title="PAN Card" 
-          desc="Clear Front Photo" 
-          icon={FileText} 
+          title="Aadhaar Back" desc="Address Side" icon={Smartphone} 
+          fileUrl={uploads.aadharBack}
+          isPending={uploadMutation.isPending && uploadMutation.variables?.type === "aadharBack"}
+          onFileSelect={(f: File) => handleFileSelect(f, "aadharBack")}
+          onReplace={() => setUploads(p => ({ ...p, aadharBack: "" }))}
+        />
+        <KYCUploadCard 
+          title="PAN Card" desc="Identity Proof" icon={FileText} 
           fileUrl={uploads.pan}
           isPending={uploadMutation.isPending && uploadMutation.variables?.type === "pan"}
-          onFileSelect={(file: File) => handleFileSelect(file, "pan")}
+          onFileSelect={(f: File) => handleFileSelect(f, "pan")}
           onReplace={() => setUploads(p => ({ ...p, pan: "" }))}
         />
         <KYCUploadCard 
-          title="Bank Passbook" 
-          desc="For Secure Payouts" 
-          icon={Building2} 
+          title="Bank Passbook" desc="Payout Details" icon={Building2} 
           fileUrl={uploads.passbook}
           isPending={uploadMutation.isPending && uploadMutation.variables?.type === "passbook"}
-          onFileSelect={(file: File) => handleFileSelect(file, "passbook")}
+          onFileSelect={(f: File) => handleFileSelect(f, "passbook")}
           onReplace={() => setUploads(p => ({ ...p, passbook: "" }))}
         />
       </div>
 
-      <div className="flex justify-end pt-6">
+      <div className="flex justify-end pt-6 xs:justify-center">
         <Button 
-          disabled={completedCount < 3}
+          disabled={completedCount < 4}
           className={cn(
             "h-16 px-12 rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl transition-all gap-3 active:scale-95",
-            completedCount === 3 ? "bg-[#0f172a] hover:bg-emerald-600" : "bg-slate-200 text-slate-400"
+            completedCount === 4 ? "bg-[#0f172a] hover:bg-emerald-600 text-white" : "bg-slate-200 text-slate-400"
           )}
         >
-          Submit Documents for Review <ArrowRight className="w-5 h-5" />
+          {completedCount === 4 ? "Submit Document for Review" : "Complete All Steps to Submit"}
+          <ArrowRight className="w-5 h-5" />
         </Button>
       </div>
     </div>
@@ -208,9 +203,7 @@ function KYCUploadCard({ title, desc, icon: Icon, fileUrl, isPending, onFileSele
     )}>
       <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
         <input 
-          type="file" 
-          className="hidden" 
-          ref={inputRef} 
+          type="file" className="hidden" ref={inputRef} 
           accept="image/jpeg,image/png,application/pdf"
           onChange={(e) => e.target.files?.[0] && onFileSelect(e.target.files[0])}
         />
@@ -223,17 +216,15 @@ function KYCUploadCard({ title, desc, icon: Icon, fileUrl, isPending, onFileSele
         </div>
         
         <div className="space-y-1">
-          <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">{title}</h3>
+          <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">{title}</h3>
           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{desc}</p>
         </div>
 
         {isUploaded ? (
           <div className="flex flex-col gap-3 w-full animate-in fade-in slide-in-from-bottom-4">
             <a 
-              href={fileUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 h-12 rounded-xl bg-white border border-emerald-100 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+              href={fileUrl} target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 h-12 rounded-xl bg-white border border-emerald-100 text-[10px] font-black uppercase text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
             >
               <Eye size={16} /> View Document
             </a>
@@ -241,15 +232,14 @@ function KYCUploadCard({ title, desc, icon: Icon, fileUrl, isPending, onFileSele
               onClick={onReplace}
               className="flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-red-500 transition-colors py-2"
             >
-              <RefreshCw size={12} /> Replace File
+              <RefreshCw size={12} /> Replace
             </button>
           </div>
         ) : (
           <Button 
-            variant="ghost" 
-            disabled={isPending}
+            variant="ghost" disabled={isPending}
             onClick={() => inputRef.current?.click()}
-            className="text-emerald-600 font-black text-[10px] uppercase tracking-widest gap-2 hover:bg-emerald-50 h-12 px-8 rounded-xl"
+            className="text-emerald-600 font-black text-[10px] uppercase tracking-widest gap-2 hover:bg-emerald-50 h-12 px-6 rounded-xl"
           >
             {isPending ? "Syncing..." : <><UploadCloud className="w-5 h-5" /> Select File</>}
           </Button>

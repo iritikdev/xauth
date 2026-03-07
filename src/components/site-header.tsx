@@ -23,7 +23,6 @@ import { SignOut } from "@/components/sign-out"
 export function SiteHeader() {
   const { toggleSidebar, state } = useSidebar()
   const { data: session } = useSession()
-  console.log("Session in SiteHeader:", session);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md">

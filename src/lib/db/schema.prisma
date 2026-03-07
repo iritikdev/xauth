@@ -80,7 +80,8 @@ model KycDocument {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Document URLs (Cloudinary)
-  aadharUrl   String?
+  aadharFrontUrl     String?   // Front
+  aadharBackUrl String?   // Back
   panUrl      String?
   passbookUrl String?
 
