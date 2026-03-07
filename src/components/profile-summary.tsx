@@ -227,7 +227,7 @@ export default function UserProfileSummary({
           ) : (
             <Printer className="w-6 h-6" />
           )}
-          {isPrinting ? "Securing PDF..." : "Download KYC Certificate"}
+          {isPrinting ? "Securing PDF..." : "Download Profile PDF"}
         </Button>
       </div>
     </div>

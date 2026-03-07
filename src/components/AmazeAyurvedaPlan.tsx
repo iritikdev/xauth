@@ -34,7 +34,7 @@ const AmazeAyurvedaPlan = () => {
   const calculateCommission = (rate: number) => (purchaseAmount * (rate / 100)).toFixed(2);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8 min-h-screen">
+    <div className="p-6 space-y-8 min-h-screen">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-extrabold tracking-tight text-emerald-900">Amaze Ayurveda</h1>
         <p className="text-muted-foreground text-lg">Interactive Business Growth Plan</p>

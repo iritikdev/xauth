@@ -190,7 +190,7 @@ const WelcomeLetter = () => {
                         textTransform: "uppercase",
                       }}
                     >
-                      <p style={{ margin: 0 }}>CIN: U85100DL2026PTC000000</p>
+                      <p style={{ margin: 0 }}>CIN: U82990BR2023PTC066853</p>
                       <p style={{ margin: "2px 0" }}>ISO 9001:2015 Certified</p>
                       <p
                         style={{
@@ -351,8 +351,9 @@ const WelcomeLetter = () => {
                       color: "#065f46",
                       margin: "5px 0 0 0",
                     }}
+                    className="uppercase"
                   >
-                    15-LEVEL HYBRID
+                    Generation Plan
                   </p>
                 </div>
               </div>

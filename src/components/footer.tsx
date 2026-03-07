@@ -157,7 +157,7 @@ export const Footer = () => {
               <MapPin className="h-4 w-4 text-orange-500 fill-orange-500" />
               <p>Headquartered in Bihar, India</p>
             </div>
-            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U85100DL2026PTC000000</p>
+            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U82990BR2023PTC066853</p>
             <p className="flex items-center gap-1.5 font-medium text-slate-700">
               Made in Bharat{" "}
               <span className="text-red-500 animate-pulse">🇮🇳</span> for Global

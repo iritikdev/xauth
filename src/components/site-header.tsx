@@ -1,6 +1,6 @@
 'use client'
 
-import { PanelLeft, Bell, Settings, ShieldCheck, LayoutDashboard, Wallet } from "lucide-react"
+import { PanelLeft, Bell, Settings, ShieldCheck, LayoutDashboard, Wallet, Key } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useSidebar } from "@/components/ui/sidebar"
@@ -23,6 +23,7 @@ import { SignOut } from "@/components/sign-out"
 export function SiteHeader() {
   const { toggleSidebar, state } = useSidebar()
   const { data: session } = useSession()
+  console.log("Session in SiteHeader:", session);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
@@ -83,7 +84,7 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-11 flex items-center gap-3 px-2 rounded-2xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
                 <Avatar className="h-8 w-8 rounded-xl border-2 border-emerald-100 shadow-sm">
-                  <AvatarImage src="/aalogoc.png" alt={session?.user?.name || "User"} />
+                  <AvatarImage src={session?.user?.photoUrl || "/default-avatar.png"} alt={session?.user?.name || "User"} />
                   <AvatarFallback className="bg-emerald-50 text-emerald-700 font-bold text-[10px]">
                     {session?.user?.name?.substring(0, 2).toUpperCase() || "AU"}
                   </AvatarFallback>
@@ -106,19 +107,25 @@ export function SiteHeader() {
                 <Link href="/dashboard">
                   <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
                     <LayoutDashboard className="mr-3 h-4 w-4 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-700">Business Dashboard</span>
+                    <span className="text-xs font-bold text-slate-700">Dashboard</span>
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/dashboard/kyc">
+                <Link href="/dashboard/kycVerification">
                   <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
                     <ShieldCheck className="mr-3 h-4 w-4 text-emerald-500" />
-                    <span className="text-xs font-bold text-slate-700">Identity & KYC</span>
+                    <span className="text-xs font-bold text-slate-700">KYC Verification</span>
                   </DropdownMenuItem>
                 </Link>
                 <Link href="/dashboard/wallet">
-                  <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5 lg:hidden">
+                  <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
                     <Wallet className="mr-3 h-4 w-4 text-orange-500" />
-                    <span className="text-xs font-bold text-slate-700">My Wallet</span>
+                    <span className="text-xs font-bold text-slate-700">My Wallets</span>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/dashboard/updatePassword">
+                  <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
+                    <Key className="mr-3 h-4 w-4 text-orange-500" />
+                    <span className="text-xs font-bold text-slate-700">Update Password</span>
                   </DropdownMenuItem>
                 </Link>
               </DropdownMenuGroup>

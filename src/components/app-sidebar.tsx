@@ -53,6 +53,7 @@ const sidebarData = {
         { title: "KYC Verification", url: "/dashboard/kycVerification", icon: BadgeCheck },
         { title: "Welcome Letter", url: "/dashboard/welcome-letter", icon: FileText },
         { title: "Digital ID Card", url: "/dashboard/partnerIdentityCard", icon: CreditCard },
+        { title: "Change Password", url: "/dashboard/updatePassword", icon: Lock },
       ],
     },
     {
@@ -61,8 +62,8 @@ const sidebarData = {
       icon: Network,
       items: [
         { title: "Genealogy Tree", url: "/dashboard/generology" },
-        { title: "Direct Referrals", url: "/dashboard/referrals" },
-        { title: "Downline Team", url: "/dashboard/team" },
+        // { title: "Direct Referrals", url: "/dashboard/referrals" },
+        // { title: "Downline Team", url: "/dashboard/team" },
       ],
     },
     {
@@ -71,6 +72,7 @@ const sidebarData = {
       icon: PiggyBank,
       items: [
         { title: "E-Wallet", url: "/dashboard/wallet", icon: ArrowRightLeft },
+        { title: "Business Plan Calculator", url: "/dashboard/businessPlanCalculator", icon: FileText },
         // { title: "Income Reports", url: "/dashboard/income", icon: BarChart3 },
         // { title: "Payout Summary", url: "/dashboard/payouts" },
       ],
@@ -81,7 +83,6 @@ const sidebarData = {
     { title: "Send Feedback", url: "#", icon: Send },
   ],
   marketing: [
-    { name: "Business Plan", url: "/dashboard/plan", icon: FileText },
     { name: "Marketing Kit", url: "/dashboard/kit", icon: CoinsIcon },
   ],
 };

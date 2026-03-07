@@ -386,7 +386,7 @@ export default function UserProfileForm({
           >
             {updateMutation.isPending
               ? "Securing Data..."
-              : "Update Swadeshi Profile"}
+              : "Update Profile"}
           </Button>
         </div>
       </form>

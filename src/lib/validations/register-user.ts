@@ -92,3 +92,13 @@ export const kycSchema = z.object({
   nomineeMobile: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
   nomineeAadhaar: z.string().length(12, "Aadhaar must be 12 digits"),
 });
+
+
+export const passwordUpdateSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z.string().min(6, "New password must be at least 6 characters"),
+  confirmPassword: z.string().min(1, "Please confirm your password"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
