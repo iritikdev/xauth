@@ -1,7 +1,7 @@
 "use server"
 import prisma from "@/lib/prisma"
 
-export async function getGenealogyTree(rootUsername: string, maxDepth: number = 15) {
+export async function getGenealogyTree(rootUsername: string, maxDepth: number = 16) {
   async function buildTree(username: string, currentLevel: number): Promise<any> {
     // 1. Stop if we exceed the 15th level
     if (currentLevel > maxDepth) return null;

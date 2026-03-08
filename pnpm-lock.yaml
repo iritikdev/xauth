@@ -77,6 +77,9 @@ importers:
       jspdf:
         specifier: ^3.0.3
         version: 3.0.3
+      jspdf-autotable:
+        specifier: ^5.0.7
+        version: 5.0.7(jspdf@3.0.3)
       lucide-react:
         specifier: ^0.546.0
         version: 0.546.0(react@19.2.4)
@@ -2408,6 +2411,11 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
+
+  jspdf-autotable@5.0.7:
+    resolution: {integrity: sha512-2wr7H6liNDBYNwt25hMQwXkEWFOEopgKIvR1Eukuw6Zmprm/ZcnmLTQEjW7Xx3FCbD3v7pflLcnMAv/h1jFDQw==}
+    peerDependencies:
+      jspdf: ^2 || ^3 || ^4
 
   jspdf@3.0.3:
     resolution: {integrity: sha512-eURjAyz5iX1H8BOYAfzvdPfIKK53V7mCpBTe7Kb16PaM8JSXEcUQNBQaiWMI8wY5RvNOPj4GccMjTlfwRBd+oQ==}
@@ -5649,6 +5657,10 @@ snapshots:
       minimist: 1.2.8
 
   json5@2.2.3: {}
+
+  jspdf-autotable@5.0.7(jspdf@3.0.3):
+    dependencies:
+      jspdf: 3.0.3
 
   jspdf@3.0.3:
     dependencies:
