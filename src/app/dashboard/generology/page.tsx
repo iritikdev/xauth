@@ -137,9 +137,9 @@ export default function GenealogyPage() {
     );
 
   return (
-    <div className="w-full mx-auto space-y-8 p-4 md:p-0">
-      <Card className="border-none shadow-2xl bg-white overflow-hidden rounded-[3rem]">
-        <CardHeader className="p-8 md:p-10 bg-[#0f172a] text-white relative space-y-8">
+    <div className="w-full mx-auto space-y-8 p-0 md:p-0">
+      <Card className="border-none shadow-2xl bg-white overflow-hidden ">
+        <CardHeader className="p-2 md:p-10 bg-[#0f172a] text-white relative space-y-8">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6 relative z-10">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 bg-emerald-500 rounded-[2rem] flex items-center justify-center shadow-xl shadow-emerald-500/20">
@@ -165,7 +165,7 @@ export default function GenealogyPage() {
                 <Button onClick={handleCollapseAll} variant="outline" className="h-14 px-4 rounded-2xl bg-white/5 border-white/10 text-white hover:bg-white hover:text-slate-900">
                   <Minimize2 className="w-4 h-4" />
                 </Button>
-                <Button onClick={exportTeamPDF} className="h-14 px-8 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase text-[10px]">
+                <Button onClick={exportTeamPDF} className="flex-1 h-14 px-8 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase text-[10px]">
                   <Download className="w-4 h-4" /> Export Report
                 </Button>
               </div>
