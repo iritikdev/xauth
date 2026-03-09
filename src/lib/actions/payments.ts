@@ -14,7 +14,7 @@ export async function distributeCommissions(orderId: string) {
   let level = 1;
 
   // 1. Process Self Cashback (Level 0)
-  const selfEarning = calculateCommission(order.amount, 0, order.user.rank);
+  const selfEarning = calculateCommission(order.totalAmount, 0, order.user.username);
   await updateWallet(order.userId, selfEarning, `Self Cashback for Order #${orderId}`);
 
   // 2. Process Downline Levels 1 to 15
@@ -22,7 +22,7 @@ export async function distributeCommissions(orderId: string) {
     const sponsor = await prisma.user.findUnique({ where: { id: currentSponsorId } });
     
     if (sponsor) {
-      const commission = calculateCommission(order.amount, level, sponsor.rank);
+      const commission = calculateCommission(order.totalAmount, level, sponsor.username);
       
       if (commission > 0) {
         await updateWallet(sponsor.id, commission, `L${level} Commission from ${order.user.name}`);
