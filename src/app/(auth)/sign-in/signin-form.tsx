@@ -11,6 +11,7 @@ import { Eye, EyeOff, Loader2, User, Lock } from "lucide-react"; // Added Icons
 import { Button } from "@/components/ui/button";
 import { loginSchema } from "@/lib/validations/login";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -81,7 +82,7 @@ const SignInForm = () => {
             Security Password
           </label>
           <button type="button" className="text-[9px] font-black uppercase tracking-widest text-emerald-600 hover:underline">
-             Forgot?
+             <Link href="/forgot-password">Forgot?</Link>
           </button>
         </div>
         <div className="relative group">

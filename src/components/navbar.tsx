@@ -119,7 +119,7 @@ export const Navbar = () => {
   {/* The Fix: Change w-full to w-[70%] and remove max-w-md */}
   <SheetContent 
     side="right" 
-    className="w-[70%] sm:w-[400px] border-none p-0 shadow-2xl transition-transform duration-500 ease-in-out"
+    className="w-[80%] sm:w-[400px] border-none p-0 shadow-2xl transition-transform duration-500 ease-in-out"
   >
     <VisuallyHidden.Root>
       <SheetTitle>Mobile Navigation</SheetTitle>
