@@ -70,7 +70,7 @@ export const Navbar = () => {
         </Link>
 
         {/* Search Bar - Desktop (Sleeker Design) */}
-        <div className="hidden flex-1 px-12 lg:flex max-w-xl">
+        {/* <div className="hidden flex-1 px-12 lg:flex max-w-xl">
           <div className="relative w-full group">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
             <Input
@@ -79,7 +79,7 @@ export const Navbar = () => {
               className="w-full h-11 pl-12 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-emerald-500/50 transition-all placeholder:text-slate-400 placeholder:text-xs"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Action Section - Desktop */}
         <div className="hidden items-center gap-8 lg:flex">
