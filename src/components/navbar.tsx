@@ -105,9 +105,9 @@ export const Navbar = () => {
 
         {/* Mobile View Navigation */}
         <div className="flex items-center gap-2 lg:hidden">
-          <Button variant="ghost" size="icon" className="text-slate-500 rounded-full hover:bg-slate-100">
+          {/* <Button variant="ghost" size="icon" className="text-slate-500 rounded-full hover:bg-slate-100">
             <Search className="h-6 w-6" />
-          </Button>
+          </Button> */}
 
          <Sheet>
   <SheetTrigger asChild>
