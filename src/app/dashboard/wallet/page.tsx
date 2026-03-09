@@ -1,163 +1,100 @@
 "use client"
 
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { 
-  Wallet, 
-  ArrowUpRight, 
-  ArrowDownLeft, 
-  ArrowRightLeft, 
-  History, 
-  ShieldCheck, 
-  TrendingUp,
-  Download,
-  Filter,
-  Plus
-} from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { ComingSoon } from "@/components/comming-soon"
+import React from "react";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Wallet, ArrowUpRight, ArrowDownLeft, History, Plus, Send } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-const transactions = [
-  { id: "#TXN-9921", type: "credit", category: "Level Bonus", amount: 1250.00, date: "05 Mar, 2026", status: "Completed" },
-  { id: "#TXN-9854", type: "credit", category: "Direct Referral", amount: 500.00, date: "03 Mar, 2026", status: "Completed" },
-  { id: "#TXN-9812", type: "debit", category: "Bank Payout", amount: 5000.00, date: "01 Mar, 2026", status: "Processing" },
-  { id: "#TXN-9740", type: "credit", category: "Team Performance", amount: 2100.50, date: "28 Feb, 2026", status: "Completed" },
-]
-
-export default function EWalletPage() {
-  const [activeTab, setActiveTab] = useState("all")
-
+export default function WalletPage() {
   return (
-    <ComingSoon />
-    // <div className="max-w-6xl mx-auto p-6 space-y-8">
-    //   {/* Header */}
-    //   <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-    //     <div>
-    //       <h1 className="text-4xl font-black text-slate-900 tracking-tight">Financial Wallet</h1>
-    //       <p className="text-slate-500 font-medium mt-1 uppercase text-[10px] tracking-[0.2em]">Live Payout Gateway • Swadeshi Earnings</p>
-    //     </div>
-    //     <Button variant="outline" className="h-12 px-6 rounded-2xl border-slate-200 gap-2 font-bold hover:bg-slate-50 shadow-sm">
-    //       <Download className="w-4 h-4" /> Download Statement
-    //     </Button>
-    //   </header>
-
-    //   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="p-6 space-y-8">
+      {/* Balance Card */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }}
+        className="relative h-64 rounded-[3rem] bg-[#0f172a] overflow-hidden p-10 text-white shadow-2xl shadow-emerald-500/10"
+      >
+        <div className="relative z-10 flex flex-col h-full justify-between">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400 mb-1">Available Balance</p>
+              <h2 className="text-5xl font-black  tracking-tighter">₹45,280.00</h2>
+            </div>
+            <Wallet className="w-10 h-10 text-white/20" />
+          </div>
+          
+          <div className="flex gap-4">
+            <Button className="rounded-2xl bg-emerald-500 hover:bg-emerald-600 h-14 px-8 font-black uppercase tracking-widest text-[10px] gap-2">
+              <Plus className="w-4 h-4" /> Add Money
+            </Button>
+            <Button variant="outline" className="rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 h-14 px-8 font-black uppercase tracking-widest text-[10px] gap-2">
+              <Send className="w-4 h-4" /> Withdraw
+            </Button>
+          </div>
+        </div>
         
-    //     {/* Main Balance Card (Glassmorphism) */}
-    //     <Card className="lg:col-span-2 rounded-[3rem] border-none bg-slate-900 text-white p-10 relative overflow-hidden shadow-2xl">
-    //       <div className="relative z-10 flex flex-col h-full justify-between">
-    //         <div className="flex justify-between items-start">
-    //           <div className="space-y-1">
-    //             <p className="text-emerald-400 font-black text-[10px] uppercase tracking-[0.3em]">Available Balance</p>
-    //             <h2 className="text-5xl font-black tracking-tighter">₹24,850.50</h2>
-    //           </div>
-    //           <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10">
-    //             <Wallet className="w-7 h-7 text-emerald-400" />
-    //           </div>
-    //         </div>
+        {/* Background Decorative Rings */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] -mr-40 -mt-40" />
+      </motion.div>
 
-    //         <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
-    //           <div>
-    //             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Total Earned</p>
-    //             <p className="text-xl font-bold">₹1,42,000</p>
-    //           </div>
-    //           <div>
-    //             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Last Payout</p>
-    //             <p className="text-xl font-bold">₹5,000</p>
-    //           </div>
-    //         </div>
-    //       </div>
-    //       {/* Decorative Circle */}
-    //       <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/20 rounded-full blur-[80px] -mr-40 -mt-40" />
-    //     </Card>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <StatItem icon={<ArrowUpRight className="text-emerald-500" />} label="This Month Earnings" value="₹12,400" />
+        <StatItem icon={<ArrowDownLeft className="text-red-500" />} label="Total Withdrawals" value="₹5,000" />
+      </div>
 
-    //     {/* Quick Actions Card */}
-    //     <Card className="rounded-[3rem] border-none shadow-xl bg-white p-8">
-    //       <h3 className="text-lg font-black text-slate-900 mb-6">Quick Actions</h3>
-    //       <div className="grid grid-cols-1 gap-4">
-    //         <Button className="h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg shadow-lg shadow-emerald-200 gap-3 group">
-    //           <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-    //           Request Payout
-    //         </Button>
-    //         <Button variant="outline" className="h-16 rounded-2xl border-slate-200 font-bold text-slate-600 hover:bg-slate-50 gap-3">
-    //           <ArrowRightLeft className="w-5 h-5" />
-    //           Transfer Funds
-    //         </Button>
-    //         <div className="mt-4 p-4 rounded-2xl bg-orange-50 border border-orange-100 flex items-center gap-4">
-    //           <ShieldCheck className="w-6 h-6 text-orange-600" />
-    //           <p className="text-[10px] font-bold text-orange-800 uppercase leading-tight">KYC must be verified to process bank withdrawals.</p>
-    //         </div>
-    //       </div>
-    //     </Card>
-    //   </div>
+      {/* Transaction History */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 px-2">
+          <History className="w-4 h-4 text-slate-400" />
+          <h3 className="text-sm font-black uppercase tracking-widest text-slate-500">Recent Activity</h3>
+        </div>
+        
+        <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden bg-white">
+          <CardContent className="p-0">
+            <TransactionRow title="Level 3 Commission" date="Mar 08, 2026" amount="+ ₹450" type="CREDIT" />
+            <TransactionRow title="Bank Withdrawal" date="Mar 05, 2026" amount="- ₹2,000" type="DEBIT" />
+            <TransactionRow title="Level 1 Referral Bonus" date="Mar 01, 2026" amount="+ ₹1,200" type="CREDIT" />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
-    //   {/* Transaction History Section */}
-    //   <section className="space-y-6">
-    //     <div className="flex items-center justify-between px-4">
-    //       <div className="flex items-center gap-3">
-    //         <History className="w-5 h-5 text-slate-400" />
-    //         <h3 className="text-xl font-black text-slate-900">Recent Transactions</h3>
-    //       </div>
-    //       <div className="flex gap-2">
-    //         {["all", "credit", "debit"].map((tab) => (
-    //           <Button 
-    //             key={tab}
-    //             variant={activeTab === tab ? "default" : "ghost"}
-    //             onClick={() => setActiveTab(tab)}
-    //             className={cn(
-    //               "h-8 rounded-full text-[10px] font-black uppercase tracking-widest",
-    //               activeTab === tab ? "bg-slate-900 text-white" : "text-slate-500"
-    //             )}
-    //           >
-    //             {tab}
-    //           </Button>
-    //         ))}
-    //       </div>
-    //     </div>
+function StatItem({ icon, label, value }: any) {
+  return (
+    <div className="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center gap-4 shadow-sm">
+      <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center">{icon}</div>
+      <div>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
+        <p className="text-xl font-black text-slate-900">{value}</p>
+      </div>
+    </div>
+  );
+}
 
-    //     <div className="space-y-3">
-    //       {transactions.map((txn, i) => (
-    //         <motion.div 
-    //           initial={{ opacity: 0, y: 10 }}
-    //           animate={{ opacity: 1, y: 0 }}
-    //           transition={{ delay: i * 0.1 }}
-    //           key={txn.id} 
-    //           className="group flex items-center justify-between p-5 bg-white rounded-3xl border border-slate-100 hover:shadow-lg hover:border-emerald-100 transition-all cursor-pointer"
-    //         >
-    //           <div className="flex items-center gap-4">
-    //             <div className={cn(
-    //               "h-12 w-12 rounded-2xl flex items-center justify-center shadow-inner",
-    //               txn.type === "credit" ? "bg-emerald-50 text-emerald-600" : "bg-orange-50 text-orange-600"
-    //             )}>
-    //               {txn.type === "credit" ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
-    //             </div>
-    //             <div>
-    //               <h4 className="font-black text-slate-900 text-sm tracking-tight">{txn.category}</h4>
-    //               <p className="text-[10px] text-slate-400 font-bold uppercase mt-0.5">{txn.id} • {txn.date}</p>
-    //             </div>
-    //           </div>
-              
-    //           <div className="text-right">
-    //             <p className={cn(
-    //               "text-lg font-black",
-    //               txn.type === "credit" ? "text-emerald-600" : "text-slate-900"
-    //             )}>
-    //               {txn.type === "credit" ? "+" : "-"} ₹{txn.amount.toLocaleString()}
-    //             </p>
-    //             <Badge variant="outline" className={cn(
-    //               "mt-1 rounded-lg text-[9px] font-black uppercase tracking-tighter",
-    //               txn.status === "Processing" ? "border-orange-200 text-orange-600 bg-orange-50" : "border-slate-100 text-slate-400"
-    //             )}>
-    //               {txn.status}
-    //             </Badge>
-    //           </div>
-    //         </motion.div>
-    //       ))}
-    //     </div>
-    //   </section>
-    // </div>
-  )
+function TransactionRow({ title, date, amount, type }: any) {
+  return (
+    <div className="flex items-center justify-between p-6 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+      <div className="flex items-center gap-4">
+        <div className={cn(
+          "h-10 w-10 rounded-xl flex items-center justify-center",
+          type === "CREDIT" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
+        )}>
+          {type === "CREDIT" ? <ArrowUpRight size={18} /> : <ArrowDownLeft size={18} />}
+        </div>
+        <div>
+          <p className="text-sm font-bold text-slate-900">{title}</p>
+          <p className="text-[10px] font-medium text-slate-400 uppercase">{date}</p>
+        </div>
+      </div>
+      <p className={cn("font-black tracking-tight", type === "CREDIT" ? "text-emerald-600" : "text-slate-900")}>
+        {amount}
+      </p>
+    </div>
+  );
 }

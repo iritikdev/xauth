@@ -28,6 +28,7 @@ model User {
   photoUrl   String?
 
   kycDocument KycDocument?
+  Wallet      Wallet?
 
   address  String?
   district String?
@@ -37,7 +38,7 @@ model User {
   accountNo String
   branch    String?
   ifsc      String?
-  upiId           String?
+  upiId     String?
 
   // Nominee Additions
   nomineeName     String?
@@ -62,33 +63,31 @@ model User {
   // Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  orders    Order[]
 }
-
-
 
 model Counter {
   id    String @id @default("userId") @map("_id")
   value Int
 }
 
-
 model KycDocument {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @unique @db.ObjectId
-  
+
   // This side is correct, but it needed the 'kycDocument' field above in User
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Document URLs (Cloudinary)
-  aadharFrontUrl     String?   // Front
-  aadharBackUrl String?   // Back
-  panUrl      String?
-  passbookUrl String?
+  aadharFrontUrl String? // Front
+  aadharBackUrl  String? // Back
+  panUrl         String?
+  passbookUrl    String?
 
   // Verification Logic
-  status      KycStatus @default(NOT_SUBMITTED)
-  remarks     String?   
-  verifiedAt  DateTime?
+  status     KycStatus @default(NOT_SUBMITTED)
+  remarks    String?
+  verifiedAt DateTime?
 }
 
 enum KycStatus {
@@ -98,7 +97,6 @@ enum KycStatus {
   REJECTED
 }
 
-
 model PasswordResetToken {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String
@@ -107,4 +105,76 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   @@unique([email, token])
+}
+
+model Wallet {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  balance   Float    @default(0.0)
+  user      User     @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  amount      Float
+  type        TransactionType // e.g., CREDIT, DEBIT
+  status      TransactionStatus // e.g., PENDING, COMPLETED, FAILED
+  description String
+  createdAt   DateTime          @default(now())
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Product {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  price       Float // MRP
+  discount    Float       @default(0) // 5% to 20% for associates
+  bvAmount    Float // Business Volume for MLM calculation
+  image       String
+  stock       Int         @default(0)
+  categoryId  String      @db.ObjectId
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+}
+
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String    @unique
+  products Product[]
+}
+
+model Order {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String      @db.ObjectId
+  user        User        @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+  totalAmount Float
+  totalBV     Float
+  status      String      @default("PENDING") // PENDING, PAID, SHIPPED, DELIVERED
+  address     String
+  createdAt   DateTime    @default(now())
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @db.ObjectId
+  productId String  @db.ObjectId
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 }

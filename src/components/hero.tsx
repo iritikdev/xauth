@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Flag, ShoppingBag, ArrowRight, ShieldCheck } from "lucide-react";
+import Link from 'next/link';
 
 const HeroPosterIndian = () => {
   return (
@@ -49,10 +50,12 @@ const HeroPosterIndian = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5">
+              <Link href="/shop" className="w-full sm:w-auto">
               <Button size="lg" className="bg-slate-900 hover:bg-emerald-700 h-16 px-10 rounded-2xl text-lg font-bold shadow-2xl transition-all hover:scale-105">
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Shop Swadeshi
               </Button>
+              </Link>
               <Button size="lg" variant="outline" className="h-16 px-10 rounded-2xl text-lg font-bold border-2 bg-white hover:bg-slate-50 transition-all">
                 Our Mission <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

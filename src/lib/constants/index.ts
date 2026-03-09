@@ -1,0 +1,67 @@
+export const products = [
+  {
+    id: "1",
+    name: "Amaze Joint Pain Care Juice",
+    price: 999,
+    mrp: 1299,
+    bvAmount: 350,
+    rating: 4.6,
+    reviews: 124,
+    category: "Health Care",
+    image: "/products/joint-pain-care.png",
+    description:
+      "A herbal formulation enriched with Punarnava and other powerful Ayurvedic herbs that helps support joint flexibility, reduce stiffness, and promote overall bone and joint health.",
+  },
+  {
+    id: "2",
+    name: "Amaze B.P. Care Juice",
+    price: 999,
+    mrp: 1299,
+    bvAmount: 350,
+    rating: 4.4,
+    reviews: 98,
+    category: "Health Care",
+    image: "/products/bp-care.png",
+    description:
+      "A natural blend of selected herbs designed to help maintain healthy blood pressure levels, support heart health, and improve overall cardiovascular wellness.",
+  },
+  {
+    id: "3",
+    name: "Amaze Thyro Balance Juice",
+    price: 999,
+    mrp: 1299,
+    bvAmount: 350,
+    rating: 4.5,
+    reviews: 76,
+    category: "Health Care",
+    image: "/products/thyro-balance.png",
+    description:
+      "A nutrient-rich Ayurvedic juice formulated to support thyroid balance, improve metabolism, and help detoxify the body while providing essential vitamins and minerals.",
+  },
+  {
+    id: "4",
+    name: "Amaze Diabic Care Juice",
+    price: 999,
+    mrp: 1299,
+    bvAmount: 350,
+    rating: 4.7,
+    reviews: 143,
+    category: "Health Care",
+    image: "/products/diabic-care.png",
+    description:
+      "A powerful herbal combination including Karela, Jamun, and Methi seeds that helps support healthy blood sugar levels and improves overall metabolic health.",
+  },
+  {
+    id: "5",
+    name: "Amaze Liver Re-Live Juice",
+    price: 999,
+    mrp: 1299,
+    bvAmount: 350,
+    rating: 4.5,
+    reviews: 89,
+    category: "Health Care",
+    image: "/products/liver-re-live.png",
+    description:
+      "A natural herbal tonic formulated with multiple Ayurvedic herbs to support liver detoxification, improve digestion, and promote better liver function.",
+  },
+];

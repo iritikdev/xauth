@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import QueryProvider from "@/app/providers/query-provider";
 import AppLoader from "@/components/Loader";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -39,7 +41,9 @@ const Layout = ({ children }: LayoutProps) => {
         <SessionProvider>
           <AppLoader>
             <Toaster position="top-right" />
+            <Navbar />
             {children}
+            <Footer/>
           </AppLoader>
         </SessionProvider>
         </QueryProvider>
