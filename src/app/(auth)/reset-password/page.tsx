@@ -23,11 +23,11 @@ export default function ResetPassword() {
   e.preventDefault();
   
   if (password !== confirmPassword) {
-    return toast.error("Passwords match nahi ho rahe!");
+    return toast.error("Password did not match. Please confirm your password correctly.");
   }
 
-  if (password.length < 8) {
-    return toast.error("Password kam se kam 8 characters ka hona chahiye.");
+  if (password.length < 6) {
+    return toast.error("Password must be at least 6 characters long.");
   }
 
   setIsLoading(true);
@@ -36,7 +36,7 @@ export default function ResetPassword() {
     const result = await updatePassword(token as string, password);
 
     if (result.success) {
-      toast.success("Aapka password secure ho gaya hai!");
+      toast.success("Your password has been updated successfully!");
       router.push("/sign-in");
     } else {
       toast.error(result.error);
