@@ -36,7 +36,7 @@ export async function sendPasswordResetEmail(email: string) {
     const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
 
     await resend.emails.send({
-      from: "Amaze Ayurveda Security <security@amazeayurveda.in>",
+      from: "Amaze Ayurveda Pvt. Ltd. <security@amazeayurveda.in>",
       to: email,
       subject: "Action Required: Reset Your Password",
       html: `
