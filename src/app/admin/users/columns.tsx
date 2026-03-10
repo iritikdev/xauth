@@ -11,6 +11,7 @@ import {
   Copy,
   Phone,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -201,8 +202,11 @@ export const columns: ColumnDef<UserRegistry>[] = [
                 <Copy size={14} /> Copy Username
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-slate-50" />
-              <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer">
-                View Full Profile
+              <DropdownMenuItem
+                className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer"
+                asChild
+              >
+                <Link href={`/admin/users/${user.username}`}>View Full Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer">
                 Network Genealogy

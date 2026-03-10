@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { DataTable } from "../../../components/data-table";
-import { columns } from "./column";
+import { columns } from "./columns";
 export default async function AdminUsersPage({
   searchParams,
 }: {
