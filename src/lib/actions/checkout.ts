@@ -7,7 +7,7 @@ import { distributeCommissions } from "./payments";
 export async function createOrder(userId: string, cartItems: any[], address: string) {
   try {
     const totalAmount = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const totalBV = cartItems.reduce((acc, item) => acc + (item.bvAmount * item.quantity), 0);
+    const totalBv = cartItems.reduce((acc, item) => acc + (item.bvAmount * item.quantity), 0);
 
     const order = await prisma.$transaction(async (tx) => {
       // 1. Create the Order
@@ -15,9 +15,9 @@ export async function createOrder(userId: string, cartItems: any[], address: str
         data: {
           userId,
           totalAmount,
-          totalBV,
+          totalBv,
           address,
-          status: "PAID", // Assuming payment is confirmed
+          status: "PENDING", // Assuming payment is confirmed
           items: {
             create: cartItems.map(item => ({
               productId: item.id,
