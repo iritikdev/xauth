@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { 
   AreaChart, 
   Area, 
