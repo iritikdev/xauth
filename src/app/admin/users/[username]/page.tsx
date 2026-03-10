@@ -23,7 +23,6 @@ export default async function UserProfilePage({ params }: { params: { username: 
     }
   });
 
-  console.log("Fetched User:", user);
   if (!user) notFound();
 
   return (

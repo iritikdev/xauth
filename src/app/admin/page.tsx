@@ -36,7 +36,7 @@ const data = [
 
 export default function AdminDashboard() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 mx-10 my-8">
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
