@@ -1,3 +1,29 @@
+import {
+  Package,
+  Users2,
+  ReceiptIndianRupee,
+  Settings2,
+  Boxes,
+  ShieldCheck,
+  Wallet,
+  History,
+  TrendingUp,
+  Tags,
+  ArrowRightLeft,
+  BadgeCheck,
+  CoinsIcon,
+  Contact2,
+  CreditCard,
+  FileText,
+  LayoutDashboard,
+  LifeBuoy,
+  Network,
+  PiggyBank,
+  Send,
+  UserCircle2,
+  Lock,
+} from "lucide-react";
+
 export const products = [
   {
     id: "1",
@@ -65,3 +91,168 @@ export const products = [
       "A natural herbal tonic formulated with multiple Ayurvedic herbs to support liver detoxification, improve digestion, and promote better liver function.",
   },
 ];
+
+export const DASHBOARD_SIDEBAR = {
+  navMain: [
+    {
+      title: "Overview",
+      icon: "LayoutDashboard",
+      url: "/dashboard",
+      isActive: true,
+    },
+    {
+      title: "Identity & Profile",
+      url: "#",
+      icon: "UserCircle2",
+      items: [
+        {
+          title: "Personal Profile",
+          url: "/dashboard/profile",
+          icon: "Contact2",
+        },
+        {
+          title: "KYC Verification",
+          url: "/dashboard/kycVerification",
+          icon: "BadgeCheck",
+        },
+        {
+          title: "Welcome Letter",
+          url: "/dashboard/welcome-letter",
+          icon: "FileText",
+        },
+        {
+          title: "Digital ID Card",
+          url: "/dashboard/partnerIdentityCard",
+          icon: "CreditCard",
+        },
+        {
+          title: "Change Password",
+          url: "/dashboard/updatePassword",
+          icon: "Lock",
+        },
+      ],
+    },
+    {
+      title: "My Network",
+      url: "#",
+      icon: "Network",
+      items: [
+        { title: "Genealogy Tree", url: "/dashboard/generology" },
+        // { title: "Direct Referrals", url: "/dashboard/referrals" },
+        // { title: "Downline Team", url: "/dashboard/team" },
+      ],
+    },
+    {
+      title: "Finances",
+      url: "#",
+      icon: "PiggyBank",
+      items: [
+        { title: "E-Wallet", url: "/dashboard/wallet", icon: "ArrowRightLeft" },
+        {
+          title: "Business Plan Calculator",
+          url: "/dashboard/businessPlanCalculator",
+          icon: "FileText",
+        },
+        // { title: "Income Reports", url: "/dashboard/income", icon: "BarChart3" },
+        // { title: "Payout Summary", url: "/dashboard/payouts" },
+      ],
+    },
+  ],
+  navSecondary: [
+    { title: "Help Center", url: "#", icon: "LifeBuoy" },
+    { title: "Send Feedback", url: "#", icon: "Send" },
+  ],
+  marketing: [
+    { name: "Marketing Kit", url: "/dashboard/kit", icon: "Coins" },
+  ],
+};
+
+export const ADMIN_SIDEBAR = {
+  navMain: [
+    {
+      title: "Overview",
+      icon: "LayoutDashboard",
+      url: "/admin",
+      isActive: true,
+    },
+    {
+      title: "Ecommerce",
+      url: "#",
+      icon: "Package",
+      items: [
+        { title: "All Products", url: "/admin/products", icon: "Boxes" },
+        { title: "Categories", url: "/admin/categories", icon: "Tags" },
+        {
+          title: "Manage Orders",
+          url: "/admin/orders",
+          icon: "ReceiptIndianRupee",
+        },
+        {
+          title: "Inventory Alerts",
+          url: "/admin/inventory",
+          icon: "TrendingUp",
+        },
+      ],
+    },
+    {
+      title: "Network & Partners",
+      url: "#",
+      icon: "Users2",
+      items: [
+        { title: "Partner Registry", url: "/admin/users", icon: "Users2" },
+        {
+          title: "KYC Approvals",
+          url: "/admin/kyc-approvals",
+          icon: "ShieldCheck",
+        },
+        { title: "Genealogy Master", url: "/admin/genealogy", icon: "History" },
+      ],
+    },
+    {
+      title: "Finances & Payouts",
+      url: "#",
+      icon: "Wallet",
+      items: [
+        {
+          title: "Withdrawal Requests",
+          url: "/admin/withdrawals",
+          icon: "ReceiptIndianRupee",
+        },
+        { title: "Commission Logs", url: "/admin/commissions", icon: "History" },
+        { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
+        { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
+      ],
+    },
+  ],
+  navSecondary: [
+    { title: "System Settings", url: "/admin/settings", icon: "Settings2" },
+    { title: "Support Tickets", url: "/admin/support", icon: "LifeBuoy" },
+  ],
+  marketing: [
+    { name: "Promotional Kits", url: "/admin/marketing", icon: "Send" },
+  ],
+};
+
+
+type Payment = {
+  id: string
+  amount: number
+  status: "pending" | "processing" | "success" | "failed"
+  email: string
+}
+
+export const payments: Payment[] = [
+  {
+    id: "728ed52f",
+    amount: 100,
+    status: "pending",
+    email: "m@example.com",
+  },
+  {
+    id: "489e1d42",
+    amount: 125,
+    status: "processing",
+    email: "example@gmail.com",
+  },
+  // ...
+]

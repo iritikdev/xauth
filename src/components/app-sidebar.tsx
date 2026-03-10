@@ -35,59 +35,28 @@ import {
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import * as LucideIcons from "lucide-react"; // Import all icons as an object
 
-const sidebarData = {
-  navMain: [
-    {
-      title: "Overview",
-      icon: LayoutDashboard,
-      url: "/dashboard",
-      isActive: true,
-    },
-    {
-      title: "Identity & Profile",
-      url: "#",
-      icon: UserCircle2,
-      items: [
-        { title: "Personal Profile", url: "/dashboard/profile", icon: Contact2 },
-        { title: "KYC Verification", url: "/dashboard/kycVerification", icon: BadgeCheck },
-        { title: "Welcome Letter", url: "/dashboard/welcome-letter", icon: FileText },
-        { title: "Digital ID Card", url: "/dashboard/partnerIdentityCard", icon: CreditCard },
-        { title: "Change Password", url: "/dashboard/updatePassword", icon: Lock },
-      ],
-    },
-    {
-      title: "My Network",
-      url: "#",
-      icon: Network,
-      items: [
-        { title: "Genealogy Tree", url: "/dashboard/generology" },
-        // { title: "Direct Referrals", url: "/dashboard/referrals" },
-        // { title: "Downline Team", url: "/dashboard/team" },
-      ],
-    },
-    {
-      title: "Finances",
-      url: "#",
-      icon: PiggyBank,
-      items: [
-        { title: "E-Wallet", url: "/dashboard/wallet", icon: ArrowRightLeft },
-        { title: "Business Plan Calculator", url: "/dashboard/businessPlanCalculator", icon: FileText },
-        // { title: "Income Reports", url: "/dashboard/income", icon: BarChart3 },
-        // { title: "Payout Summary", url: "/dashboard/payouts" },
-      ],
-    },
-  ],
-  navSecondary: [
-    { title: "Help Center", url: "#", icon: LifeBuoy },
-    { title: "Send Feedback", url: "#", icon: Send },
-  ],
-  marketing: [
-    { name: "Marketing Kit", url: "/dashboard/kit", icon: CoinsIcon },
-  ],
+// 1. Define the TypeScript interface for the navigation prop
+interface NavigationData {
+  navMain: any[];
+  navSecondary: any[];
+  marketing: any[];
+}
+
+// 2. Update component to accept 'navigation' as a prop
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  navigation: NavigationData;
+}
+
+// Helper component to render icon by name string
+const IconRenderer = ({ name, className }: { name: string; className?: string }) => {
+  const IconComponent = (LucideIcons as any)[name];
+  if (!IconComponent) return null;
+  return <IconComponent className={className} />;
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ navigation, ...props }: AppSidebarProps) {
   const { data: session } = useSession()
   const { state } = useSidebar()
 
@@ -133,7 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
            </div>
         )}
 
-        <NavMain items={sidebarData.navMain} />
+        <NavMain items={navigation.navMain} />
         
         <div className="mt-8 px-4 mb-2">
            <h3 className={cn(
@@ -141,9 +110,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
              state === "collapsed" ? "opacity-0" : "opacity-100"
            )}>Resources</h3>
         </div>
-        <NavProjects projects={sidebarData.marketing} />
+        <NavProjects projects={navigation.marketing} />
         
-        <NavSecondary items={sidebarData.navSecondary} className="mt-auto pb-4" />
+        <NavSecondary items={navigation.navSecondary} className="mt-auto pb-4" />
       </SidebarContent>
 
       {/* <SidebarFooter className="border-t border-slate-100 p-2 bg-slate-50/50">

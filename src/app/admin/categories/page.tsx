@@ -12,7 +12,7 @@ export default async function CategoryPage() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto py-10 px-6 space-y-10">
+    <div className="py-10 px-6 space-y-10">
       <div className="border-b border-slate-100 pb-8 flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-black italic tracking-tighter uppercase text-slate-900">

@@ -28,7 +28,7 @@ export default async function AdminUsersPage({
   });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-20 pt-10 px-6">
+    <div className="space-y-8 pb-20 pt-10 px-6">
       <div className="border-b border-slate-100 pb-8">
         <h1 className="text-4xl font-black italic tracking-tighter uppercase text-slate-900 leading-none">
           Partner <span className="text-emerald-600">Registry</span>

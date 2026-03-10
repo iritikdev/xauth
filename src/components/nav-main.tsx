@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -17,21 +17,29 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import * as LucideIcons from "lucide-react"; // Import all icons as an object
+
+
+const IconRenderer = ({ name, className }: { name: string; className?: string }) => {
+  const IconComponent = (LucideIcons as any)[name];
+  if (!IconComponent) return null;
+  return <IconComponent className={className} />;
+};
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
+      title: string;
+      url: string;
+    }[];
+  }[];
 }) {
   return (
     <SidebarGroup>
@@ -42,7 +50,12 @@ export function NavMain({
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
                 <a href={item.url}>
-                  <item.icon />
+                  {/* <item.icon /> */}
+                  {item.icon && typeof item.icon === "string" ? (
+                    <IconRenderer name={item.icon} className="h-4 w-4" />
+                  ) : (
+                    item.icon && <item.icon className="h-4 w-4" />
+                  )}
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
@@ -74,5 +87,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

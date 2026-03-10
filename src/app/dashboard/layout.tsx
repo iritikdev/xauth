@@ -1,11 +1,10 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { BackButton } from "@/components/back-button";
 import AppBreadcrumb from "@/components/breadcrumb";
 import { NewsTicker } from "@/components/new-ticker";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React, { ReactNode } from "react";
-
+import { DASHBOARD_SIDEBAR } from "@/lib/constants";
 export const iframeHeight = "800px";
 
 export const description = "A sidebar with a header and a search form.";
@@ -20,9 +19,9 @@ function Layout({ children }: LayoutProps) {
         <SiteHeader />
         <NewsTicker />
         <div className="flex flex-row">
-          <AppSidebar />
+          <AppSidebar navigation={DASHBOARD_SIDEBAR} />
           {/* <BackButton /> */}
-          <SidebarInset className="flex-1 overflow-y-auto">
+          <SidebarInset className="flex-1 overflow-y-auto" >
             <AppBreadcrumb />
             {children}
           </SidebarInset>

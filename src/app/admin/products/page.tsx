@@ -10,7 +10,7 @@ export default async function AdminProductsPage() {
   const products = await prisma.product.findMany();
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10 pb-20 pt-10 px-6">
+    <div className="space-y-10 pb-20 pt-10 px-6">
       {/* SaaS Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
