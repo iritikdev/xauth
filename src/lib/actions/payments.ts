@@ -8,7 +8,7 @@ export async function distributeCommissions(orderId: string) {
     include: { user: true }
   });
 
-  if (!order) return { error: "Order not found" };
+  if (!order) return { error: "Order not found" };ww
 
   let currentSponsorId = order.user.sponsorId;
   let level = 1;

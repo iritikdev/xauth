@@ -25,13 +25,14 @@ const messages = [
 const Home = (props: Props) => {
   return (
     <div className="min-h-screen bg-white">
-     
+     <Navbar />
       <Hero />
       <LatestReleases />
       <AboutUs />
       {/* <AmazeAyurvedaPlan /> */}
       <BusinessOpportunity />
       <Testimonial />
+      <Footer />
     </div>
   );
 };

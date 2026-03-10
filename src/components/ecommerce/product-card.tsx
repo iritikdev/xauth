@@ -16,7 +16,7 @@ interface ProductProps {
 
 export function ProductCard({ id, name, price, bvAmount, image }: ProductProps) {
   return (
-    <Card className="group border-none shadow-xl rounded-[2.5rem] overflow-hidden bg-white hover:shadow-2xl transition-all duration-500">
+    <Card className="w-56 group border-none shadow-xl rounded-[2.5rem] overflow-hidden bg-white hover:shadow-2xl transition-all duration-500">
       {/* WRAP THE IMAGE IN A LINK */}
       <Link href={`/shop/${id}`} className="block relative aspect-square overflow-hidden bg-slate-100">
         <img 
