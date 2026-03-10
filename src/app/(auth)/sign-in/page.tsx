@@ -9,8 +9,7 @@ import Image from "next/image";
 import { ShieldCheck, ArrowLeft, Leaf } from "lucide-react";
 
 const Page = async () => {
-  const session = await auth();
-  if (session) redirect("/dashboard");
+ 
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 relative overflow-hidden px-4 py-12">

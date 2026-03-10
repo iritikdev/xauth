@@ -1,5 +1,6 @@
 import NextAuth, { DefaultSession } from "next-auth"
 import { JWT as DefaultJWT } from "next-auth/jwt"
+import { Role } from "@prisma/client";
 
 declare module "next-auth" {
   interface Session {
@@ -7,15 +8,17 @@ declare module "next-auth" {
       id: string
       username: string
       mobile: string
-      photoUrl: string
-    } & DefaultSession["user"]   // ✅ keeps name, email, image
+      photoUrl: string | null; // Allow null to match Prisma
+      role: Role; // Use the actual Enum type from Prisma
+    } & DefaultSession["user"]
   }
 
   interface User {
-    id: string
+    // id is already in DefaultUser, but we can override it
     username: string
     mobile: string
-    photoUrl: string
+    photoUrl: string | null;
+    role: Role;
   }
 }
 
@@ -24,6 +27,7 @@ declare module "next-auth/jwt" {
     id: string
     username: string
     mobile: string
-    photoUrl: string
+    photoUrl: string | null;
+    role: Role;
   }
 }

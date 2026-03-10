@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import Link from "next/link";
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const SignInForm = () => {
+  const session = useSession()
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false); // Password Toggle State
@@ -28,20 +29,93 @@ const SignInForm = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  // const onSubmit = async (data: LoginFormValues) => {
+  //   setError(null);
+  //   const res = await signIn("credentials", {
+  //     username: data.username.trim(),
+  //     password: data.password,
+  //     redirect: false,
+  //   });
+
+  //   if (res?.error) {
+  //     setError("Invalid Associate Credentials");
+  //     toast.error("Invalid Username or Password");
+  //   } else {
+  //     toast.success("Welcome to Amaze Ayurveda!");
+  //     // Redirect based on user role
+
+  //   }
+  // };
+  // const onSubmit = async (data: LoginFormValues) => {
+  //   setError(null);
+    
+  //   // 1. Attempt Sign In
+  //   const res = await signIn("credentials", {
+  //     username: data.username.trim(),
+  //     password: data.password,
+  //     redirect: false, // Must be false to handle redirection manually
+  //   });
+
+  //   if (res?.error) {
+  //     setError("Invalid Associate Credentials");
+  //     toast.error("Invalid Username or Password");
+  //   } else {
+  //     toast.success("Welcome to Amaze Ayurveda!");
+
+  //     // 2. Fetch fresh session data immediately
+  //     // This bypasses the stale 'session' variable from useSession()
+  //     const response = await fetch("/api/auth/session");
+  //     const freshSession = await response.json();
+
+  //     // 3. Redirect based on fresh role
+  //     const role = freshSession?.user?.role;
+      
+  //     if (role === "ADMIN") {
+  //       router.push("/admin");
+  //     } else {
+  //       router.push("/dashboard");
+  //     }
+
+  //     // Refresh to ensure all server components/middleware sync up
+  //     router.refresh();
+  //   }
+  // };
+
   const onSubmit = async (data: LoginFormValues) => {
     setError(null);
-    const res = await signIn("credentials", {
-      username: data.username.trim(),
-      password: data.password,
-      redirect: false,
-    });
+    
+    try {
+      const res = await signIn("credentials", {
+        username: data.username.trim(),
+        password: data.password,
+        redirect: false, // We handle this manually
+      });
 
-    if (res?.error) {
-      setError("Invalid Associate Credentials");
-      toast.error("Invalid Username or Password");
-    } else {
+      if (res?.error) {
+        setError("Invalid Associate Credentials");
+        toast.error("Invalid Username or Password");
+        return;
+      }
+
       toast.success("Welcome to Amaze Ayurveda!");
-      router.push("/dashboard");
+
+      // 1. Fetch the fresh session immediately to get the role
+      const response = await fetch("/api/auth/session");
+      console.log("Session Response:", response);
+      const freshSession = await response.json();
+      console.log("Fresh Session Data:", freshSession);
+
+      // 2. Logic-based Redirect
+      if (freshSession?.user?.role === "ADMIN") {
+        // Use window.location.href for a hard redirect if router.push fails
+        window.location.href = "/admin"; 
+      } else {
+        window.location.href = "/dashboard";
+      }
+
+    } catch (err) {
+      setError("An unexpected error occurred during sign-in.");
+      console.error(err);
     }
   };
 

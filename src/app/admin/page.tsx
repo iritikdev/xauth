@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { 
   Users, 
@@ -13,6 +12,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { 
   AreaChart, 
   Area, 
@@ -34,7 +35,9 @@ const data = [
   { name: 'Sun', sales: 3490 },
 ];
 
-export default function AdminDashboard() {
+export default  async function AdminDashboard() {
+ 
+ 
   return (
     <div className="space-y-10 mx-10 my-8">
       {/* Welcome Header */}

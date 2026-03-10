@@ -1,42 +1,41 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import GitHub from "next-auth/providers/github";
-
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    GitHub,
     Credentials({
       credentials: {
-        username: {},
-        password: {},
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
+        if (!credentials?.username || !credentials?.password) return null;
 
         const user = await prisma.user.findFirst({
-          where: { username: credentials?.username as string },
+          where: { username: credentials.username as string },
         });
-        if (!user) return null;
-        // Make sure `user` exists and has the expected properties before returning.
+
+        if (!user || !user.password) return null;
+
         const isPasswordMatch = await bcrypt.compare(
-          credentials?.password as string,
-          user.password
+          credentials.password as string,
+          user.password,
         );
-        if (user.username === credentials?.username && isPasswordMatch) {
-          // Return a user object that definitely has a string `id` (no undefined).
+
+        if (isPasswordMatch) {
           return {
             id: user.id,
-            name: user.name as string,
-            email: user.email as string,
-            mobile: user.mobile as string,
-            username: user.username as string,
-            photoUrl: user.photoUrl as string,
+            name: user.name ?? "",
+            email: user.email ?? "",
+            mobile: user.mobile ?? "",
+            username: user.username,
+            photoUrl: user.photoUrl ?? "", // Changed to empty string to match your .d.ts easier
+            role: user.role,
           };
         }
 
-        // Auth failed
         return null;
       },
     }),
@@ -44,19 +43,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.username = user.username as string;
-        token.mobile = user.mobile as string;
-        token.photoUrl = user.photoUrl as string;
+        token.id = user.id as string; // Explicitly map ID
+        token.username = user.username;
+        token.mobile = user.mobile;
+        token.photoUrl = user.photoUrl;
+        token.role = user.role;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
-      if (token?.username) {
-        session.user.username = token.username;
-        session.user.mobile = token.mobile;
-        session.user.photoUrl = token.photoUrl;
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string; // Map from token.id
+        session.user.username = token.username as string;
+        session.user.mobile = token.mobile as string;
+        session.user.photoUrl = token.photoUrl as string;
+        session.user.role = token.role as any; // Cast to Role if needed
       }
       return session;
     },
   },
+  pages: {
+    signIn: "/login",
+  },
+  session: { strategy: "jwt" },
+  // Important for NextAuth v5
+  secret: process.env.NEXTAUTH_SECRET,
 });

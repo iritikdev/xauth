@@ -39,9 +39,7 @@ const isTrainingTime = isSunday && now.getHours() >= 19 && now.getHours() <= 21;
 
 const meetingLink = "https://meet.google.com/your-meeting-id"; // Replace with your link
 
-  useEffect(() => {
-    if (status === "unauthenticated") router.push("/sign-in");
-  }, [status, router]);
+
 
   useEffect(() => {
     const fetchUser = async () => {
