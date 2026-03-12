@@ -162,9 +162,7 @@ export const DASHBOARD_SIDEBAR = {
     { title: "Help Center", url: "#", icon: "LifeBuoy" },
     { title: "Send Feedback", url: "#", icon: "Send" },
   ],
-  marketing: [
-    { name: "Marketing Kit", url: "/dashboard/kit", icon: "Coins" },
-  ],
+  marketing: [{ name: "Marketing Kit", url: "/dashboard/kit", icon: "Coins" }],
 };
 
 export const ADMIN_SIDEBAR = {
@@ -218,9 +216,40 @@ export const ADMIN_SIDEBAR = {
           url: "/admin/withdrawals",
           icon: "ReceiptIndianRupee",
         },
-        { title: "Commission Logs", url: "/admin/commissions", icon: "History" },
+        {
+          title: "Commission Logs",
+          url: "/admin/commissions",
+          icon: "History",
+        },
         { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
         { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
+      ],
+    },
+    {
+      title: "Content Management",
+      url: "#",
+      icon: "FileText", // Lucide Icon
+      items: [
+        {
+          title: "All Blog Posts",
+          url: "/admin/blog",
+          icon: "Library",
+        },
+        {
+          title: "Create New Post",
+          url: "/admin/blog/create",
+          icon: "PlusCircle",
+        },
+        {
+          title: "Categories",
+          url: "/admin/blog/categories",
+          icon: "Tags",
+        },
+        {
+          title: "Comments",
+          url: "/admin/blog/comments",
+          icon: "MessageSquare",
+        },
       ],
     },
   ],
@@ -233,13 +262,12 @@ export const ADMIN_SIDEBAR = {
   ],
 };
 
-
 type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
 
 export const payments: Payment[] = [
   {
@@ -255,4 +283,4 @@ export const payments: Payment[] = [
     email: "example@gmail.com",
   },
   // ...
-]
+];

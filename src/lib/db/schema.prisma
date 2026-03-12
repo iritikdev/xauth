@@ -192,3 +192,19 @@ model OrderItem {
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
+
+// Blog and Content Management
+model Post {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   // HTML or Markdown
+  image       String   // Cloudinary URL
+  category    String   // Network Marketing, Training, etc.
+  authorName  String   @default("Amaze Ayurveda Admin")
+  readTime    String   @default("5 min read")
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
