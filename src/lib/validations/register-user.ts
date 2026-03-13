@@ -80,17 +80,18 @@ export const kycSchema = z.object({
     .length(12, { message: "Aadhar must be exactly 12 characters" })
     .regex(/^\d{12}$/, { message: "Aadhar must contain only digits" }),
 
-  nomineeName: z.string().min(3, "Nominee name is required"),
-  nomineeRelation: z.enum([
-    "Mother",
-    "Father",
-    "Son",
-    "Wife",
-    "Daughter",
-    "Husband",
-  ]),
-  nomineeMobile: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
-  nomineeAadhaar: z.string().length(12, "Aadhaar must be 12 digits"),
+  // nomineeRelation: z.enum([
+  //   "Mother",
+  //   "Father",
+  //   "Son",
+  //   "Wife",
+  //   "Daughter",
+  //   "Husband",
+  // ]),
+  nomineeName: z.string().min(3, "Nominee name is too short"),
+  nomineeRelation: z.string().min(1, "Please select a relationship"),
+  nomineeMobile: z.string().length(10, "Mobile must be 10 digits").regex(/^[0-9]+$/, "Digits only"),
+  nomineeAadhaar: z.string().length(12, "Aadhaar must be 12 digits").regex(/^[0-9]+$/, "Digits only"),
 });
 
 

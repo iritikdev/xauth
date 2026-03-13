@@ -20,7 +20,7 @@ export default function ProfilePage() {
       {isEditing ? (
         // Show the Form when editing
         <UserProfileForm 
-          onSuccess={() => setIsEditing(false)} 
+          
         />
       ) : (
         // Show the Summary by default

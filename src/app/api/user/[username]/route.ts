@@ -79,3 +79,42 @@ export async function POST(req: Request) {
     }
 }
 
+
+
+
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { username: string } }
+) {
+  try {
+    const body = await req.json();
+    
+    // 1. IMPORTANT: Await params in Next.js 15
+    const { username } = await params; 
+
+    // 2. Safety Check: If username is missing, stop here
+    if (!username) {
+      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+    }
+
+    // 3. Execute Update
+    const updatedUser = await prisma.user.update({
+      where: { 
+        username: username // Ensure this field is marked @unique in schema.prisma
+      },
+      data: body,
+    });
+
+    return NextResponse.json(updatedUser);
+  } catch (error: any) {
+    console.error("[USER_PATCH_ERROR]", error);
+    
+    // Handle "Record not found" error specifically
+    if (error.code === 'P2025') {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
+}
