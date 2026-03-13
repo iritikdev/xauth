@@ -3,47 +3,66 @@
 import prisma from "@/lib/prisma";
 import { distributeCommissions } from "./payments";
 
-
 export async function createOrder(userId: string, cartItems: any[], address: string) {
   try {
-    const totalAmount = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const totalBv = cartItems.reduce((acc, item) => acc + (item.bvAmount * item.quantity), 0);
+
+    const totalAmount = cartItems.reduce(
+      (acc, item) => acc + (item.price * item.quantity),
+      0
+    );
+
+    const totalBv = cartItems.reduce(
+      (acc, item) => acc + (item.bvAmount * item.quantity),
+      0
+    );
 
     const order = await prisma.$transaction(async (tx) => {
-      // 1. Create the Order
+
       const newOrder = await tx.order.create({
         data: {
           userId,
           totalAmount,
           totalBv,
           address,
-          status: "PENDING", // Assuming payment is confirmed
+          status: "PENDING",
+
           items: {
-            create: cartItems.map(item => ({
-              productId: item.id,
+            create: cartItems.map((item: any) => ({
+              productName: item.name,   // required
               quantity: item.quantity,
-              price: item.price
+              price: item.price,
+              bv: item.bvAmount,        // required
+
+              product: {
+                connect: {
+                  id: item.id
+                }
+              }
             }))
           }
         }
       });
 
-      // 2. Reduce Stock
+      // Reduce Stock
       for (const item of cartItems) {
         await tx.product.update({
           where: { id: item.id },
-          data: { stock: { decrement: item.quantity } }
+          data: {
+            stock: {
+              decrement: item.quantity
+            }
+          }
         });
       }
 
       return newOrder;
     });
 
-    // 3. Trigger MLM Commission Distribution
-    // We pass totalBV here instead of totalAmount to match your plan
+    // MLM Commission Distribution
     await distributeCommissions(order.id);
 
     return { success: true, orderId: order.id };
+
   } catch (error: any) {
     return { error: error.message };
   }
