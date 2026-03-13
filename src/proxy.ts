@@ -25,7 +25,7 @@ export async function proxy(req: NextRequest) {
   // 3. Protect Associate Dashboard
   if (pathname.startsWith("/dashboard")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/login", req.url));
+      return NextResponse.redirect(new URL("/sign-in", req.url));
     }
   }
 

@@ -14,10 +14,17 @@ export async function createOrder(cartItems: any[]) {
 
     const userId = session.user.id;
 
-    // Product IDs
+    const user = await prisma.user.findFirst({
+      where: { id: userId },
+      select: { address: true, district: true, state: true, pincode: true },
+    });
+
+    const address = `${user?.address || "No Address"}, ${user?.district || ""}, ${user?.state || ""} - ${user?.pincode || ""}`;
+
+    // 1. Get Product IDs
     const productIds = cartItems.map((item) => item.id);
 
-    // Fetch products from DB
+    // 2. Fetch products from DB (To get real price and BV)
     const dbProducts = await prisma.product.findMany({
       where: {
         id: { in: productIds },
@@ -27,7 +34,7 @@ export async function createOrder(cartItems: any[]) {
     let runningTotalAmount = 0;
     let runningTotalBv = 0;
 
-    // Prepare OrderItems
+    // 3. Prepare OrderItems (Correct Server-side mapping)
     const orderItemsData = cartItems.map((item) => {
       const dbProduct = dbProducts.find((p) => p.id === item.id);
 
@@ -36,9 +43,7 @@ export async function createOrder(cartItems: any[]) {
       }
 
       const quantity = Number(item.quantity);
-
-      const unitPrice =
-        dbProduct.price - (dbProduct.price * (dbProduct.discount || 0)) / 100;
+      const unitPrice = dbProduct.price - (dbProduct.price * (dbProduct.discount || 0)) / 100;
 
       runningTotalAmount += unitPrice * quantity;
       runningTotalBv += dbProduct.bvAmount * quantity;
@@ -46,7 +51,8 @@ export async function createOrder(cartItems: any[]) {
       return {
         quantity: quantity,
         price: unitPrice,
-        bv: dbProduct.bvAmount,
+        bv: dbProduct.bvAmount, // Ye exact schema field se match kar raha hai
+        productName: dbProduct.name,
         product: {
           connect: {
             id: dbProduct.id,
@@ -55,14 +61,14 @@ export async function createOrder(cartItems: any[]) {
       };
     });
 
-    // Create Order
+    // 4. Create Order using the ALREADY PREPARED orderItemsData
     const order = await prisma.order.create({
       data: {
         totalAmount: runningTotalAmount,
         totalBv: runningTotalBv,
         status: "PENDING",
         paymentStatus: "UNPAID",
-        address: (session.user as any).address || "Default Address",
+        address: address,
 
         user: {
           connect: {
@@ -71,21 +77,12 @@ export async function createOrder(cartItems: any[]) {
         },
 
         items: {
-          create: cartItems.map((item: any) => ({
-            productName: item.name, // required
-            quantity: Number(item.quantity),
-            price: Number(item.price),
-            bv: Number(item.bv), // required
-
-            product: {
-              connect: {
-                id: item.id,
-              },
-            },
-          })),
+          create: orderItemsData, // 👈 Yahan change hai! Naya map mat lagaiye
         },
       },
     });
+
+    console.log("ORDER_CREATED:", order);
 
     revalidatePath("/dashboard/orders");
 
@@ -95,7 +92,6 @@ export async function createOrder(cartItems: any[]) {
     };
   } catch (error) {
     console.error("ORDER_CREATE_ERROR:", error);
-
     return {
       error: "Failed to create order",
     };

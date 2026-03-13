@@ -40,7 +40,7 @@ const Layout = ({ children }: LayoutProps) => {
         <QueryProvider>
         <SessionProvider>
           <AppLoader>
-            <Toaster position="top-right" />
+            <Toaster position="bottom-right" />
             
             {children}
           </AppLoader>
