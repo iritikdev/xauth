@@ -188,6 +188,7 @@ model OrderItem {
   orderId   String  @db.ObjectId
   productId String  @db.ObjectId
   quantity  Int
+  bv        Float
   price     Float
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
