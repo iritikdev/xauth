@@ -83,38 +83,29 @@ export async function POST(req: Request) {
 
 
 
+// Correct Type for Next.js 15 Route Handlers
 export async function PATCH(
-  req: Request,
-  { params }: { params: { username: string } }
+  request: NextRequest, // Changed from Request to NextRequest
+  { params }: { params: Promise<{ username: string }> } // params is now a Promise
 ) {
   try {
-    const body = await req.json();
+    const body = await request.json();
     
-    // 1. IMPORTANT: Await params in Next.js 15
-    const { username } = await params; 
+    // 1. You MUST await the params object before using it
+    const { username } = await params;
 
-    // 2. Safety Check: If username is missing, stop here
     if (!username) {
-      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+      return NextResponse.json({ error: "Username missing" }, { status: 400 });
     }
 
-    // 3. Execute Update
     const updatedUser = await prisma.user.update({
-      where: { 
-        username: username // Ensure this field is marked @unique in schema.prisma
-      },
+      where: { username: username },
       data: body,
     });
 
     return NextResponse.json(updatedUser);
   } catch (error: any) {
-    console.error("[USER_PATCH_ERROR]", error);
-    
-    // Handle "Record not found" error specifically
-    if (error.code === 'P2025') {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
+    console.error("[PATCH_ERROR]", error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
