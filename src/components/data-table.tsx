@@ -40,15 +40,12 @@ interface DataTableProps<TData, TValue> {
 // 1. Define the Global Filter Function
 const globalSearchFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const searchValue = value.toLowerCase();
-  
+
   // Extract values from the row for the specific fields
   const name = String(row.getValue("name") || "").toLowerCase();
   const mobile = String(row.getValue("mobile") || "").toLowerCase();
 
-  return (
-    name.includes(searchValue) ||
-    mobile.includes(searchValue) 
-  );
+  return name.includes(searchValue) || mobile.includes(searchValue);
 };
 
 export function DataTable<TData, TValue>({
@@ -71,7 +68,7 @@ export function DataTable<TData, TValue>({
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter, // 3. Set global filter change handler
-    globalFilterFn: globalSearchFilter,    // 4. Apply custom filter logic
+    globalFilterFn: globalSearchFilter, // 4. Apply custom filter logic
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -82,25 +79,32 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        {/* Global Search Input */}
-        <div className="relative flex-1 max-w-md group">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {/* Search */}
+        <div className="relative w-full sm:max-w-md group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+
           <Input
-            placeholder="Search name, mobile, email or username..."
+            placeholder="Search ..."
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(event.target.value)}
-            className="h-11 pl-10 rounded-xl bg-white border-slate-200 shadow-sm focus-visible:ring-emerald-500/20 focus-visible:border-emerald-500"
+            className="text-sm h-11 pl-10 w-full rounded-xl bg-white border-slate-200 shadow-sm focus-visible:ring-emerald-500/20 focus-visible:border-emerald-500"
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Actions */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-11 rounded-xl border-slate-200 gap-2 font-bold text-xs uppercase tracking-widest text-slate-600">
-                <Settings2 className="w-4 h-4" /> Columns
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto h-11 rounded-xl border-slate-200 gap-2 font-bold text-xs uppercase tracking-widest text-slate-600"
+              >
+                <Settings2 className="w-4 h-4" />
+                Columns
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-48 rounded-xl">
               {table.getAllColumns().map((column) => (
                 <DropdownMenuCheckboxItem
@@ -121,10 +125,21 @@ export function DataTable<TData, TValue>({
         <Table>
           <TableHeader className="bg-slate-50/50">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-transparent border-slate-100">
+              <TableRow
+                key={headerGroup.id}
+                className="hover:bg-transparent border-slate-100"
+              >
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="h-12 text-[10px] font-black uppercase tracking-widest text-slate-400 px-6">
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  <TableHead
+                    key={header.id}
+                    className="h-12 text-[10px] font-black uppercase tracking-widest text-slate-400 px-6"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -133,17 +148,27 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} className="border-slate-50 hover:bg-slate-50/30 transition-colors px-6" data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  className="border-slate-50 hover:bg-slate-50/30 transition-colors px-6"
+                  data-state={row.getIsSelected() && "selected"}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-4 px-6">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-32 text-center text-slate-400 font-medium italic">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-32 text-center text-slate-400 font-medium italic"
+                >
                   No results found.
                 </TableCell>
               </TableRow>
@@ -155,7 +180,8 @@ export function DataTable<TData, TValue>({
       {/* Modern Pagination Bar */}
       <div className="flex items-center justify-between px-2">
         <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} Selected
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} Selected
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -168,7 +194,7 @@ export function DataTable<TData, TValue>({
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-xs font-bold px-4">
-             {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
           </div>
           <Button
             variant="outline"

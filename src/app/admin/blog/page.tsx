@@ -25,9 +25,7 @@ export default async function AdminBlogPage() {
       />
 
       {/* Aapka DataTable Component */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
         <DataTable columns={blogColumns} data={posts} />
-      </div>
     </div>
   );
 }
