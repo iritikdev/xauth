@@ -27,6 +27,8 @@ model User {
   kycDocument KycDocument?
   Wallet      Wallet?
 
+  totalBv Float @default(0) 
+
   address  String?
   district String?
   state    String?

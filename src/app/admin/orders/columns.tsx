@@ -2,103 +2,116 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Truck, Clock, XCircle, MoreHorizontal, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-// / 1. Define the status type to match your Prisma Enum
-export type OrderStatus = "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+import { 
+  CheckCircle2, 
+  Clock, 
+  Truck, 
+  MoreHorizontal, 
+  Zap, 
+  User as UserIcon 
+} from "lucide-react";
+import { markOrderAsDelivered } from "@/lib/actions/admin"; // Import action
+import { toast } from "sonner";
+import { useState } from "react";
 
-// 2. Define the nested User structure (from the .findMany include)
-export interface OrderUser {
-  name: string | null;
-  username: string;
-  mobile: string;
-}
-
-// 3. The Main Order Interface
-export interface OrderColumn {
-  id: string;
-  totalAmount: number;
-  totalBv: number;
-  status: OrderStatus;
-  paymentStatus: string;
-  address: string;
-  createdAt: Date;
-  // This represents the "include: { user: true }" part of your query
-  user: OrderUser; 
-  // Optional: if you plan to show item counts in the table
-  _count?: {
-    items: number;
-  };
-}
-
-export const orderColumns: ColumnDef<OrderColumn>[] = [
+export const orderColumns: ColumnDef<any>[] = [
   {
     accessorKey: "id",
     header: "Order ID",
-    // cell: ({ row }) => <span className="font-mono font-bold text-xs">#{row.getValue("id").toString().slice(-6).toUpperCase()}</span>,
+    cell: ({ row }) => <span className="font-mono text-[10px] font-bold">#{row.original.id.slice(-6).toUpperCase()}</span>,
   },
   {
-    accessorKey: "user.name",
-    header: "Associate",
+    accessorKey: "user",
+    header: "Customer",
+    cell: ({ row }) => {
+      const user = row.original.user;
+      return (
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+            <UserIcon size={14} />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-black text-slate-900 leading-none">{user?.name}</span>
+            <span className="text-[9px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">@{user?.username}</span>
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "totalBv",
+    header: "BV Points",
     cell: ({ row }) => (
-      <div className="flex flex-col">
-        <span className="font-black uppercase italic text-[11px] text-slate-900">{row.original.user?.name}</span>
-        <span className="text-[10px] text-slate-400 font-bold">@{row.original.user?.username}</span>
+      <div className="flex items-center gap-1.5 text-emerald-600">
+        <Zap size={12} className="fill-current" />
+        <span className="text-xs font-black">{row.original.totalBv} BV</span>
       </div>
     ),
+  },
+  {
+    accessorKey: "totalAmount",
+    header: "Amount",
+    cell: ({ row }) => <span className="text-xs font-black text-slate-900 tracking-tighter italic">₹{row.original.totalAmount.toLocaleString()}</span>,
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
-      const config: any = {
-        PENDING: { color: "bg-orange-50 text-orange-600 border-orange-100", icon: Clock },
-        SHIPPED: { color: "bg-blue-50 text-blue-600 border-blue-100", icon: Truck },
-        DELIVERED: { color: "bg-emerald-50 text-emerald-600 border-emerald-100", icon: CheckCircle2 },
-        CANCELLED: { color: "bg-red-50 text-red-600 border-red-100", icon: XCircle },
-      };
-      const { color, icon: Icon } = config[status] || config.PENDING;
+      const status = row.original.status;
       return (
-        <Badge className={`rounded-lg border px-2 py-0.5 font-black uppercase text-[9px] gap-1.5 shadow-none ${color}`}>
-          <Icon size={10} /> {status}
+        <Badge className={cn(
+          "rounded-lg px-2 py-0.5 text-[9px] font-black uppercase tracking-widest border-none",
+          status === "DELIVERED" ? "bg-emerald-50 text-emerald-600" : "bg-orange-50 text-orange-600"
+        )}>
+          {status}
         </Badge>
       );
     },
   },
   {
-    accessorKey: "totalAmount",
-    header: "Amount",
-    cell: ({ row }) => <span className="font-black text-slate-900">₹{row.original.totalAmount}</span>,
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Date",
-    cell: ({ row }) => <span className="text-[10px] font-bold text-slate-400">{format(new Object(row.getValue("createdAt")) as Date, "dd MMM yyyy")}</span>,
-  },
-  {
     id: "actions",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="rounded-xl"><MoreHorizontal size={16}/></Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 rounded-2xl p-2">
-          <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase gap-2">
-            <Eye size={14}/> View Details
-          </DropdownMenuItem>
-          <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase gap-2 text-blue-600">
-             Update to Shipped
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    header: "Action",
+    cell: ({ row }) => {
+      const order = row.original;
+      const [loading, setLoading] = useState(false);
+
+      const onDeliver = async () => {
+        if (!confirm("क्या आप वाकई इस ऑर्डर को Delivered मार्क करना चाहते हैं? इससे यूजर के वॉलेट में BV क्रेडिट हो जाएगा।")) return;
+        
+        setLoading(true);
+        const res = await markOrderAsDelivered(order.id);
+        if (res.success) {
+          toast.success("Order Delivered", { description: "BV points have been credited to user wallet." });
+        } else {
+          toast.error("Error", { description: res.error });
+        }
+        setLoading(false);
+      };
+
+      return (
+        <div className="flex items-center gap-2">
+          {order.status !== "DELIVERED" ? (
+            <Button 
+              size="sm" 
+              onClick={onDeliver}
+              disabled={loading}
+              className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[10px] font-black uppercase tracking-widest gap-2"
+            >
+              {loading ? "Processing..." : <><CheckCircle2 size={14} /> Deliver</>}
+            </Button>
+          ) : (
+            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-1">
+              <CheckCircle2 size={12} /> Completed
+            </span>
+          )}
+        </div>
+      );
+    },
   },
 ];
+
+// Utility function (agar utils mein nahi hai toh yahan define kar dein)
+function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(" ");
+}

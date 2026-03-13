@@ -133,6 +133,12 @@ export const DASHBOARD_SIDEBAR = {
       ],
     },
     {
+      title: "My Orders",
+      icon: "ShoppingBag",
+      url: "/dashboard/orders",
+      isActive: true,
+    },
+    {
       title: "My Network",
       url: "#",
       icon: "Network",
