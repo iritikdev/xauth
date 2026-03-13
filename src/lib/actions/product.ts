@@ -90,3 +90,48 @@ export async function deleteProduct(id: string) {
     return { error: "Failed to remove product." };
   }
 }
+
+
+export async function getRecommendedProducts(currentProductId?: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        // Exclude the current product if we are on a detail page
+        NOT: currentProductId ? { id: currentProductId } : undefined,
+        stock: { gt: 0 }, // Only show items available for purchase
+      },
+      include: {
+        category: true, // Required for the category badge in ProductCard
+      },
+      take: 8,
+      orderBy: { createdAt: "desc" },
+    });
+
+    // Safely serialize for Client Components
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    console.error("DATABASE_ERROR:", error);
+    return [];
+  }
+}
+
+export async function getAllProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        category: true, // category property missing error yahan se fix hoga
+      },
+    });
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    return [];
+  }
+}
+
+export async function getProductById(id: string) {
+  return await prisma.product.findUnique({
+    where: { id },
+    include: { category: true }
+  });
+}

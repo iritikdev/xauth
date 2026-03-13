@@ -1,30 +1,53 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, ShoppingBag, Leaf, Zap, Search, SlidersHorizontal } from "lucide-react";
+import { ShoppingBag, Leaf, Zap, Search, SlidersHorizontal, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ProductCard } from "@/components/ecommerce/product-card"; // Using the card we built earlier
 import { cn } from "@/lib/utils";
-import { products } from "@/lib/constants"; // Mock data for products
 import { CartDrawer } from "@/components/ecommerce/cart-drawer";
+import ProductCard from "@/components/ecommerce/ProductCard";
+import { getAllProducts } from "@/lib/actions/product"; // Action import karein
+import { toast } from "sonner";
+import Link from "next/link";
+import { Navbar } from "@/components/navbar";
+
 const CATEGORIES = ["All", "Health Care", "Personal Care", "Agriculture", "Home Care", "Food"];
 
 export default function ProductListPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock Data - Connect to Prisma findMany() later
- 
+  // 1. Fetch products on load
+  useEffect(() => {
+    const fetchItems = async () => {
+      setIsLoading(true);
+      try {
+        const data = await getAllProducts();
+        setProducts(data);
+      } catch (err) {
+        toast.error("Failed to load products");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchItems();
+  }, []);
 
-  const filteredProducts = products.filter(p => 
-    (activeCategory === "All" || p.category === activeCategory) &&
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // 2. Client-side filtering logic
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = activeCategory === "All" || p.category?.name === activeCategory;
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Header Section */}
       <div className="bg-[#0f172a] pt-20 pb-32 px-6 relative overflow-hidden">
@@ -84,35 +107,44 @@ export default function ProductListPage() {
           <div className="flex items-center gap-2">
             <ShoppingBag className="w-5 h-5 text-emerald-600" />
             <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-400">
-              Showing {filteredProducts.length} Products
+              {isLoading ? "Fetching Products..." : `Showing ${filteredProducts.length} Products`}
             </h3>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredProducts.map((product, idx) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-              >
-                <ProductCard {...product} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+             <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Inventory is loading...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredProducts.map((product, idx) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: idx * 0.05 }}
+                >
+                  
+                    <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
 
-        {filteredProducts.length === 0 && (
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-40 bg-white rounded-[3rem] border border-dashed border-slate-200">
             <Leaf className="w-16 h-16 text-slate-200 mx-auto mb-4" />
             <p className="text-slate-400 font-black uppercase tracking-widest text-xs">No products found in this category</p>
           </div>
         )}
       </div>
-      <CartDrawer /> {/* Add the cart drawer component here */}
+      <CartDrawer open={false} setOpen={() => {}} />
     </div>
+    </>
   );
 }

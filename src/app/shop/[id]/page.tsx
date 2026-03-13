@@ -1,26 +1,18 @@
 "use client";
 
-import React, { use, useState, useMemo } from "react";
+import React, { use, useState, useEffect } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { 
-  ShoppingCart, 
-  Star, 
-  Zap, 
-  ChevronLeft, 
-  ShieldCheck, 
-  Truck, 
-  RefreshCcw,
-  Minus,
-  Plus,
-  Leaf
+  ShoppingCart, Star, Zap, ChevronLeft, ShieldCheck, 
+  Truck, RefreshCcw, Minus, Plus, Leaf, Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { products } from "@/lib/constants";
+// Import your server actions
+import { getProductById } from "@/lib/actions/product"; 
 import { ProductCarousel } from "@/components/ecommerce/product-carousel";
 
 interface PageProps {
@@ -30,19 +22,40 @@ interface PageProps {
 export default function ProductDetailsPage({ params }: PageProps) {
   const resolvedParams = use(params);
   const router = useRouter();
+  const [product, setProduct] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
-  // 1. Find Product
-  const product = useMemo(() => 
-    products.find((p) => p.id === resolvedParams.id), 
-    [resolvedParams.id]
+  // 1. Fetch Product from DB
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        setIsLoading(true);
+        const data = await getProductById(resolvedParams.id);
+        if (!data) return notFound();
+        setProduct(data);
+      } catch (error) {
+        toast.error("Failed to load product details");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProduct();
+  }, [resolvedParams.id]);
+
+  if (isLoading) return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
+      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Fetching Formulation...</p>
+    </div>
   );
 
   if (!product) return notFound();
 
-  // 2. Calculate Discount Logic
-  const discountPercent = Math.round(((product.mrp - product.price) / product.mrp) * 100);
-  const savingsAmount = (product.mrp - product.price) * quantity;
+  // 2. Logic Calculations
+  // MRP ko aapne price bola tha, aur associate price discounted hai
+  const associatePrice = product.price - (product.price * (product.discount / 100));
+  const savingsAmount = (product.price - associatePrice) * quantity;
   const totalBV = product.bvAmount * quantity;
 
   const handleAddToCart = () => {
@@ -65,7 +78,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
             <ChevronLeft className="w-4 h-4" /> Back to Shop
           </Button>
           <Badge variant="outline" className="border-slate-200 text-slate-400 font-bold px-4 py-1 rounded-full">
-            Product ID: #00{product.id}
+            Category: {product.category?.name || 'General'}
           </Badge>
         </div>
 
@@ -86,12 +99,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 className="w-full h-full object-contain relative z-10" 
               />
               
-              {/* Discount Float Badge */}
-              <div className="absolute top-10 right-10 z-20 bg-red-500 text-white font-black px-5 py-2 rounded-2xl shadow-xl shadow-red-500/20 rotate-12 animate-pulse">
-                {discountPercent}% OFF
-              </div>
-
-              {/* Decorative Circle */}
+              {product.discount > 0 && (
+                <div className="absolute top-10 right-10 z-20 bg-red-500 text-white font-black px-5 py-2 rounded-2xl shadow-xl shadow-red-500/20 rotate-12">
+                  {product.discount}% OFF
+                </div>
+              )}
               <div className="absolute inset-20 bg-emerald-500/5 rounded-full blur-3xl" />
             </div>
           </motion.div>
@@ -103,10 +115,9 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-black px-4 py-1.5 uppercase tracking-widest text-[10px]">
                   <Leaf className="w-3 h-3 mr-2" /> 100% Ayurvedic
                 </Badge>
-                <div className="flex items-center gap-1 text-orange-500 bg-orange-50 px-3 py-1 rounded-full">
-                  <Star className="w-3 h-3 fill-current" />
-                  <span className="text-xs font-black text-slate-900">{product.rating}</span>
-                </div>
+                <Badge className="bg-slate-100 text-slate-600 border-none font-bold px-3 py-1 text-[10px]">
+                  Stock: {product.stock} units
+                </Badge>
               </div>
 
               <h1 className="text-4xl md:text-6xl font-black text-slate-900 italic tracking-tighter uppercase leading-none">
@@ -117,17 +128,19 @@ export default function ProductDetailsPage({ params }: PageProps) {
               </p>
             </div>
 
-            {/* Pricing & Business Value Matrix */}
-            <Card className="border-none shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-[3rem] bg-[#0f172a] text-white overflow-hidden relative">
+            {/* Pricing & BV Matrix */}
+            <Card className="border-none shadow-2xl rounded-[3rem] bg-[#0f172a] text-white overflow-hidden relative">
               <CardContent className="p-10 space-y-8 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3">Partner Price</p>
                     <div className="flex items-baseline gap-4">
-                      <span className="text-6xl font-black italic tracking-tighter">₹{product.price}</span>
+                      <span className="text-6xl font-black italic tracking-tighter">₹{associatePrice}</span>
                       <div className="flex flex-col">
-                        <span className="text-xl text-slate-500 line-through font-bold">₹{product.mrp}</span>
-                        <span className="text-[10px] text-red-400 font-black uppercase tracking-widest">Save ₹{savingsAmount}</span>
+                        <span className="text-xl text-slate-500 line-through font-bold">₹{product.price}</span>
+                        {product.discount > 0 && (
+                           <span className="text-[10px] text-red-400 font-black uppercase tracking-widest">Save ₹{savingsAmount}</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -144,14 +157,14 @@ export default function ProductDetailsPage({ params }: PageProps) {
               <Zap className="absolute -bottom-10 -left-10 w-48 h-48 text-white/5 rotate-12" />
             </Card>
 
-            {/* Quantity Selector & Add to Cart */}
+            {/* Quantity & Actions */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex items-center bg-slate-100 rounded-2xl p-1.5 border border-slate-200">
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="h-12 w-12 rounded-xl text-slate-500 hover:bg-white"
+                  className="h-12 w-12 rounded-xl"
                 >
                   <Minus className="w-4 h-4" />
                 </Button>
@@ -159,8 +172,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="h-12 w-12 rounded-xl text-slate-500 hover:bg-white"
+                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                  className="h-12 w-12 rounded-xl"
                 >
                   <Plus className="w-4 h-4" />
                 </Button>
@@ -168,39 +181,30 @@ export default function ProductDetailsPage({ params }: PageProps) {
 
               <Button 
                 onClick={handleAddToCart}
-                className="flex-1 h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black uppercase tracking-[0.2em] text-xs gap-4 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 group"
+                disabled={product.stock === 0}
+                className="flex-1 h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black uppercase tracking-[0.2em] text-xs gap-4 shadow-xl shadow-emerald-600/20 active:scale-95 transition-all"
               >
-                <ShoppingCart className="w-6 h-6 group-hover:rotate-12 transition-transform" /> 
-                Add to Business Cart
+                <ShoppingCart className="w-6 h-6" /> 
+                {product.stock === 0 ? "Out of Stock" : "Add to Business Cart"}
               </Button>
             </div>
 
-            {/* Trust Logistics */}
+            {/* Trust Badges */}
             <div className="grid grid-cols-2 gap-4 pt-6">
-              <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-[1.5rem] border border-slate-100">
-                <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                  <Truck className="w-5 h-5 text-emerald-600" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">Shipping</span>
-                  <span className="text-xs font-black text-slate-900">Pan India Delivery</span>
-                </div>
+              <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-[1.5rem]">
+                <Truck className="w-5 h-5 text-emerald-600" />
+                <span className="text-xs font-black text-slate-900">Pan India Delivery</span>
               </div>
-              <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-[1.5rem] border border-slate-100">
-                <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                  <RefreshCcw className="w-5 h-5 text-emerald-600" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 leading-none mb-1">Return</span>
-                  <span className="text-xs font-black text-slate-900">7 Days Policy</span>
-                </div>
+              <div className="flex items-center gap-4 p-5 bg-slate-50 rounded-[1.5rem]">
+                <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                <span className="text-xs font-black text-slate-900">100% Secure Payouts</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <ProductCarousel currentProductId={product.id} />
+      {/* <ProductCarousel currentProductId={product.id} /> */}
     </div>
   );
 }

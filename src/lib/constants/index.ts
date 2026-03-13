@@ -30,7 +30,7 @@ export const products = [
     name: "Amaze Joint Pain Care Juice",
     price: 999,
     mrp: 1299,
-    bvAmount: 350,
+    bvPoints: 350,
     rating: 4.6,
     reviews: 124,
     category: "Health Care",

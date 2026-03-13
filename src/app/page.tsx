@@ -8,7 +8,7 @@ import OurProducts from "@/components/products";
 import Testimonial from "@/components/testimonial";
 import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
 import {Footer} from "@/components/footer";
-import LatestReleases from "@/components/LatestReleases";
+import { ProductCarousel } from "@/components/LatestReleases";
 import { Navbar } from "@/components/navbar";
 
 interface Props {
@@ -27,7 +27,7 @@ const Home = (props: Props) => {
     <div className="min-h-screen bg-white">
      <Navbar />
       <Hero />
-      <LatestReleases />
+      <ProductCarousel products={[]} />
       <AboutUs />
       {/* <AmazeAyurvedaPlan /> */}
       <BusinessOpportunity />
