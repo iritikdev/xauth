@@ -185,11 +185,7 @@ export const ADMIN_SIDEBAR = {
           url: "/admin/orders",
           icon: "ReceiptIndianRupee",
         },
-        {
-          title: "Inventory Alerts",
-          url: "/admin/inventory",
-          icon: "TrendingUp",
-        },
+        
       ],
     },
     {
@@ -200,7 +196,7 @@ export const ADMIN_SIDEBAR = {
         { title: "Partner Registry", url: "/admin/users", icon: "Users2" },
         {
           title: "KYC Approvals",
-          url: "/admin/kyc-approvals",
+          url: "/admin/kyc",
           icon: "ShieldCheck",
         },
         { title: "Genealogy Master", url: "/admin/genealogy", icon: "History" },

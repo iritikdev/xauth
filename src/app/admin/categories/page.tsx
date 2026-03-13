@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { Layers, FolderTree } from "lucide-react";
 import CategoryForm from "@/components/admin/CategoryForm";
 import CategoryList from "@/components/admin/CategoryList";
+import { PageHeader } from "@/components/admin/page-header";
 
 export default async function CategoryPage() {
   const categories = await prisma.category.findMany({
@@ -14,16 +15,15 @@ export default async function CategoryPage() {
   return (
     <div className="py-10 px-6 space-y-10">
       <div className="border-b border-slate-100 pb-8 flex justify-between items-end">
-        <div>
-          <h1 className="text-4xl font-black italic tracking-tighter uppercase text-slate-900">
-            Product <span className="text-emerald-600">Categories</span>
-          </h1>
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
-            Organize Swadeshi Catalog Hierarchy
-          </p>
-        </div>
+        <PageHeader 
+        title="Manage"
+        highlight="Categories"
+        description="Create, edit, and organize product categories to structure your catalog effectively."
+      />
         <FolderTree className="text-slate-200 w-12 h-12" />
       </div>
+
+      
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-4">

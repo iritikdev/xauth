@@ -43,7 +43,14 @@ export async function getAllPosts() {
 
 export async function createBlogPost(values: any) {
   try {
-   
+   // 1. Check if slug exists
+    const existingPost = await prisma.post.findUnique({
+      where: { slug: values.slug }
+    });
+
+    if (existingPost) {
+      return { error: "This slug/URL already exists. Please change the title or slug." };
+    }
 
     const { title, slug, excerpt, content, image, category, published } = values;
 

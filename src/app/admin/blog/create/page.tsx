@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { createBlogPost } from "@/lib/actions/blog";
+import RichEditor from "@/components/admin/RichEditor";
 
 // Schema Validation
 const formSchema = z.object({
@@ -68,12 +69,10 @@ export default function CreateBlogPage() {
 };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/admin/blog"><ArrowLeft size={20} /></Link>
-          </Button>
+          
           <h1 className="text-3xl font-black tracking-tight">Create <span className="text-emerald-600">New Article</span></h1>
         </div>
       </div>
@@ -107,7 +106,11 @@ export default function CreateBlogPage() {
 
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Content (HTML/Rich Text)</label>
-              <Textarea {...form.register("content")} placeholder="Write your full article here..." className="rounded-2xl min-h-[300px] font-serif leading-relaxed" />
+
+              <RichEditor 
+                content={form.watch("content")} 
+                onChange={(content) => form.setValue("content", content)} 
+              />  
             </div>
           </div>
         </div>
