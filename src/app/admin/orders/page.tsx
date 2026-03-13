@@ -22,6 +22,7 @@ export default async function AdminOrdersPage() {
     },
   });
 
+  console.log("Fetched Orders:", orders);
   // Analytics for the SaaS Header
   const pendingOrders = orders.filter((o) => o.status === "PENDING").length;
   const revenue = orders.reduce((acc, curr) => acc + curr.totalAmount, 0);
