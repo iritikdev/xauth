@@ -3,36 +3,52 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function proxy(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  const { pathname } = req.nextUrl;
-  console.log("Requested Pathname:", token ? `${token.username} (${token.role})` : "No Token", "->", pathname);
 
-  // 2. Protect Admin Routes
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+  });
+
+  const { pathname } = req.nextUrl;
+
+  console.log(
+    "Requested Path:",
+    token ? `${token.username} (${token.role})` : "No Token",
+    "->",
+    pathname
+  );
+
+  // Protect Admin Routes
   if (pathname.startsWith("/admin")) {
+
+    // Not logged in
     if (!token) {
       const url = new URL("/sign-in", req.nextUrl.origin);
-    //   url.searchParams.set("callbackUrl", pathname);
-    // console.log("Redirecting to:", url.toString());
       return NextResponse.redirect(url);
     }
 
+    // Logged in but not admin
     if (token.role !== "ADMIN") {
-      // If logged in but NOT an admin, send to Associate Dashboard
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
+      const url = new URL("/dashboard", req.nextUrl.origin);
+      return NextResponse.redirect(url);
     }
   }
 
-  // 3. Protect Associate Dashboard
+  // Protect User Dashboard
   if (pathname.startsWith("/dashboard")) {
+
     if (!token) {
-      return NextResponse.redirect(new URL("/sign-in", req.nextUrl.origin));
+      const url = new URL("/sign-in", req.nextUrl.origin);
+      return NextResponse.redirect(url);
     }
   }
 
   return NextResponse.next();
 }
 
-// 4. Configure Matcher
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/dashboard/:path*",
+  ],
 };
