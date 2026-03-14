@@ -1,21 +1,25 @@
 import prisma from "@/lib/prisma";
 import AdminDashboardClient from "./dashboard-client";
 
+export const dynamic = "force-dynamic"; // Prerender error se bachne ke liye
+
 export default async function AdminDashboardPage() {
   // 1. Fetch Real Stats
-  const [totalRevenue, userCount, ordersToday, 
-    // pendingPayouts
-  
-  ] = await Promise.all([
-    // prisma.order.aggregate({ _sum: { total: true }, where: { status: "COMPLETED" } }),
+  const [revenueData, userCount, ordersToday, pendingKycCount] = await Promise.all([
+    // Aapke schema mein 'totalAmount' hai, 'total' nahi
+    prisma.order.aggregate({ 
+      _sum: { totalAmount: true }, 
+      where: { status: "DELIVERED" } // Amaze Ayurveda mein DELIVERED hi completed hai
+    }),
     prisma.user.count(),
     prisma.order.count({
       where: {
         createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) }
       }
     }),
-    prisma.user.findMany({ // Dummy logic for example
-       where: { kycDocument:{status: "PENDING"} } 
+    // FIX: Yahan sirf count lijiye, poora object array nahi
+    prisma.user.count({ 
+       where: { kycDocument: {status : "PENDING"} } // Schema field check karein (kycStatus ya kycDocument)
     })
   ]);
 
@@ -23,10 +27,14 @@ export default async function AdminDashboardPage() {
   const recentOrders = await prisma.order.findMany({
     take: 5,
     orderBy: { createdAt: 'desc' },
-    include: { user: { select: { name: true } } }
+    include: { 
+      user: { 
+        select: { name: true } 
+      } 
+    }
   });
 
-  // 3. Mock Chart Data (In real app, group by date)
+  // 3. Prepare Chart Data (Static for now)
   const chartData = [
     { name: 'Mon', sales: 4000 },
     { name: 'Tue', sales: 3000 },
@@ -40,13 +48,20 @@ export default async function AdminDashboardPage() {
   return (
     <AdminDashboardClient 
       stats={{
-        revenue:  0,
+        revenue: revenueData._sum.totalAmount || 0,
         users: userCount,
         orders: ordersToday,
-        pending: "0"
+        // FIX: Object ki jagah number/string bhej rahe hain
+        pending: pendingKycCount.toString() 
       }}
       chartData={chartData}
-      recentActivity={recentOrders}
+      // Ensure karein recentActivity mein sirf zaroori strings hon
+      recentActivity={recentOrders.map(order => ({
+        id: order.id,
+        userName: order.user.name || "Unknown",
+        amount: order.totalAmount,
+        status: order.status
+      }))}
     />
   );
 }

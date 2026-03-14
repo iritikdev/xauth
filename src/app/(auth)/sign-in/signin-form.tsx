@@ -29,57 +29,7 @@ const SignInForm = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   setError(null);
-  //   const res = await signIn("credentials", {
-  //     username: data.username.trim(),
-  //     password: data.password,
-  //     redirect: false,
-  //   });
 
-  //   if (res?.error) {
-  //     setError("Invalid Associate Credentials");
-  //     toast.error("Invalid Username or Password");
-  //   } else {
-  //     toast.success("Welcome to Amaze Ayurveda!");
-  //     // Redirect based on user role
-
-  //   }
-  // };
-  // const onSubmit = async (data: LoginFormValues) => {
-  //   setError(null);
-    
-  //   // 1. Attempt Sign In
-  //   const res = await signIn("credentials", {
-  //     username: data.username.trim(),
-  //     password: data.password,
-  //     redirect: false, // Must be false to handle redirection manually
-  //   });
-
-  //   if (res?.error) {
-  //     setError("Invalid Associate Credentials");
-  //     toast.error("Invalid Username or Password");
-  //   } else {
-  //     toast.success("Welcome to Amaze Ayurveda!");
-
-  //     // 2. Fetch fresh session data immediately
-  //     // This bypasses the stale 'session' variable from useSession()
-  //     const response = await fetch("/api/auth/session");
-  //     const freshSession = await response.json();
-
-  //     // 3. Redirect based on fresh role
-  //     const role = freshSession?.user?.role;
-      
-  //     if (role === "ADMIN") {
-  //       router.push("/admin");
-  //     } else {
-  //       router.push("/dashboard");
-  //     }
-
-  //     // Refresh to ensure all server components/middleware sync up
-  //     router.refresh();
-  //   }
-  // };
 
   const onSubmit = async (data: LoginFormValues) => {
     setError(null);
@@ -101,9 +51,7 @@ const SignInForm = () => {
 
       // 1. Fetch the fresh session immediately to get the role
       const response = await fetch("/api/auth/session");
-      console.log("Session Response:", response);
       const freshSession = await response.json();
-      console.log("Fresh Session Data:", freshSession);
 
       // 2. Logic-based Redirect
       if (freshSession?.user?.role === "ADMIN") {
