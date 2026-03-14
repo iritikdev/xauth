@@ -134,8 +134,15 @@ export const DASHBOARD_SIDEBAR = {
     },
     {
       
-      title: "My Orders",
+      title: "Shop",
       icon: "ShoppingBag",
+      url: "/shop",
+      isActive: true,
+    },
+    {
+      
+      title: "My Orders",
+      icon: "BaggageClaim",
       url: "/dashboard/orders",
       isActive: true,
     },
