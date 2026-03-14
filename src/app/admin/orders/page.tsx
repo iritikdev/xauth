@@ -12,15 +12,21 @@ export default async function AdminOrdersPage() {
       user: {
         select: {
           name: true,
-          username: true,
-          mobile: true,
-        },
+          email: true,
+          username: true
+        }
       },
+      items: {
+        include: {
+          product: true
+        }
+      }
     },
     orderBy: {
-      createdAt: "desc",
-    },
-  });
+      createdAt: "desc"
+    }
+  })
+
 
   // Analytics for the SaaS Header
   const pendingOrders = orders.filter((o) => o.status === "PENDING").length;
