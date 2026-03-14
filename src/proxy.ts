@@ -10,9 +10,9 @@ export async function proxy(req: NextRequest) {
   // 2. Protect Admin Routes
   if (pathname.startsWith("/admin")) {
     if (!token) {
-      const url = new URL("/sign-in", req.url);
+      const url = new URL("/sign-in", req.nextUrl.origin);
     //   url.searchParams.set("callbackUrl", pathname);
-    console.log("Redirecting to:", url.toString());
+    // console.log("Redirecting to:", url.toString());
       return NextResponse.redirect(url);
     }
 
@@ -25,7 +25,7 @@ export async function proxy(req: NextRequest) {
   // 3. Protect Associate Dashboard
   if (pathname.startsWith("/dashboard")) {
     if (!token) {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
+      return NextResponse.redirect(new URL("/sign-in", req.nextUrl.origin));
     }
   }
 
