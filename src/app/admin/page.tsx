@@ -1,9 +1,11 @@
 import prisma from "@/lib/prisma";
 import AdminDashboardClient from "./dashboard-client";
+import { useSession } from "next-auth/react";
 
 export const dynamic = "force-dynamic"; // Prerender error se bachne ke liye
 
 export default async function AdminDashboardPage() {
+  const {data: session} = useSession()
   // 1. Fetch Real Stats
   const [revenueData, userCount, ordersToday, pendingKycCount] = await Promise.all([
     // Aapke schema mein 'totalAmount' hai, 'total' nahi
@@ -45,6 +47,7 @@ export default async function AdminDashboardPage() {
     { name: 'Sun', sales: 3490 },
   ];
 
+  console.log(session?.user.role, "-> Admin Dashboard Access Attempt");
   return (
     <AdminDashboardClient 
       stats={{
