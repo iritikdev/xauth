@@ -18,7 +18,7 @@ export async function proxy(req: NextRequest) {
 
     if (token.role !== "ADMIN") {
       // If logged in but NOT an admin, send to Associate Dashboard
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin));
     }
   }
 
