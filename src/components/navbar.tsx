@@ -2,36 +2,25 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  Search,
-  Menu,
-  X,
-  User,
-  LogIn,
-  Clock,
-  ChevronRight,
-  ShoppingCart,
+  Search, Menu, X, User, LogIn, ShoppingCart, 
+  ChevronDown, LayoutDashboard, Leaf, Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
+  Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger,
 } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, 
+  DropdownMenuTrigger, DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { VisuallyHidden } from "radix-ui";
-
-// IMPORTANT: Import your Cart Store and Drawer
 import { useCart } from "@/hooks/use-cart";
 import { CartDrawer } from "@/components/ecommerce/cart-drawer";
 import { useSession } from "next-auth/react";
 import UserDropdown from "./dashboard/user-dropdown";
 
 export const Navbar = () => {
-  const [currentTime, setCurrentTime] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -39,228 +28,137 @@ export const Navbar = () => {
   const cart = useCart();
   const { data: session } = useSession();
 
-  // Prevent hydration mismatch for client-side storage
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  const cartItemCount = mounted ? cart.items.length : 0;
-
-  // Handle scroll effect
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // System Time Logic
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      };
-      const formatted = now
-        .toLocaleDateString("en-US", options)
-        .replace(/,/g, "")
-        .replace(/(\w{3}) (\w{3}) (\d+)/, "$1 | $2 $3 |");
-      setCurrentTime(formatted);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const cartItemCount = mounted ? cart.items.length : 0;
+
+  const NAV_LINKS = [
+    { label: "Shop Swadeshi", href: "/shop", icon: Leaf },
+    { label: "Our Story", href: "/about", icon: Info },
+    { label: "Business Plan", href: "/plan", icon: LayoutDashboard },
+  ];
 
   return (
     <>
       <nav
         className={cn(
-          "sticky top-0 z-[30] w-full transition-all duration-300",
+          "fixed top-0 z-[50] w-full transition-all duration-500",
           isScrolled
-            ? "bg-white/80 backdrop-blur-md border-b border-slate-200/50 py-2"
-            : "bg-white border-b border-transparent py-4",
+            ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60 py-2 shadow-sm"
+            : "bg-transparent py-4"
         )}
       >
         <div className="container mx-auto flex items-center justify-between px-6">
-          {/* Logo Section */}
-          <Link
-            href="/"
-            className="flex items-center gap-3 group transition-transform active:scale-95"
-          >
+          
+          {/* 1. Logo Section */}
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <img
-                src="/amaze-logo.png"
-                alt="Amaze Ayurveda"
-                className="h-14 w-14 object-contain"
-              />
-              <div className="absolute -inset-1 bg-emerald-500/10 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
+              <img src="/amaze-logo.png" alt="Amaze Ayurveda" className="h-12 w-12 md:h-14 md:w-14 object-contain transition-transform group-hover:rotate-12" />
+              <div className="absolute -inset-2 bg-emerald-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-black text-slate-900 leading-none tracking-tighter text-lg md:text-xl uppercase italic">
-                Amaze Ayurveda
+            <div className="hidden sm:flex flex-col">
+              <span className="font-[1000] text-slate-900 leading-none text-lg md:text-xl uppercase italic tracking-tighter">
+                Amaze <span className="text-emerald-600">Ayurveda</span>
               </span>
-              <span className="text-emerald-600 text-[10px] font-black uppercase tracking-[0.3em] mt-1">
-                Pvt. Ltd.
-              </span>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mt-1">Swadeshi Movement</span>
             </div>
           </Link>
 
-          {/* Action Section - Desktop */}
-          <div className="hidden items-center gap-6 lg:flex">
-            {/* System Time Badge */}
-            <Badge
-              variant="secondary"
-              className="bg-slate-100/80 text-slate-500 border-none font-bold text-[10px] px-4 py-1.5 rounded-full flex items-center gap-2"
-            >
-              <Clock className="w-3 h-3 text-emerald-600" />
-              {currentTime || "Loading Time..."}
-            </Badge>
-
-            <div className="flex items-center gap-2">
-              {/* CART BUTTON (Desktop) */}
-              <Button
-                onClick={() => setIsCartOpen(true)}
-                variant="ghost"
-                className="relative h-11 w-11 rounded-2xl hover:bg-emerald-50 group transition-all"
-              >
-                <ShoppingCart className="w-5 h-5 text-slate-600 group-hover:text-emerald-600 transition-colors" />
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-black h-5 w-5 flex items-center justify-center rounded-lg shadow-lg shadow-emerald-600/20 border-2 border-white animate-in zoom-in">
-                    {cartItemCount}
-                  </span>
-                )}
-              </Button>
-
-              <div className="w-[1px] h-6 bg-slate-200 mx-2" />
-
-              {session ? (
-                <UserDropdown user={session?.user} />
-              ) : (
-                <>
-                  <Link href="/sign-in">
-                    <Button
-                      variant="ghost"
-                      className="text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl"
-                    >
-                      Login
-                    </Button>
-                  </Link>
-                  <Link href="/sign-up">
-                    <Button className="rounded-2xl bg-slate-900 hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-[11px] px-8 h-11 shadow-xl shadow-slate-900/10 transition-all active:scale-95">
-                      Join Now
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
+          {/* 2. Middle Navigation (Desktop) */}
+          <div className="hidden lg:flex items-center gap-1 bg-slate-100/50 p-1.5 rounded-2xl border border-slate-200/20">
+            {NAV_LINKS.map((link) => (
+              <Link key={link.href} href={link.href}>
+                <Button variant="ghost" className="h-9 px-4 rounded-xl text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 hover:bg-white transition-all">
+                  {link.label}
+                </Button>
+              </Link>
+            ))}
           </div>
 
-          {/* Mobile View Navigation */}
-          <div className="flex items-center gap-3 lg:hidden">
-            {/* CART BUTTON (Mobile) */}
+          {/* 3. Actions Section */}
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Search Trigger (Icon Only) */}
+            <Button variant="ghost" size="icon" className="hidden md:flex h-10 w-10 rounded-xl hover:bg-emerald-50 text-slate-600">
+              <Search className="w-5 h-5" />
+            </Button>
+
+            {/* Cart Button */}
             <Button
               onClick={() => setIsCartOpen(true)}
               variant="ghost"
-              size="icon"
-              className="relative rounded-full hover:bg-slate-100"
+              className="relative h-11 px-3 md:px-4 rounded-xl hover:bg-emerald-50 group transition-all border border-transparent hover:border-emerald-100"
             >
-              <ShoppingCart className="h-6 w-6 text-slate-900" />
+              <ShoppingCart className="w-5 h-5 text-slate-700 group-hover:text-emerald-600 transition-colors" />
+              <span className="hidden md:block ml-2 text-[11px] font-black uppercase tracking-widest">Cart</span>
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-lg border-2 border-white">
+                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-lg border-2 border-white animate-bounce">
                   {cartItemCount}
                 </span>
               )}
             </Button>
 
+            <div className="hidden md:block w-px h-6 bg-slate-200 mx-1" />
+
+            {/* Auth/User Section */}
+            <div className="hidden md:flex items-center gap-2">
+              {session ? (
+                <UserDropdown user={session?.user} />
+              ) : (
+                <>
+                  <Link href="/sign-in">
+                    <Button variant="ghost" className="text-[11px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button className="rounded-xl bg-slate-900 hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-[10px] px-6 h-11 shadow-lg shadow-slate-900/10">
+                      Join
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Trigger */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full hover:bg-slate-100"
-                >
+                <Button variant="ghost" size="icon" className="lg:hidden rounded-xl bg-slate-100">
                   <Menu className="h-6 w-6 text-slate-900" />
                 </Button>
               </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="w-[80%] sm:w-[400px] border-none p-0 shadow-2xl"
-              >
-                <VisuallyHidden.Root>
-                  <SheetTitle>Mobile Navigation</SheetTitle>
-                </VisuallyHidden.Root>
-
-                <div className="h-full flex flex-col bg-white">
-                  {/* Mobile Menu Header */}
-                  <div className="p-6 bg-[#0f172a] text-white">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src="/amaze-logo.png"
-                          className="h-10 w-10 brightness-200"
-                          alt="Logo"
-                        />
-                        <p className="font-black text-sm tracking-tighter italic uppercase leading-none">
-                          Amaze{" "}
-                          <span className="text-emerald-400">Ayurveda</span>
-                        </p>
-                      </div>
-                      <SheetClose className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
-                        <X className="h-5 w-5" />
-                      </SheetClose>
-                    </div>
+              <SheetContent side="right" className="w-[85%] p-0 border-none bg-white">
+                <div className="flex flex-col h-full">
+                  <div className="p-8 bg-slate-900 text-white">
+                    <SheetTitle className="text-white text-2xl font-black italic uppercase italic">Amaze <span className="text-emerald-400">Ayurveda</span></SheetTitle>
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Associate Portal v3.0</p>
                   </div>
-
-                  {/* Mobile Menu Content */}
-                  <div className="flex-1 p-6 space-y-8 overflow-y-auto">
-                    <div className="space-y-4">
-                      <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">
-                        Portal Access
-                      </label>
-                      <div className="grid gap-3">
-                        <Link href="/sign-in">
-                          <Button
-                            variant="outline"
-                            className="w-full justify-between h-14 rounded-2xl border-slate-100 px-5 text-[11px] font-black group transition-all"
-                          >
-                            <span className="flex items-center gap-3 text-slate-700">
-                              <LogIn className="w-4 h-4 text-emerald-500" />{" "}
-                              SIGN IN
-                            </span>
-                            <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-all" />
+                  
+                  <div className="flex-1 px-6 py-8 space-y-8 overflow-y-auto">
+                    <div className="space-y-3">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Quick Navigation</p>
+                      {NAV_LINKS.map((link) => (
+                        <Link key={link.href} href={link.href}>
+                          <Button variant="outline" className="my-1 w-full justify-start h-14 rounded-2xl border-slate-100 gap-4 font-bold text-slate-700">
+                            <link.icon className="w-5 h-5 text-emerald-500" /> {link.label}
                           </Button>
                         </Link>
-
-                        <Link href="/sign-up">
-                          <Button className="w-full justify-between h-14 rounded-2xl bg-[#0f172a] px-5 text-[11px] font-black shadow-lg shadow-slate-900/10">
-                            <span className="flex items-center gap-3 text-white">
-                              <User className="w-4 h-4 text-emerald-400" />{" "}
-                              PARTNER JOIN
-                            </span>
-                            <ChevronRight className="w-4 h-4 text-white/50" />
-                          </Button>
-                        </Link>
-                      </div>
+                      ))}
                     </div>
 
-                    <div className="bg-slate-50 p-5 rounded-[2rem] border border-slate-100">
-                      <p className="text-[9px] font-black text-slate-500 uppercase flex items-center gap-2">
-                        <Clock className="w-3 h-3 text-emerald-500" /> System
-                        Time
-                      </p>
-                      <p className="text-sm font-black text-slate-900 mt-2 font-mono tracking-tight">
-                        {currentTime || "SUN | MAR 08"}
-                      </p>
+                    <div className="space-y-3 pt-4 border-t border-slate-50">
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Account Access</p>
+                       <Link href="/sign-in" className="block">
+                          <Button className="w-full h-14 rounded-2xl bg-emerald-600 text-white font-black uppercase text-xs tracking-widest">Login to Portal</Button>
+                       </Link>
+                       <Link href="/sign-up" className="block">
+                          <Button className="w-full h-14 rounded-2xl bg-slate-900 text-white font-black uppercase text-xs tracking-widest">Register Yourself</Button>
+                       </Link>
                     </div>
-                  </div>
-
-                  <div className="p-6 text-center border-t bg-slate-50/50">
-                    <p className="text-[8px] font-black uppercase tracking-[0.4em] text-slate-400 italic">
-                      Growth Engine
-                    </p>
                   </div>
                 </div>
               </SheetContent>
@@ -268,9 +166,9 @@ export const Navbar = () => {
           </div>
         </div>
       </nav>
-
-      {/* RENDER THE CART DRAWER GLOBALLY */}
       <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
+      {/* Spacer to prevent content jump due to fixed nav */}
+      <div className="h-20" />
     </>
   );
 };

@@ -1,171 +1,156 @@
+"use client";
+
+import React from "react";
 import {
-  Github,
-  Instagram,
-  Twitter,
-  Youtube,
-  Send,
-  MapPin,
-  Phone,
-  Mail,
+  Github, Instagram, Twitter, Youtube, Send, 
+  MapPin, Phone, Mail, ShieldCheck, Leaf, Award
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-green-50 border-t border-slate-100 overflow-hidden pt-16 pb-8 md:pt-24">
-      {/* --- Swadeshi Background Graphics Overlay --- */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none">
-        {/* Simplified Vector of Red Fort (Left) */}
+    <footer className="relative bg-[#fcfdfc] border-t border-slate-100 overflow-hidden pt-20 pb-10">
+      
+      {/* 1. Enhanced Patriotic Background Overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-[0.04]">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/1/12/Red_Fort_New_Delhi_Vector.svg"
-          alt="Red Fort Graphic"
-          className="absolute -left-20 bottom-0 h-[300px] w-auto text-slate-900 grayscale"
+          alt="Heritage"
+          className="absolute -left-20 -bottom-10 h-[400px] w-auto grayscale brightness-50"
         />
-        {/* Simplified Vector of Taj Mahal (Center-Right) */}
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Taj_Mahal_Vector.svg"
-          alt="Taj Mahal Graphic"
-          className="absolute right-1/4 top-10 h-[250px] w-auto grayscale"
-        />
-        {/* Simplified Vector of Qutub Minar (Right) */}
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/3/30/Qutub_Minar_Vector.svg"
-          alt="Qutub Minar Graphic"
-          className="absolute right-0 bottom-[-50px] h-[400px] w-auto grayscale"
+          alt="Heritage"
+          className="absolute right-0 bottom-0 h-[500px] w-auto grayscale brightness-50"
         />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-y-12 gap-x-8 md:gap-12 mb-16">
-          {/* Brand & Mission Column */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-4 space-y-6">
-            <div className="flex items-center gap-3">
-              <img
-                src="/amaze-logo.png"
-                alt="Logo"
-                className="shrink-0 w-12 h-12 object-contain"
-              />
-              <h3 className="text-2xl font-black text-slate-900 leading-none tracking-tight">
-                Amaze Ayurveda
-                <br />
-                <span className="text-emerald-600 text-lg font-bold">
-                  Pvt. Ltd.
-                </span>
-              </h3>
+        
+        {/* 2. Top Section: Newsletter Card */}
+        {/* <div className="bg-emerald-600 rounded-[2.5rem] p-8 md:p-12 mb-20 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl shadow-emerald-200">
+            <div className="text-white space-y-2 text-center lg:text-left">
+                <h3 className="text-2xl md:text-3xl font-black tracking-tight italic">Join the Swadeshi Revolution</h3>
+                <p className="text-emerald-100 text-sm font-medium opacity-80 uppercase tracking-widest">Aatmanirbhar Bharat begins with you.</p>
             </div>
-            <p className="text-slate-600 leading-relaxed max-w-md">
-              Aatmanirbhar Bharat begins with wellness. We empower the nation
-              with authentic Ayurvedic wisdom and sustainable business
-              opportunities.
-            </p>
-            <div className="flex gap-4 text-slate-400">
-              {[Github, Instagram, Twitter, Youtube].map((Icon, i) => (
-                <Icon
-                  key={i}
-                  className="w-5 h-5 hover:text-emerald-600 hover:scale-110 cursor-pointer transition-all"
+            <div className="relative w-full max-w-md group">
+                <Input 
+                    type="email" 
+                    placeholder="Enter your email for updates..." 
+                    className="h-16 rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-emerald-100/50 px-6 focus:bg-white focus:text-slate-900 transition-all outline-none"
                 />
+                <Button className="absolute right-2 top-2 bottom-2 bg-white text-emerald-600 hover:bg-slate-900 hover:text-white rounded-xl px-6 transition-all font-black uppercase text-[10px] tracking-widest">
+                   Subscribe
+                </Button>
+            </div>
+        </div> */}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
+          
+          {/* 3. Brand & Socials */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="space-y-4">
+                <Link href="/" className="flex items-center gap-3">
+                  <img src="/amaze-logo.png" alt="Logo" className="w-14 h-14 object-contain" />
+                  <div>
+                    <h3 className="text-2xl font-[1000] text-slate-900 leading-none tracking-tighter uppercase italic">
+                        Amaze <span className="text-emerald-600">Ayurveda</span>
+                    </h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">Pvt. Ltd.</p>
+                  </div>
+                </Link>
+                <p className="text-slate-500 text-sm leading-relaxed max-w-sm font-medium italic">
+                  "Authentic Ayurvedic wisdom, sustainable opportunities, and a vision for a stronger, healthier India."
+                </p>
+            </div>
+            
+            <div className="flex gap-3">
+              {[Github, Instagram, Twitter, Youtube].map((Icon, i) => (
+                <div key={i} className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-emerald-600 hover:text-white hover:-translate-y-1 transition-all cursor-pointer shadow-sm">
+                  <Icon size={18} />
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Contact & Location (Replaces standard links for stronger trust) */}
-          <div className="col-span-1 md:col-span-3 space-y-6">
-            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">
-              Reach Us
-            </h4>
-            <ul className="space-y-4 text-slate-700 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                <span>Saraiya, Bihar, India 843106</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-emerald-600 shrink-0" />
-
-                <a
-                  href="tel:+919204260719"
-                  className="hover:text-emerald-600 transition-colors"
-                >
-                  +91 9204260719
-                </a>
-              </li>
-
-              <li className="flex items-center gap-3 hover:text-emerald-600 cursor-pointer transition-colors">
-                <Mail className="w-5 h-5 text-emerald-600 shrink-0" />
-
-                <a
-                  href="mailto:amazeayurveda.in@gmail.com"
-                  className="hover:text-emerald-600 transition-colors"
-                >
-                  amazeayurveda.in@gmail.com
-                </a>
-              </li>
-            </ul>
+          {/* 4. Reach Us Section */}
+          <div className="lg:col-span-3 space-y-6">
+            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Reach Us</h4>
+            <div className="space-y-5">
+                <ContactItem icon={<MapPin size={18}/>} label="Location" value="Saraiya, Bihar, India 843106" />
+                <ContactItem icon={<Phone size={18}/>} label="Call" value="+91 9204260719" href="tel:+919204260719" />
+                <ContactItem icon={<Mail size={18}/>} label="Email" value="support@amazeayurveda.in" href="mailto:support@amazeayurveda.in" />
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="col-span-1 md:col-span-2 space-y-6">
-            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">
-              Explore
-            </h4>
-            <ul className="space-y-3 text-slate-600 text-sm font-medium">
-              {[
-                "About Us",
-                "Business Plan",
-                "Latest Products",
-                "Careers",
-                "Terms",
-              ].map((link) => (
-                <li
-                  key={link}
-                  className="hover:text-emerald-600 transition-all cursor-pointer hover:translate-x-1"
-                >
-                  {link}
+          {/* 5. Quick Explore Links */}
+          <div className="lg:col-span-2 space-y-6">
+            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Explore</h4>
+            <ul className="space-y-4">
+              {["About Us", "Business Plan", "Products", "Careers", "T&C"].map((link) => (
+                <li key={link}>
+                  <Link href={`/${link.toLowerCase().replace(/\s+/g, '-')}`} className="text-slate-500 text-sm font-bold hover:text-emerald-600 hover:translate-x-2 transition-all flex items-center gap-2 group">
+                    <div className="h-1.5 w-1.5 rounded-full bg-slate-200 group-hover:bg-emerald-500 transition-colors" />
+                    {link}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Swadeshi Newsletter */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-3 space-y-6">
-            <h4 className="font-bold text-slate-950 uppercase tracking-widest text-xs">
-              Stay Connected
-            </h4>
-            <p className="text-slate-600 text-sm leading-relaxed">
-              Subscribe for Ayurvedic insights and exclusive Swadeshi offers.
-            </p>
-            <div className="relative group">
-              <Input
-                type="email"
-                placeholder="Support Local. Enter Email..."
-                className="w-full h-14 bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all shadow-inner text-sm"
-              />
-              <Button
-                size="icon"
-                className="absolute right-2 top-2 bottom-2 bg-slate-950 text-white rounded-lg hover:bg-emerald-600 transition-all h-10 w-10"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
+          {/* 6. Certification Badges (Premium UX) */}
+          <div className="lg:col-span-3 space-y-6">
+            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Trust & Safety</h4>
+            <div className="grid grid-cols-2 gap-3">
+               <TrustBadge icon={<ShieldCheck size={16}/>} label="ISO Certified" />
+               <TrustBadge icon={<Leaf size={16}/>} label="100% Organic" />
+               <TrustBadge icon={<Award size={16}/>} label="Ayush Dept." />
+               <TrustBadge icon={<Award size={16}/>} label="GMP Certified" />
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Patriotism Focus */}
-        <div className="mt-16 pt-8 border-t border-slate-100">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center text-slate-500 text-xs md:text-sm">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-orange-500 fill-orange-500" />
-              <p>Headquartered in Bihar, India</p>
-            </div>
-            <p>© 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U82990BR2023PTC066853</p>
-            <p className="flex items-center gap-1.5 font-medium text-slate-700">
-              Made in Bharat{" "}
-              <span className="text-red-500 animate-pulse">🇮🇳</span> for Global
-              Wellness
+        {/* 7. Bottom Bar */}
+        <div className="pt-10 border-t border-slate-100">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+                © 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U82990BR2023PTC066853
             </p>
+            <div className="flex items-center gap-4">
+                <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                    Proudly Made in Bharat <span className="animate-pulse">🇮🇳</span>
+                </span>
+            </div>
           </div>
         </div>
       </div>
     </footer>
   );
 };
+
+// --- Sub-components for Cleaner Code ---
+
+const ContactItem = ({ icon, label, value, href }: any) => (
+    <div className="flex gap-4 group cursor-pointer">
+        <div className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+            {icon}
+        </div>
+        <div>
+            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">{label}</p>
+            {href ? (
+                <a href={href} className="text-sm font-bold text-slate-700 hover:text-emerald-600 transition-colors">{value}</a>
+            ) : (
+                <p className="text-sm font-bold text-slate-700">{value}</p>
+            )}
+        </div>
+    </div>
+);
+
+const TrustBadge = ({ icon, label }: any) => (
+    <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 text-center gap-2 hover:bg-white hover:border-emerald-100 transition-all">
+        <div className="text-emerald-600">{icon}</div>
+        <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter leading-none">{label}</p>
+    </div>
+);

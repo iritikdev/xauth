@@ -2,9 +2,13 @@ import AboutUs from "@/components/aboutus";
 import BusinessOpportunity from "@/components/business";
 import Hero from "@/components/hero";
 import Testimonial from "@/components/testimonial";
-import {Footer} from "@/components/footer";
+import { Footer } from "@/components/footer";
 import { ProductCarousel } from "@/components/LatestReleases";
 import { Navbar } from "@/components/navbar";
+import { FeaturedProducts } from "@/components/ecommerce/featured-products";
+import prisma from "@/lib/prisma";
+import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
+import FaqSection from "@/components/faq-section";
 
 interface Props {
   companyName?: string;
@@ -17,16 +21,22 @@ const messages = [
   "📢 Follow us on Twitter!",
 ];
 
-const Home = (props: Props) => {
+const Home = async (props: Props) => {
+  const products = await prisma.product.findMany({
+    include : {category:true},
+    take: 6,
+    orderBy: { createdAt: "desc" },
+  });
+  console.log("Product", products)
   return (
     <div className="min-h-screen bg-white">
-     <Navbar />
+      <Navbar />
       <Hero />
-      <ProductCarousel products={[]} />
+      <FeaturedProducts initialProducts={products} />
       <AboutUs />
-      {/* <AmazeAyurvedaPlan /> */}
       <BusinessOpportunity />
       <Testimonial />
+      <FaqSection/>
       <Footer />
     </div>
   );
