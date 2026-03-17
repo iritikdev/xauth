@@ -53,8 +53,8 @@ export async function POST(request: Request) {
                 email: "",
                 mobile,
                 accountNo: "",
-                aadharNo: "",
-                panNumber: "",
+                // aadharNo: "",
+                // panNumber: "",
 
                 sponsorId,
                 username,
