@@ -32,6 +32,8 @@ export async function getUserByUsername(username: string) {
             aadharNo: true,
             panNumber: true,
             createdAt: true,
+            totalBv:true,
+            Wallet:true,
 
             sponsorId: true,
             sponsor: true,

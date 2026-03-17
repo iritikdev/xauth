@@ -55,6 +55,7 @@ export async function POST(req: Request) {
                 state: parsed.state,
                 pincode: parsed.pincode,
 
+
                 accountNo: parsed.accountNo,
                 branch: parsed.branch,
                 ifsc: parsed.ifsc,

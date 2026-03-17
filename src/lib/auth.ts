@@ -33,7 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             mobile: user.mobile ?? "",
             username: user.username,
             photoUrl: user.photoUrl ?? "", // Changed to empty string to match your .d.ts easier
-            role: user.role,
+            // role: user.role,
           };
         }
 
@@ -48,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.username = user.username;
         token.mobile = user.mobile;
         token.photoUrl = user.photoUrl;
-        token.role = user.role;
+        // token.role = user.role;
       }
       return token;
     },
@@ -58,7 +58,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.username = token.username as string;
         session.user.mobile = token.mobile as string;
         session.user.photoUrl = token.photoUrl as string;
-        session.user.role = token.role as any; // Cast to Role if needed
+        // session.user.role = token.role as any; // Cast to Role if needed
       }
       return session;
     },
