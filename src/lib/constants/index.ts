@@ -112,7 +112,7 @@ export const DASHBOARD_SIDEBAR = {
         },
         {
           title: "KYC Verification",
-          url: "/dashboard/kycVerification",
+          url: "/dashboard/kyc",
           icon: "BadgeCheck",
         },
         {
