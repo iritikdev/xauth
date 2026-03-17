@@ -121,11 +121,11 @@ export default async function UserProfilePage({ params }: { params: { username: 
               <div className="space-y-4">
                 <div className="flex flex-col p-4 bg-slate-50 rounded-2xl">
                   <span className="text-[9px] font-bold text-slate-400 uppercase mb-1">Aadhaar Number</span>
-                  <span className="text-sm font-black italic tracking-widest">{user.aadharNo}</span>
+                  {/* <span className="text-sm font-black italic tracking-widest">{user.aadharNo}</span> */}
                 </div>
                 <div className="flex flex-col p-4 bg-slate-50 rounded-2xl">
                   <span className="text-[9px] font-bold text-slate-400 uppercase mb-1">PAN Card Number</span>
-                  <span className="text-sm font-black italic tracking-widest uppercase">{user.panNumber}</span>
+                  {/* <span className="text-sm font-black italic tracking-widest uppercase">{user.panNumber}</span> */}
                 </div>
               </div>
             </Card>
