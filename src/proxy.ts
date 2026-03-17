@@ -63,6 +63,8 @@ export async function proxy(req:NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
+  console.log("TOKEN:", token);
+  
   const { pathname } = req.nextUrl;
 
   if (pathname.startsWith("/admin")) {
