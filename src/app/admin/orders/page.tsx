@@ -4,6 +4,8 @@ import { DataTable } from "@/components/data-table";
 import { orderColumns } from "./columns"; // You'll create this file in the same folder
 import { Card } from "@/components/ui/card";
 import { PageHeader } from "@/components/admin/page-header";
+export const dynamic = "force-dynamic";
+
 
 export default async function AdminOrdersPage() {
   // Fetch orders with associated User data

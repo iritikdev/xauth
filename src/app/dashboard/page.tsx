@@ -26,6 +26,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+export const dynamic = "force-dynamic";
 export default function Page() {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState<any>(null);

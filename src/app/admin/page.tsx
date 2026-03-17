@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import AdminDashboardClient from "./dashboard-client";
 
-export const dynamic = "force-dynamic"; // Prerender error se bachne ke liye
+export const dynamic = "force-dynamic"; 
 
 export default async function AdminDashboardPage() {
   // 1. Fetch Real Stats

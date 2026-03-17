@@ -50,16 +50,19 @@ const SignInForm = () => {
       toast.success("Welcome to Amaze Ayurveda!");
 
       // 1. Fetch the fresh session immediately to get the role
-      const response = await fetch("/api/auth/session");
-      const freshSession = await response.json();
+      setTimeout(async () => {
+        const response = await fetch("/api/auth/session");
+        const freshSession = await response.json();
+        if (freshSession?.user?.role === "ADMIN") {
+          router.replace("/admin") 
+        } else {
+          router.replace("/dashboard") 
+        }
+
+      }, 500)
+
 
       // 2. Logic-based Redirect
-      if (freshSession?.user?.role === "ADMIN") {
-        // Use window.location.href for a hard redirect if router.push fails
-        window.location.href = "/admin"; 
-      } else {
-        window.location.href = "/dashboard";
-      }
 
     } catch (err) {
       setError("An unexpected error occurred during sign-in.");
