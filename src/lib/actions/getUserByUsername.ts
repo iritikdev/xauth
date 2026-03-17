@@ -29,8 +29,6 @@ export async function getUserByUsername(username: string) {
             username: true,
             mobile: true,
             email: true,
-            aadharNo: true,
-            panNumber: true,
             createdAt: true,
             totalBv:true,
             Wallet:true,

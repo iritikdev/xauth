@@ -1,12 +1,7 @@
 import AboutUs from "@/components/aboutus";
 import BusinessOpportunity from "@/components/business";
-import Categories from "@/components/categories";
 import Hero from "@/components/hero";
-import LeadershipDesignations from "@/components/leader-designation";
-import Marquee from "@/components/flash-marquee";
-import OurProducts from "@/components/products";
 import Testimonial from "@/components/testimonial";
-import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
 import {Footer} from "@/components/footer";
 import { ProductCarousel } from "@/components/LatestReleases";
 import { Navbar } from "@/components/navbar";

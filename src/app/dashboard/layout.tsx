@@ -17,7 +17,7 @@ function Layout({ children }: LayoutProps) {
     <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
         <SiteHeader />
-        <NewsTicker />
+        {/* <NewsTicker /> */}
         <div className="flex flex-row">
           <AppSidebar navigation={DASHBOARD_SIDEBAR} />
           {/* <BackButton /> */}

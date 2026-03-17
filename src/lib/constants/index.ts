@@ -193,6 +193,7 @@ export const ADMIN_SIDEBAR = {
       icon: "Package",
       items: [
         { title: "All Products", url: "/admin/products", icon: "Boxes" },
+        { title: "Add Product", url: "/admin/products/new", icon: "Boxes" },
         { title: "Categories", url: "/admin/categories", icon: "Tags" },
         {
           title: "Manage Orders",
