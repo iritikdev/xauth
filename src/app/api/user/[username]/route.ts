@@ -68,8 +68,8 @@ export async function POST(req: Request) {
 
                 email: parsed.email,
                 mobile: parsed.mobile,
-                panNumber: parsed.panNumber,
-                aadharNo: parsed.aadharNo,
+                // panNumber: parsed.panNumber,
+                // aadharNo: parsed.aadharNo,
             },
         });
 
