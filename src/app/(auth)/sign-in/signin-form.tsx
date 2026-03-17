@@ -49,17 +49,18 @@ const SignInForm = () => {
 
       toast.success("Welcome to Amaze Ayurveda!");
 
-      // 1. Fetch the fresh session immediately to get the role
-      setTimeout(async () => {
-        const response = await fetch("/api/auth/session");
-        const freshSession = await response.json();
-        if (freshSession?.user?.role === "ADMIN") {
-          router.replace("/admin") 
-        } else {
-          router.replace("/dashboard") 
-        }
+      if (res?.ok) {
+  setTimeout(async () => {
+    const sessionRes = await fetch("/api/auth/session");
+    const session = await sessionRes.json();
 
-      }, 500)
+    if (session?.user?.role === "ADMIN") {
+      router.replace("/admin");
+    } else {
+      router.replace("/dashboard");
+    }
+  }, 500);
+}
 
 
       // 2. Logic-based Redirect
