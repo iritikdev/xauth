@@ -5,15 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   CheckCircle2, 
-  Clock, 
-  Truck, 
-  MoreHorizontal, 
+ 
   Zap, 
-  User as UserIcon 
+  User as UserIcon, 
+  Loader2
 } from "lucide-react";
 import { markOrderAsDelivered } from "@/lib/actions/admin"; // Import action
 import { toast } from "sonner";
 import { useState } from "react";
+import { distributeLevelIncome } from "@/lib/actions/commission";
 
 export const orderColumns: ColumnDef<any>[] = [
   {
@@ -69,24 +69,87 @@ export const orderColumns: ColumnDef<any>[] = [
       );
     },
   },
+  // {
+  //   id: "actions",
+  //   header: "Action",
+  //   cell: ({ row }) => {
+  //     const order = row.original;
+  //     const [loading, setLoading] = useState(false);
+
+  //     const onDeliver = async () => {
+  //       if (!confirm("क्या आप वाकई इस ऑर्डर को Delivered मार्क करना चाहते हैं? इससे यूजर के वॉलेट में BV क्रेडिट हो जाएगा।")) return;
+        
+  //       setLoading(true);
+  //       const res = await markOrderAsDelivered(order.id);
+  //       if (res.success) {
+  //         if (order.status === "PAID") distributeLevelIncome(order.userId, 500)
+  //         toast.success("Order Delivered", { description: "BV points have been credited to user wallet." });
+  //       } else {
+  //         toast.error("Error", { description: res.error });
+  //       }
+  //       setLoading(false);
+  //     };
+
+  //     return (
+  //       <div className="flex items-center gap-2">
+  //         {order.status !== "DELIVERED" ? (
+  //           <Button 
+  //             size="sm" 
+  //             onClick={onDeliver}
+  //             disabled={loading}
+  //             className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[10px] font-black uppercase tracking-widest gap-2"
+  //           >
+  //             {loading ? "Processing..." : <><CheckCircle2 size={14} /> Deliver</>}
+  //           </Button>
+  //         ) : (
+  //           <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-1">
+  //             <CheckCircle2 size={12} /> Completed
+  //           </span>
+  //         )}
+  //       </div>
+  //     );
+  //   },
+  // },
+
   {
     id: "actions",
     header: "Action",
     cell: ({ row }) => {
       const order = row.original;
-      const [loading, setLoading] = useState(false);
+      const [isProcessing, setIsProcessing] = useState(false);
 
       const onDeliver = async () => {
-        if (!confirm("क्या आप वाकई इस ऑर्डर को Delivered मार्क करना चाहते हैं? इससे यूजर के वॉलेट में BV क्रेडिट हो जाएगा।")) return;
+        // Confirm before processing
+        const confirmMsg = "क्या आप इस ऑर्डर को Delivered मार्क करना चाहते हैं? इससे 15 लेवल्स तक इनकम डिस्ट्रीब्यूट हो जाएगी।";
+        if (!window.confirm(confirmMsg)) return;
         
-        setLoading(true);
-        const res = await markOrderAsDelivered(order.id);
-        if (res.success) {
-          toast.success("Order Delivered", { description: "BV points have been credited to user wallet." });
-        } else {
-          toast.error("Error", { description: res.error });
+        setIsProcessing(true);
+        try {
+          // 1. Mark Order as Delivered in DB
+          const res = await markOrderAsDelivered(order.id);
+          
+          if (res.success) {
+            // 2. Trigger Level Income Distribution
+            // Hum order ka totalAmount pass karenge (ya jitne par commission banna hai)
+            const incomeRes = await distributeLevelIncome(order.userId, order.totalAmount);
+            console.log(".........",incomeRes)
+            if (incomeRes.success) {
+              toast.success("Success!", { 
+                description: `Order delivered and level income distributed to ${incomeRes.logs?.length || 0} levels.` 
+              });
+            } else {
+              toast.warning("Partial Success", { 
+                description: "Order marked delivered, but income distribution failed. Please check logs." 
+              });
+            }
+          } else {
+            toast.error("Error", { description: res.error });
+          }
+        } catch (error) {
+          toast.error("Critical Error", { description: "Something went wrong during the process." });
+        } finally {
+          setIsProcessing(false);
         }
-        setLoading(false);
       };
 
       return (
@@ -95,20 +158,32 @@ export const orderColumns: ColumnDef<any>[] = [
             <Button 
               size="sm" 
               onClick={onDeliver}
-              disabled={loading}
-              className="h-8 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-[10px] font-black uppercase tracking-widest gap-2"
+              disabled={isProcessing}
+              className="h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-[10px] font-black uppercase tracking-widest gap-2 transition-all active:scale-95 shadow-lg shadow-slate-200"
             >
-              {loading ? "Processing..." : <><CheckCircle2 size={14} /> Deliver</>}
+              {isProcessing ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 size={14} /> Deliver
+                </>
+              )}
             </Button>
           ) : (
-            <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-1">
-              <CheckCircle2 size={12} /> Completed
-            </span>
+            <div className="flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-lg">
+                <CheckCircle2 size={12} className="text-emerald-600" />
+                <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                    Dispatched
+                </span>
+            </div>
           )}
         </div>
       );
     },
-  },
+  }
 ];
 
 // Utility function (agar utils mein nahi hai toh yahan define kar dein)

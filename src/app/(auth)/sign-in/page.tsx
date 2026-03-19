@@ -41,6 +41,7 @@ const Page = async () => {
                 alt="Amaze Ayurveda Logo"
                 fill
                 className="object-contain p-2"
+                sizes=""
               />
             </div>
             <div className="space-y-1">
