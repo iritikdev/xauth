@@ -57,9 +57,10 @@ model User {
   downlines User[]  @relation("SponsorRelation")
 
   // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  orders       Order[]
+  transactions Transaction[]
 }
 
 model Counter {
@@ -116,6 +117,7 @@ model Transaction {
   status      TransactionStatus // e.g., PENDING, COMPLETED, FAILED
   description String
   createdAt   DateTime          @default(now())
+  user        User              @relation(fields: [userId], references: [id])
 }
 
 enum TransactionType {

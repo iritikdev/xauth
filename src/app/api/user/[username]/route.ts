@@ -99,6 +99,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Username missing" }, { status: 400 });
     }
 
+    console.log("bodt", body)
     const updatedUser = await prisma.user.update({
       where: { username: username },
       data: body,

@@ -223,8 +223,8 @@ export const ADMIN_SIDEBAR = {
       icon: "Wallet",
       items: [
         {
-          title: "Withdrawal Requests",
-          url: "/admin/withdrawals",
+          title: "Payout Requests",
+          url: "/admin/payouts",
           icon: "ReceiptIndianRupee",
         },
         {

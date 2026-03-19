@@ -348,8 +348,7 @@ export default function UserProfileForm() {
             title="Banking & ID"
             sectionKey="Bank"
             fields={[
-              "panNumber",
-              "aadharNo",
+          
               "accountNo",
               "ifsc",
               "branch",
@@ -358,7 +357,7 @@ export default function UserProfileForm() {
           />
           <Card className="rounded-[2.5rem] border-none shadow-xl bg-white p-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <FormInput
+              {/* <FormInput
                 label="PAN Number"
                 {...register("panNumber")}
                 className="uppercase"
@@ -367,7 +366,7 @@ export default function UserProfileForm() {
                 label="Aadhaar Number"
                 {...register("aadharNo")}
                 maxLength={12}
-              />
+              /> */}
               <FormInput label="UPI ID" {...register("upiId")} />
               <FormInput label="Account Number" {...register("accountNo")} />
               <FormInput
