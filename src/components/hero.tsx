@@ -1,129 +1,258 @@
 "use client";
 
-import React from 'react';
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Flag, ShoppingBag, ArrowRight, ShieldCheck, Heart, Star } from "lucide-react";
-import Link from 'next/link';
+import React from "react";
+import { motion } from "framer-motion";
+import { ShoppingBag, ArrowRight, Leaf, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+
+/* ── Shared botanical leaf SVG ── */
+const LeafDecor = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 120 180" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15" />
+    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
+    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 120 C42 110 30 115 22 128" stroke="currentColor" strokeWidth="1" opacity="0.15" />
+  </svg>
+);
+
+/* ── Stagger helpers ── */
+const fadeUp = (delay = 0) => ({
+  initial:    { opacity: 0, y: 24 },
+  animate:    { opacity: 1, y: 0  },
+  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
+});
+
+const fadeRight = (delay = 0) => ({
+  initial:    { opacity: 0, x: -28 },
+  animate:    { opacity: 1, x: 0   },
+  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
+});
+
+const fadeLeft = (delay = 0) => ({
+  initial:    { opacity: 0, x: 28 },
+  animate:    { opacity: 1, x: 0  },
+  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
+});
+
+const trust = [
+  { value: "100%",   label: "Organic"   },
+  { value: "AYUSH",  label: "Certified" },
+  { value: "1M+",    label: "Artisans"  },
+];
+
+const pillars = [
+  "Authentic Ayurvedic Formulations",
+  "15-Level Income Opportunity",
+  "Proudly Made in Bharat",
+];
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#fafafa]">
-      
-      {/* 1. Enhanced Background Mesh */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-orange-200/30 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-200/30 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20" />
+    <section
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f5f0e8]"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
+    >
+
+      {/* ── Background layer ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Warm orbs */}
+        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-[#e8a020]/8 blur-[130px]" />
+        <div className="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full bg-[#1c3320]/6 blur-[120px]" />
+
+        {/* Dot grid — masked to center */}
+        <div
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #1c3320 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
+            maskImage: "radial-gradient(ellipse 70% 70% at 50% 50%, #000 60%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(ellipse 70% 70% at 50% 50%, #000 60%, transparent 100%)",
+          }}
+        />
+
+        {/* Botanical leaf accents */}
+        <LeafDecor className="absolute top-16 right-[5%]  w-36 text-[#1c3320] opacity-[0.06]" />
+        <LeafDecor className="absolute bottom-20 left-[3%] w-24 text-[#c8860a] opacity-[0.07] rotate-[15deg]" />
+        <LeafDecor className="absolute top-1/2  left-[8%] w-16 text-[#1c6634] opacity-[0.05] -rotate-12" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full pt-28 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          
-          {/* Content Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="space-y-8 text-center lg:text-left"
-          >
-            <div className="space-y-6">
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-orange-200/50 px-4 py-2 rounded-full shadow-sm"
+      {/* ── Content ── */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full pt-28 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 xl:gap-24 items-center">
+
+          {/* ════════════════════════════════
+              LEFT  —  Copy
+          ════════════════════════════════ */}
+          <div className="space-y-8 text-center lg:text-left">
+
+            {/* Badge */}
+            <motion.div {...fadeUp(0.05)} className="inline-flex items-center gap-2.5 bg-[#1c3320]/6 border border-[#1c3320]/10 px-4 py-2 rounded-full">
+              <Leaf className="w-3.5 h-3.5 text-[#e8a020] fill-[#e8a020]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#1c3320]/60">
+                Swadeshi Movement 2026
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              {...fadeUp(0.12)}
+              className="text-[3.5rem] sm:text-[5rem] md:text-[6.5rem] font-black leading-[0.92] tracking-[-0.03em] text-[#1c3320]"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              BE{" "}
+              <span className="text-[#e8a020] italic">INDIAN</span>
+              <br />
+              BUY{" "}
+              <span
+                className="relative inline-block"
+                style={{
+                  WebkitTextStroke: "2px #1c3320",
+                  color: "transparent",
+                }}
               >
-                <Flag className="w-4 h-4 text-orange-600 animate-bounce" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600">
-                  Swadeshi Movement 2026
-                </span>
-              </motion.div>
-              
-              <h1 className="text-5xl md:text-8xl font-[1000] leading-[0.9] tracking-[-0.04em] text-slate-900">
-                BE <span className="text-orange-600 italic">INDIAN</span><br />
-                BUY <span className="text-emerald-600 italic">INDIAN</span>
-              </h1>
-            </div>
+                INDIAN
+              </span>
+            </motion.h1>
 
-            <p className="text-md md:text-xl text-slate-500 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
-              Empowering <span className="text-slate-900 font-bold underline decoration-orange-500/30 decoration-4">1 Million+ Artisans</span>. 
+            {/* Body copy */}
+            <motion.p
+              {...fadeUp(0.2)}
+              className="text-base md:text-lg text-[#1c3320]/55 leading-relaxed max-w-md mx-auto lg:mx-0 font-medium"
+            >
+              Empowering{" "}
+              <span className="text-[#1c3320] font-bold">1 Million+ Artisans</span>.
               Amaze Ayurveda brings the purity of ancient wisdom to your modern lifestyle.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-              <Link href="/shop" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full bg-slate-900 hover:bg-emerald-600 h-16 px-10 rounded-[1.25rem] text-base font-black uppercase tracking-widest shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] transition-all hover:-translate-y-1 active:scale-95">
-                  <ShoppingBag className="mr-2 h-5 w-5" />
-                  Shop Now
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="h-16 px-10 rounded-[1.25rem] text-base font-black uppercase tracking-widest border-2 border-slate-200 bg-transparent hover:bg-white transition-all active:scale-95">
-                Our Story <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="flex items-center justify-center lg:justify-start gap-8 pt-8 opacity-60">
-                <div className="flex flex-col items-center lg:items-start">
-                    <span className="text-2xl font-black text-slate-900">100%</span>
-                    <span className="text-[10px] uppercase font-bold tracking-widest">Organic</span>
-                </div>
-                <div className="w-px h-8 bg-slate-200" />
-                <div className="flex flex-col items-center lg:items-start">
-                    <span className="text-2xl font-black text-slate-900">AYUSH</span>
-                    <span className="text-[10px] uppercase font-bold tracking-widest">Certified</span>
-                </div>
-            </div>
-          </motion.div>
-
-          {/* Image Side with Parallax Effect */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="relative"
-          >
-            <div className="relative z-10 p-4 bg-white rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border border-slate-100">
-              <div className="aspect-[4/5] overflow-hidden rounded-[2.5rem] relative group">
-                <img 
-                  src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=800" 
-                  alt="Indian Heritage"
-                  className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110"
-                />
-                
-                {/* Floating Make in India Badge */}
-                <motion.div 
-                  animate={{ y: [0, -15, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute top-8 right-8 bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-5 border border-white flex flex-col items-center text-center w-24"
-                >
-                  <div className="w-10 h-10 bg-orange-600 rounded-2xl flex items-center justify-center mb-2 rotate-12 group-hover:rotate-0 transition-transform">
-                     <ShieldCheck className="text-white w-5 h-5" />
-                  </div>
-                  <span className="text-[9px] font-black uppercase tracking-tighter leading-tight text-slate-800">
-                    Trusted<br/>Bharat
+            {/* Pillar checklist */}
+            <motion.ul {...fadeUp(0.27)} className="space-y-2.5 text-left max-w-xs mx-auto lg:mx-0">
+              {pillars.map((p) => (
+                <li key={p} className="flex items-center gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#e8a020] flex-shrink-0" />
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-[#1c3320]/55">
+                    {p}
                   </span>
-                </motion.div>
+                </li>
+              ))}
+            </motion.ul>
 
-                {/* Bottom Overlay Card */}
-                <div className="absolute bottom-6 left-6 right-6 p-6 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20 text-white shadow-2xl">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="flex -space-x-2">
-                        {[1,2,3].map(i => (
-                            <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-slate-300" />
-                        ))}
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-300">Join 50k+ Indians</span>
+            {/* CTAs */}
+            <motion.div
+              {...fadeUp(0.33)}
+              className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2"
+            >
+              <Link href="/shop" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 h-14 px-8 rounded-xl bg-[#1c3320] hover:bg-[#1c6634] text-white font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_8px_32px_rgba(28,50,32,0.25)] hover:shadow-[0_12px_40px_rgba(28,50,32,0.35)] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200">
+                  <ShoppingBag className="w-4 h-4" />
+                  Shop Now
+                </button>
+              </Link>
+              <Link href="/about" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-14 px-8 rounded-xl border-2 border-[#1c3320]/15 bg-transparent hover:bg-[#1c3320]/5 hover:border-[#1c3320]/25 text-[#1c3320]/65 hover:text-[#1c3320] font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-200">
+                  Our Story
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </motion.div>
+
+            {/* Trust stats */}
+            <motion.div
+              {...fadeUp(0.4)}
+              className="flex items-center gap-6 justify-center lg:justify-start pt-2"
+            >
+              {trust.map((t, i) => (
+                <React.Fragment key={t.label}>
+                  {i > 0 && <div className="h-8 w-px bg-[#1c3320]/12" />}
+                  <div>
+                    <p className="text-xl font-black text-[#1c3320] leading-none">{t.value}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#1c3320]/40 mt-0.5">
+                      {t.label}
+                    </p>
                   </div>
-                  <p className="text-xl font-bold leading-tight">Reviving our roots, one product at a time.</p>
+                </React.Fragment>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* ════════════════════════════════
+              RIGHT  —  Image composition
+          ════════════════════════════════ */}
+          <motion.div
+            {...fadeLeft(0.15)}
+            className="relative flex items-center justify-center"
+          >
+            {/* Outer ring — forest green border */}
+            <div className="absolute inset-[-18px] rounded-[3.5rem] border border-[#1c3320]/8 rotate-2" />
+            <div className="absolute inset-[-18px] rounded-[3.5rem] border border-[#1c3320]/5 -rotate-2" />
+
+            {/* Image card */}
+            <div className="relative z-10 w-full rounded-[3rem] bg-[#1c3320] p-3 shadow-[0_40px_80px_-16px_rgba(28,50,32,0.3)] overflow-hidden">
+
+              {/* Dark forest header strip */}
+              <div className="relative overflow-hidden">
+                <div className="aspect-[4/5] overflow-hidden rounded-[2.5rem] relative group">
+                  <Image
+                    src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?auto=format&fit=crop&q=80&w=800"
+                    alt="Indian Ayurvedic Heritage"
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1c3320]/80 via-[#1c3320]/10 to-transparent" />
+
+                  {/* Floating trust badge — top right */}
+                  <motion.div
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-6 right-6 bg-[#e8a020] rounded-2xl p-4 shadow-[0_8px_32px_rgba(232,160,32,0.4)] flex flex-col items-center gap-1.5"
+                  >
+                    <Leaf className="w-5 h-5 text-[#1c3320] fill-[#1c3320]" />
+                    <span className="text-[8px] font-black uppercase tracking-tight text-[#1c3320] leading-tight text-center">
+                      Trusted<br />Bharat
+                    </span>
+                  </motion.div>
+
+                  {/* Bottom info card */}
+                  <div className="absolute bottom-5 left-5 right-5 bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-5">
+                    <div className="flex items-center gap-3 mb-2">
+                      {/* Avatar stack */}
+                      <div className="flex -space-x-2">
+                        {[0, 1, 2].map((i) => (
+                          <div
+                            key={i}
+                            className="w-7 h-7 rounded-full border-2 border-white/30 bg-gradient-to-br from-[#e8a020]/60 to-[#1c6634]/60"
+                          />
+                        ))}
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#e8a020]">
+                        Join 50k+ Indians
+                      </span>
+                    </div>
+                    <p className="text-sm font-bold text-white leading-snug">
+                      Reviving our roots, one product at a time.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Brand strip below image (inside dark card) */}
+              <div className="flex items-center justify-between px-4 py-4">
+                <div className="flex items-center gap-2">
+                  <LeafDecor className="w-5 text-[#e8a020]" />
+                  <span
+                    className="text-sm font-black text-white"
+                    style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                  >
+                    Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
+                  </span>
+                </div>
+                <div className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
+                  🌿 Vocal for Local
                 </div>
               </div>
             </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-slate-200 rounded-[4rem] rotate-3" />
-            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] border border-slate-100 rounded-[4rem] -rotate-3" />
           </motion.div>
 
         </div>

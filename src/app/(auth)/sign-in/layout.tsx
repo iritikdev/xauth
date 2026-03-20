@@ -11,7 +11,6 @@ const SignInLayout = ({ children }: LayoutProps) => {
     <>
       <Navbar  />
       <div>{children}</div>
-      <Footer />
     </>
   );
 };

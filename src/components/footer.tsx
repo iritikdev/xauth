@@ -2,97 +2,137 @@
 
 import React from "react";
 import {
-  Github, Instagram, Twitter, Youtube, Send, 
+  Instagram, Twitter, Youtube, Facebook,
   MapPin, Phone, Mail, ShieldCheck, Leaf, Award
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
+
+/* ── Botanical leaf SVG (shared design-system asset) ── */
+const LeafDecor = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 120 180" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15" />
+    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
+    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 120 C42 110 30 115 22 128" stroke="currentColor" strokeWidth="1" opacity="0.15" />
+  </svg>
+);
+
+const exploreLinks = ["About Us", "Business Plan", "Products", "Careers", "T&C"];
+
+const socials = [
+  { Icon: Instagram, href: "#", label: "Instagram" },
+  { Icon: Twitter,   href: "#", label: "Twitter"   },
+  { Icon: Youtube,   href: "#", label: "YouTube"   },
+  { Icon: Facebook,  href: "#", label: "Facebook"  },
+];
+
+const trustBadges = [
+  { icon: <ShieldCheck size={15} />, label: "ISO Certified"  },
+  { icon: <Leaf        size={15} />, label: "100% Organic"   },
+  { icon: <Award       size={15} />, label: "Ayush Dept."    },
+  { icon: <Award       size={15} />, label: "GMP Certified"  },
+];
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-[#fcfdfc] border-t border-slate-100 overflow-hidden pt-20 pb-10">
-      
-      {/* 1. Enhanced Patriotic Background Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-[0.04]">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/12/Red_Fort_New_Delhi_Vector.svg"
-          alt="Heritage"
-          className="absolute -left-20 -bottom-10 h-[400px] w-auto grayscale brightness-50"
+    <footer
+      className="relative bg-[#1c3320] overflow-hidden pt-20 pb-8"
+      style={{ fontFamily: "'DM Sans', sans-serif" }}
+    >
+      {/* ── Ambient glows ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40  w-[480px] h-[480px] rounded-full bg-[#c8860a]/8  blur-[120px]" />
+        <div className="absolute -bottom-20 -right-20 w-[400px] h-[400px] rounded-full bg-emerald-500/6 blur-[100px]" />
+
+        {/* Subtle dot-grid */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
         />
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/3/30/Qutub_Minar_Vector.svg"
-          alt="Heritage"
-          className="absolute right-0 bottom-0 h-[500px] w-auto grayscale brightness-50"
-        />
+
+        {/* Decorative leaves */}
+        <LeafDecor className="absolute top-6  right-12  w-32 text-emerald-400  opacity-60" />
+        <LeafDecor className="absolute bottom-10 left-6  w-20 text-[#c8860a] opacity-50 rotate-[20deg]" />
+        <LeafDecor className="absolute top-1/2 right-5  w-14 text-emerald-300 opacity-40 -rotate-12" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
-        {/* 2. Top Section: Newsletter Card */}
-        {/* <div className="bg-emerald-600 rounded-[2.5rem] p-8 md:p-12 mb-20 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl shadow-emerald-200">
-            <div className="text-white space-y-2 text-center lg:text-left">
-                <h3 className="text-2xl md:text-3xl font-black tracking-tight italic">Join the Swadeshi Revolution</h3>
-                <p className="text-emerald-100 text-sm font-medium opacity-80 uppercase tracking-widest">Aatmanirbhar Bharat begins with you.</p>
-            </div>
-            <div className="relative w-full max-w-md group">
-                <Input 
-                    type="email" 
-                    placeholder="Enter your email for updates..." 
-                    className="h-16 rounded-2xl bg-white/10 border-white/20 text-white placeholder:text-emerald-100/50 px-6 focus:bg-white focus:text-slate-900 transition-all outline-none"
-                />
-                <Button className="absolute right-2 top-2 bottom-2 bg-white text-emerald-600 hover:bg-slate-900 hover:text-white rounded-xl px-6 transition-all font-black uppercase text-[10px] tracking-widest">
-                   Subscribe
-                </Button>
-            </div>
-        </div> */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-12 mb-16">
-          
-          {/* 3. Brand & Socials */}
-          <div className="lg:col-span-4 space-y-8">
-            <div className="space-y-4">
-                <Link href="/" className="flex items-center gap-3">
-                  <img src="/amaze-logo.png" alt="Logo" className="w-14 h-14 object-contain" />
-                  <div>
-                    <h3 className="text-2xl font-[1000] text-slate-900 leading-none tracking-tighter uppercase italic">
-                        Amaze <span className="text-emerald-600">Ayurveda</span>
-                    </h3>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">Pvt. Ltd.</p>
-                  </div>
-                </Link>
-                <p className="text-slate-500 text-sm leading-relaxed max-w-sm font-medium italic">
-                  "Authentic Ayurvedic wisdom, sustainable opportunities, and a vision for a stronger, healthier India."
+        {/* ══════════════════════════════════════
+            TOP  —  Brand + Nav grid
+        ══════════════════════════════════════ */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-12 pb-14 border-b border-white/8">
+
+          {/* ── Brand column ── */}
+          <div className="lg:col-span-4 space-y-7">
+            <Link href="/" className="flex items-center gap-4 group">
+              <div className="relative w-14 h-14 rounded-xl bg-white/8 border border-white/10 overflow-hidden flex-shrink-0">
+                <Image
+                  src="/amaze-logo.png"
+                  alt="Amaze Ayurveda"
+                  fill
+                  className="object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+              <div>
+                <h3
+                  className="text-xl font-black text-white leading-none tracking-tight"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                >
+                  Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
+                </h3>
+                <p className="text-[9px] font-bold text-white/30 uppercase tracking-[0.35em] mt-1.5">
+                  Pvt. Ltd.
                 </p>
-            </div>
-            
-            <div className="flex gap-3">
-              {[Github, Instagram, Twitter, Youtube].map((Icon, i) => (
-                <div key={i} className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-emerald-600 hover:text-white hover:-translate-y-1 transition-all cursor-pointer shadow-sm">
-                  <Icon size={18} />
-                </div>
+              </div>
+            </Link>
+
+            <p className="text-white/40 text-sm leading-relaxed max-w-xs font-medium italic border-l-2 border-[#e8a020]/30 pl-4">
+              "Authentic Ayurvedic wisdom, sustainable opportunities, and a vision for a stronger, healthier India."
+            </p>
+
+            {/* Socials */}
+            <div className="flex gap-2.5">
+              {socials.map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="h-9 w-9 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-white/40 hover:bg-[#e8a020] hover:text-[#1c3320] hover:border-[#e8a020] hover:-translate-y-1 transition-all duration-200"
+                >
+                  <Icon size={15} />
+                </a>
               ))}
             </div>
           </div>
 
-          {/* 4. Reach Us Section */}
+          {/* ── Reach Us ── */}
           <div className="lg:col-span-3 space-y-6">
-            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Reach Us</h4>
+            <SectionHeading>Reach Us</SectionHeading>
             <div className="space-y-5">
-                <ContactItem icon={<MapPin size={18}/>} label="Location" value="Saraiya, Bihar, India 843106" />
-                <ContactItem icon={<Phone size={18}/>} label="Call" value="+91 9204260719" href="tel:+919204260719" />
-                <ContactItem icon={<Mail size={18}/>} label="Email" value="support@amazeayurveda.in" href="mailto:support@amazeayurveda.in" />
+              <ContactItem icon={<MapPin  size={15} />} label="Location" value="Saraiya, Bihar, India 843106" />
+              <ContactItem icon={<Phone   size={15} />} label="Call"     value="+91 9204260719"            href="tel:+919204260719" />
+              <ContactItem icon={<Mail    size={15} />} label="Email"    value="support@amazeayurveda.in"  href="mailto:support@amazeayurveda.in" />
             </div>
           </div>
 
-          {/* 5. Quick Explore Links */}
+          {/* ── Explore ── */}
           <div className="lg:col-span-2 space-y-6">
-            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Explore</h4>
-            <ul className="space-y-4">
-              {["About Us", "Business Plan", "Products", "Careers", "T&C"].map((link) => (
+            <SectionHeading>Explore</SectionHeading>
+            <ul className="space-y-3.5">
+              {exploreLinks.map((link) => (
                 <li key={link}>
-                  <Link href={`/${link.toLowerCase().replace(/\s+/g, '-')}`} className="text-slate-500 text-sm font-bold hover:text-emerald-600 hover:translate-x-2 transition-all flex items-center gap-2 group">
-                    <div className="h-1.5 w-1.5 rounded-full bg-slate-200 group-hover:bg-emerald-500 transition-colors" />
+                  <Link
+                    href={`/${link.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="group flex items-center gap-2.5 text-white/45 hover:text-[#e8a020] text-sm font-medium transition-all duration-200"
+                  >
+                    <span className="h-1 w-1 rounded-full bg-white/20 group-hover:bg-[#e8a020] group-hover:w-3 transition-all duration-200 flex-shrink-0" />
                     {link}
                   </Link>
                 </li>
@@ -100,57 +140,82 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* 6. Certification Badges (Premium UX) */}
+          {/* ── Trust Badges ── */}
           <div className="lg:col-span-3 space-y-6">
-            <h4 className="font-black text-slate-900 uppercase tracking-[0.3em] text-[10px]">Trust & Safety</h4>
-            <div className="grid grid-cols-2 gap-3">
-               <TrustBadge icon={<ShieldCheck size={16}/>} label="ISO Certified" />
-               <TrustBadge icon={<Leaf size={16}/>} label="100% Organic" />
-               <TrustBadge icon={<Award size={16}/>} label="Ayush Dept." />
-               <TrustBadge icon={<Award size={16}/>} label="GMP Certified" />
+            <SectionHeading>Trust &amp; Safety</SectionHeading>
+            <div className="grid grid-cols-2 gap-2.5">
+              {trustBadges.map(({ icon, label }) => (
+                <div
+                  key={label}
+                  className="flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-white/5 border border-white/8 hover:bg-white/8 hover:border-[#e8a020]/30 transition-all text-center group"
+                >
+                  <span className="text-[#e8a020]/70 group-hover:text-[#e8a020] transition-colors">
+                    {icon}
+                  </span>
+                  <p className="text-[9px] font-bold text-white/30 uppercase tracking-wider leading-none group-hover:text-white/50 transition-colors">
+                    {label}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* 7. Bottom Bar */}
-        <div className="pt-10 border-t border-slate-100">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-                © 2026 Amaze Ayurveda Pvt. Ltd. | CIN: U82990BR2023PTC066853
-            </p>
-            <div className="flex items-center gap-4">
-                <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
-                    Proudly Made in Bharat <span className="animate-pulse">🇮🇳</span>
-                </span>
-            </div>
+        {/* ══════════════════════════════════════
+            BOTTOM BAR
+        ══════════════════════════════════════ */}
+        <div className="pt-7 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-[10px] font-medium text-white/25 uppercase tracking-widest">
+            © 2026 Amaze Ayurveda Pvt. Ltd.&nbsp;&nbsp;·&nbsp;&nbsp;CIN: U82990BR2023PTC066853
+          </p>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px w-8 bg-[#e8a020]/30" />
+            <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.22em]">
+              Proudly Made in Bharat
+            </span>
+            <span className="text-base leading-none">🇮🇳</span>
+            <div className="h-px w-8 bg-[#e8a020]/30" />
           </div>
         </div>
+
       </div>
     </footer>
   );
 };
 
-// --- Sub-components for Cleaner Code ---
+/* ─────────── Sub-components ─────────── */
 
-const ContactItem = ({ icon, label, value, href }: any) => (
-    <div className="flex gap-4 group cursor-pointer">
-        <div className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
-            {icon}
-        </div>
-        <div>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">{label}</p>
-            {href ? (
-                <a href={href} className="text-sm font-bold text-slate-700 hover:text-emerald-600 transition-colors">{value}</a>
-            ) : (
-                <p className="text-sm font-bold text-slate-700">{value}</p>
-            )}
-        </div>
-    </div>
+const SectionHeading = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex items-center gap-3">
+    <span className="text-[10px] font-black text-white/35 uppercase tracking-[0.28em]">
+      {children}
+    </span>
+    <div className="h-px flex-1 bg-white/8" />
+  </div>
 );
 
-const TrustBadge = ({ icon, label }: any) => (
-    <div className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 text-center gap-2 hover:bg-white hover:border-emerald-100 transition-all">
-        <div className="text-emerald-600">{icon}</div>
-        <p className="text-[8px] font-black text-slate-500 uppercase tracking-tighter leading-none">{label}</p>
+const ContactItem = ({
+  icon, label, value, href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  href?: string;
+}) => (
+  <div className="flex items-start gap-3 group">
+    <div className="h-8 w-8 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-[#e8a020]/60 group-hover:bg-[#e8a020]/10 group-hover:border-[#e8a020]/20 group-hover:text-[#e8a020] transition-all flex-shrink-0 mt-0.5">
+      {icon}
     </div>
+    <div>
+      <p className="text-[9px] font-bold text-white/25 uppercase tracking-widest mb-0.5">{label}</p>
+      {href ? (
+        <a href={href} className="text-sm font-medium text-white/55 hover:text-[#e8a020] transition-colors">
+          {value}
+        </a>
+      ) : (
+        <p className="text-sm font-medium text-white/55">{value}</p>
+      )}
+    </div>
+  </div>
 );
