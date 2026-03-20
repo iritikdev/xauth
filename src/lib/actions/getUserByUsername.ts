@@ -30,7 +30,8 @@ export async function getUserByUsername(username: string) {
             mobile: true,
             email: true,
             createdAt: true,
-            totalBv:true,
+            personalBv:true,
+            groupBv:true,
             Wallet:true,
 
             sponsorId: true,
