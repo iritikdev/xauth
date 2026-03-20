@@ -93,6 +93,86 @@ export const products = [
 ];
 
 export const DASHBOARD_SIDEBAR = {
+  // navMain: [
+  //   {
+  //     title: "Overview",
+  //     icon: "LayoutDashboard",
+  //     url: "/dashboard",
+  //     isActive: true,
+  //   },
+  //   {
+  //     title: "Identity & Profile",
+  //     url: "#",
+  //     icon: "UserCircle2",
+  //     items: [
+  //       {
+  //         title: "Personal Profile",
+  //         url: "/dashboard/profile",
+  //         icon: "Contact2",
+  //       },
+  //       {
+  //         title: "KYC Verification",
+  //         url: "/dashboard/kyc",
+  //         icon: "BadgeCheck",
+  //       },
+  //       {
+  //         title: "Welcome Letter",
+  //         url: "/dashboard/welcome-letter",
+  //         icon: "FileText",
+  //       },
+  //       {
+  //         title: "Digital ID Card",
+  //         url: "/dashboard/partnerIdentityCard",
+  //         icon: "CreditCard",
+  //       },
+  //       {
+  //         title: "Change Password",
+  //         url: "/dashboard/updatePassword",
+  //         icon: "Lock",
+  //       },
+  //     ],
+  //   },
+  //   {
+      
+  //     title: "Shop",
+  //     icon: "ShoppingBag",
+  //     url: "/shop",
+  //     isActive: true,
+  //   },
+  //   {
+      
+  //     title: "My Orders",
+  //     icon: "BaggageClaim",
+  //     url: "/dashboard/orders",
+  //     isActive: true,
+  //   },
+  //   {
+  //     title: "My Network",
+  //     url: "#",
+  //     icon: "Network",
+  //     items: [
+  //       { title: "Genealogy Tree", url: "/dashboard/generology" },
+  //       // { title: "Direct Referrals", url: "/dashboard/referrals" },
+  //       // { title: "Downline Team", url: "/dashboard/team" },
+  //     ],
+  //   },
+  //   {
+  //     title: "Finances",
+  //     url: "#",
+  //     icon: "PiggyBank",
+  //     items: [
+  //       { title: "E-Wallet", url: "/dashboard/wallet", icon: "ArrowRightLeft" },
+  //       {
+  //         title: "Business Plan Calculator",
+  //         url: "/dashboard/businessPlanCalculator",
+  //         icon: "FileText",
+  //       },
+  //       // { title: "Income Reports", url: "/dashboard/income", icon: "BarChart3" },
+  //       // { title: "Payout Summary", url: "/dashboard/payouts" },
+  //     ],
+  //   },
+  // ],
+  
   navMain: [
     {
       title: "Overview",
@@ -100,15 +180,61 @@ export const DASHBOARD_SIDEBAR = {
       url: "/dashboard",
       isActive: true,
     },
+    /* --- Earning & Business (Sabse Important) --- */
     {
-      title: "Identity & Profile",
+      title: "Business Center",
       url: "#",
-      icon: "UserCircle2",
+      icon: "PiggyBank", // Or "Wallet"
+      isActive: true,
+      items: [
+        { 
+          title: "My E-Wallet", 
+          url: "/dashboard/wallet", 
+          icon: "ArrowRightLeft" 
+        },
+        {
+          title: "Income Reports",
+          url: "/dashboard/income",
+          icon: "BarChart3",
+        },
+        {
+          title: "Plan Calculator",
+          url: "/dashboard/businessPlanCalculator",
+          icon: "Calculator",
+        },
+      ],
+    },
+    /* --- Network & Growth --- */
+    {
+      title: "My Network",
+      url: "#",
+      icon: "Network",
+      items: [
+        { title: "Genealogy Tree", url: "/dashboard/generology", icon: "GitGraph" },
+        { title: "Direct Referrals", url: "/dashboard/referrals", icon: "UserPlus" },
+        { title: "Downline Team", url: "/dashboard/team", icon: "Users2" },
+      ],
+    },
+    /* --- Shopping & Commerce --- */
+    {
+      title: "Shop & Orders",
+      url: "#",
+      icon: "ShoppingBag",
+      items: [
+        { title: "Browse Products", url: "/shop", icon: "Store" },
+        { title: "My Orders", url: "/dashboard/orders", icon: "BaggageClaim" },
+      ],
+    },
+    /* --- Profile & Compliance (Secondary) --- */
+    {
+      title: "Identity & KYC",
+      url: "#",
+      icon: "ShieldCheck",
       items: [
         {
-          title: "Personal Profile",
+          title: "My Profile",
           url: "/dashboard/profile",
-          icon: "Contact2",
+          icon: "User",
         },
         {
           title: "KYC Verification",
@@ -116,59 +242,28 @@ export const DASHBOARD_SIDEBAR = {
           icon: "BadgeCheck",
         },
         {
+          title: "Digital ID Card",
+          url: "/dashboard/partnerIdentityCard",
+          icon: "Contact2",
+        },
+        {
           title: "Welcome Letter",
           url: "/dashboard/welcome-letter",
           icon: "FileText",
         },
-        {
-          title: "Digital ID Card",
-          url: "/dashboard/partnerIdentityCard",
-          icon: "CreditCard",
-        },
+      ],
+    },
+    /* --- Settings & Security --- */
+    {
+      title: "Security",
+      url: "#",
+      icon: "Lock",
+      items: [
         {
           title: "Change Password",
           url: "/dashboard/updatePassword",
-          icon: "Lock",
+          icon: "KeyRound",
         },
-      ],
-    },
-    {
-      
-      title: "Shop",
-      icon: "ShoppingBag",
-      url: "/shop",
-      isActive: true,
-    },
-    {
-      
-      title: "My Orders",
-      icon: "BaggageClaim",
-      url: "/dashboard/orders",
-      isActive: true,
-    },
-    {
-      title: "My Network",
-      url: "#",
-      icon: "Network",
-      items: [
-        { title: "Genealogy Tree", url: "/dashboard/generology" },
-        // { title: "Direct Referrals", url: "/dashboard/referrals" },
-        // { title: "Downline Team", url: "/dashboard/team" },
-      ],
-    },
-    {
-      title: "Finances",
-      url: "#",
-      icon: "PiggyBank",
-      items: [
-        { title: "E-Wallet", url: "/dashboard/wallet", icon: "ArrowRightLeft" },
-        {
-          title: "Business Plan Calculator",
-          url: "/dashboard/businessPlanCalculator",
-          icon: "FileText",
-        },
-        // { title: "Income Reports", url: "/dashboard/income", icon: "BarChart3" },
-        // { title: "Payout Summary", url: "/dashboard/payouts" },
       ],
     },
   ],

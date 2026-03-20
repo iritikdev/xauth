@@ -1,130 +1,113 @@
 'use client'
 
 import * as React from "react";
-import {
-  CoinsIcon,
-  LayoutDashboard,
-  LifeBuoy,
-  PiggyBank,
-  Send,
-  Network,
-  UserCircle2,
-  FileText,
-  BadgeCheck,
-  CreditCard,
-  BarChart3,
-  Contact2,
-  ArrowRightLeft,
-  ChevronRight
-} from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { Leaf } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
+import { NavMain }      from "@/components/nav-main";
+import { NavProjects }  from "@/components/nav-projects";
 import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavUser }      from "@/components/nav-user";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar
+  Sidebar, SidebarContent, SidebarFooter,
+  SidebarHeader, SidebarMenu, SidebarMenuItem,
+  SidebarMenuButton, useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import * as LucideIcons from "lucide-react"; // Import all icons as an object
 
-// 1. Define the TypeScript interface for the navigation prop
+/* ── Botanical leaf SVG ── */
+const LeafDecor = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 120 180" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15"/>
+    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3"/>
+    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
+    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
+  </svg>
+);
+
+/* ── Icon renderer ── */
+export const IconRenderer = ({ name, className }: { name: string; className?: string }) => {
+  const Icon = (LucideIcons as any)[name];
+  return Icon ? <Icon className={className} /> : null;
+};
+
+/* ── Types ── */
 interface NavigationData {
   navMain: any[];
   navSecondary: any[];
   marketing: any[];
 }
-
-// 2. Update component to accept 'navigation' as a prop
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   navigation: NavigationData;
 }
 
-// Helper component to render icon by name string
-const IconRenderer = ({ name, className }: { name: string; className?: string }) => {
-  const IconComponent = (LucideIcons as any)[name];
-  if (!IconComponent) return null;
-  return <IconComponent className={className} />;
-};
-
 export function AppSidebar({ navigation, ...props }: AppSidebarProps) {
-  const { data: session } = useSession()
-  const { state } = useSidebar()
+  const { data: session } = useSession();
+  const { state }         = useSidebar();
+  const isCollapsed       = state === "collapsed";
 
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-slate-200/60 bg-white shadow-xl"
+      className={cn(
+        " bg-[#1c3320] shadow-[4px_0_32px_rgba(28,50,32,0.15)]",
+        "transition-all duration-300"
+      )}
+      
       {...props}
     >
-      <SidebarHeader className="p-4">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
-              <a href="/dashboard" className="flex items-center gap-3">
-                <div className="flex aspect-square h-10 w-10 items-center justify-center rounded-xl  shadow-lg  transition-transform hover:scale-105">
-                  <Image
-                    src="/amaze-logo.png"
-                    width={32}
-                    height={32}
-                    alt="Amaze Logo"
-                  />
-                </div>
-                <div className={cn(
-                  "grid flex-1 text-left text-sm leading-tight transition-all duration-300",
-                  state === "collapsed" ? "opacity-0 invisible" : "opacity-100 visible"
-                )}>
-                  <span className="truncate font-black text-slate-900 uppercase tracking-tighter">Amaze Ayurveda</span>
-                  <span className="truncate text-[10px] font-bold text-[#059669] uppercase tracking-widest">Pvt. Ltd.</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
 
-      <SidebarContent className="px-2">
-        {/* Progress Badge for Collapsed State */}
-        {state === "collapsed" && (
-           <div className="flex flex-col items-center py-4 gap-4">
-              <div className="h-1.5 w-8 bg-emerald-100 rounded-full overflow-hidden">
-                <div className="h-full w-2/3 bg-emerald-500" />
-              </div>
-           </div>
+      {/* ══════════════════════════════════
+          HEADER
+      ══════════════════════════════════ */}
+     
+
+      {/* ══════════════════════════════════
+          CONTENT
+      ══════════════════════════════════ */}
+      <SidebarContent className="relative px-2 py-3 overflow-hidden">
+
+        {/* Decorative leaves inside content area */}
+        <div className="pointer-events-none absolute bottom-32 right-0 w-20 text-emerald-400 opacity-10">
+          <LeafDecor />
+        </div>
+        <div className="pointer-events-none absolute top-1/3 -left-3 w-14 text-[#c8860a] opacity-8 rotate-[20deg]">
+          <LeafDecor />
+        </div>
+
+        {/* Collapsed micro-indicator */}
+        {isCollapsed && (
+          <div className="flex flex-col items-center py-3 gap-2">
+            <div className="h-px w-5 bg-[#e8a020]/30" />
+            <Leaf className="w-3 h-3 text-[#e8a020]/30 fill-[#e8a020]/20" />
+            <div className="h-px w-5 bg-[#e8a020]/30" />
+          </div>
         )}
 
+        {/* Main nav */}
         <NavMain items={navigation.navMain} />
-        
-        <div className="mt-8 px-4 mb-2">
-           <h3 className={cn(
-             "text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 transition-opacity",
-             state === "collapsed" ? "opacity-0" : "opacity-100"
-           )}>Resources</h3>
+
+        {/* Resources section */}
+        <div className={cn(
+          "mt-6 mb-1.5 px-3 transition-all duration-300",
+          isCollapsed ? "opacity-0 h-0 overflow-hidden mt-0 mb-0" : "opacity-100"
+        )}>
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-white/8" />
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/20">
+              Resources
+            </span>
+            <div className="h-px flex-1 bg-white/8" />
+          </div>
         </div>
+
         <NavProjects projects={navigation.marketing} />
-        
-        <NavSecondary items={navigation.navSecondary} className="mt-auto pb-4" />
+        <NavSecondary items={navigation.navSecondary} className="mt-auto pb-2" />
       </SidebarContent>
 
-      {/* <SidebarFooter className="border-t border-slate-100 p-2 bg-slate-50/50">
-        {session?.user && (
-          <NavUser user={{
-            name: session.user.name ?? "Member",
-            email: session.user.email ?? "",
-            image: session.user.image ?? "/aalogoc.png",
-            username: session.user.username
-          }} />
-        )}
-      </SidebarFooter> */}
+     
     </Sidebar>
   );
 }

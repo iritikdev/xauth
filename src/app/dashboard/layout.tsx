@@ -22,7 +22,7 @@ function Layout({ children }: LayoutProps) {
           <AppSidebar navigation={DASHBOARD_SIDEBAR} />
           {/* <BackButton /> */}
           <SidebarInset className="flex-1 overflow-y-auto" >
-            <AppBreadcrumb />
+            {/* <AppBreadcrumb /> */}
             {children}
           </SidebarInset>
         </div>
