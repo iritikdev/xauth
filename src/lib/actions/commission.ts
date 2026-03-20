@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/prisma";
 
-// 1. Sponsor ke liye ek interface define karein taaki TS ko shape pata ho
 interface SponsorData {
   id: string;
   sponsorId: string | null;
@@ -14,42 +13,49 @@ export async function distributeLevelIncome(
 ) {
   try {
     const commissionMap: Record<number, number> = {
-      1: 0.1,
-      2: 0.05,
-      3: 0.02,
-      4: 0.02,
-      5: 0.02,
-      6: 0.01,
-      7: 0.01,
-      8: 0.01,
-      9: 0.01,
-      10: 0.01,
-      11: 0.01,
-      12: 0.01,
-      13: 0.01,
-      14: 0.01,
-      15: 0.01,
+      0: 0.05, // 5% (Self Purchase Bonus) 👈 Added this
+      1: 0.20, // 20% (Direct Sponsor)
+      2: 0.10, 3: 0.08, 4: 0.06, 5: 0.04, 6: 0.02, 7: 0.02,
+      8: 0.01, 9: 0.01, 10: 0.01, 11: 0.01, 12: 0.01, 13: 0.01, 14: 0.01, 15: 0.01,
     };
 
-    console.log("userid", userId);
+    // 1. BUYER (SELF) KO INCOME DENA
+    const selfCommission = orderAmount * commissionMap[0];
+    if (selfCommission > 0) {
+      await prisma.$transaction(async (tx) => {
+        await tx.wallet.upsert({
+          where: { userId: userId },
+          update: { balance: { increment: selfCommission } },
+          create: { userId: userId, balance: selfCommission },
+        });
+
+        await tx.transaction.create({
+          data: {
+            userId: userId,
+            amount: selfCommission,
+            type: "CREDIT",
+            status: "COMPLETED",
+            description: `Self Purchase Bonus (5%) on Order Amount ₹${orderAmount}`,
+          },
+        });
+      });
+    }
+
+    // 2. UPLINE KO INCOME DENA (1 TO 15 LEVELS)
     const buyer = await prisma.user.findUnique({
       where: { id: userId },
       select: { sponsorId: true, name: true },
     });
 
-    console.log("buyes", buyer);
-
     if (!buyer || !buyer.sponsorId)
-      return { success: true, msg: "No sponsor found" };
+      return { success: true, msg: "Self income distributed. No sponsor found for levels." };
 
-    // Explicitly type the iterator variable
     let currentSponsorUsername: string | null = buyer.sponsorId;
-    const distributionLogs = [];
+    const distributionLogs = [{ level: 0, to: userId, amount: selfCommission }];
 
     for (let level = 1; level <= 15; level++) {
       if (!currentSponsorUsername) break;
 
-      // 2. Type annotation yahan add karein (SponsorData | null)
       const sponsor: SponsorData | null = await prisma.user.findUnique({
         where: { username: currentSponsorUsername },
         select: { id: true, sponsorId: true },
@@ -64,15 +70,10 @@ export async function distributeLevelIncome(
         await prisma.$transaction(async (tx) => {
           await tx.wallet.upsert({
             where: { userId: sponsor.id },
-            update: {
-              balance: { increment: commissionEarned },
-            },
-            create: {
-              userId: sponsor.id,
-              balance: commissionEarned,
-            },
+            update: { balance: { increment: commissionEarned } },
+            create: { userId: sponsor.id, balance: commissionEarned },
           });
-          // Transaction record create karein
+
           await tx.transaction.create({
             data: {
               userId: sponsor.id,
@@ -91,7 +92,6 @@ export async function distributeLevelIncome(
         });
       }
 
-      // 3. Ab TS ko pata hai ki sponsor.sponsorId string | null hai
       currentSponsorUsername = sponsor.sponsorId;
     }
 
