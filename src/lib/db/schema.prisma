@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Rank {
+  USER
+  STAR
+  SUPER_STAR
+  DIAMOND
+  STAR_DIAMOND
+  DIPLOMAT
+  STAR_DIPLOMAT
+  DIAMOND_DIPLOMAT
+  CROWN_AMBASSADOR
+  CHAIRMAN
+}
+
 enum Role {
   USER
   ADMIN
@@ -20,6 +33,7 @@ model User {
   fatherName String?
   motherName String?
   photoUrl   String?
+  rank      Rank     @default(USER)
 
   role Role @default(USER)
 
