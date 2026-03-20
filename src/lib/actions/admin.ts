@@ -17,11 +17,11 @@ export async function markOrderAsDelivered(orderId: string) {
         where: { id: orderId },
         data: { status: "DELIVERED", paymentStatus: "PAID" }
       }),
-      // 2. Credit BV to User Wallet
-      prisma.user.update({
-        where: { id: order.userId },
-        data: { totalBv: { increment: order.totalBv } }
-      })
+      // // 2. Credit BV to User Wallet
+      // prisma.user.update({
+      //   where: { id: order.userId },
+      //   data: { personalBv: { increment: order.totalBv } }
+      // })
     ]);
 
     revalidatePath("/admin/orders");

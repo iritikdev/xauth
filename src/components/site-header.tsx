@@ -15,6 +15,7 @@ export function SiteHeader() {
   const { toggleSidebar, state } = useSidebar()
   const { data: session }        = useSession()
 
+
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [mounted,    setMounted]    = useState(false)
   const cart = useCart()
@@ -79,7 +80,7 @@ export function SiteHeader() {
             <div className="flex items-center gap-2">
 
               {/* Earnings chip — desktop */}
-              <div className="hidden lg:flex items-center gap-2 bg-white/60 border border-[#1c3320]/8 px-3 py-1.5 rounded-full mr-1 shadow-[0_1px_4px_rgba(28,50,32,0.05)]">
+              {/* <div className="hidden lg:flex items-center gap-2 bg-white/60 border border-[#1c3320]/8 px-3 py-1.5 rounded-full mr-1 shadow-[0_1px_4px_rgba(28,50,32,0.05)]">
                 <TrendingUp className="w-3 h-3 text-[#1c6634]" />
                 <span className="text-[9px] font-bold uppercase tracking-[0.22em] text-[#1c3320]/35">Earnings</span>
                 <div className="h-3 w-px bg-[#1c3320]/10" />
@@ -88,7 +89,7 @@ export function SiteHeader() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 </span>
-              </div>
+              </div> */}
 
               {/* ── Icon actions ── */}
               <div className="flex items-center gap-1">

@@ -131,11 +131,11 @@ export const orderColumns: ColumnDef<any>[] = [
           if (res.success) {
             // 2. Trigger Level Income Distribution
             // Hum order ka totalAmount pass karenge (ya jitne par commission banna hai)
-            const incomeRes = await distributeLevelIncome(order.userId, order.totalAmount);
+            const incomeRes = await distributeLevelIncome(order.userId, order.totalBv,order.id);
             console.log(".........",incomeRes)
             if (incomeRes.success) {
               toast.success("Success!", { 
-                description: `Order delivered and level income distributed to ${incomeRes.logs?.length || 0} levels.` 
+                description: `Order delivered and level income distributed to ${incomeRes.success || 0} levels.` 
               });
             } else {
               toast.warning("Partial Success", { 
