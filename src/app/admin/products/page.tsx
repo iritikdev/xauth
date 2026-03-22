@@ -3,101 +3,143 @@ import {
   Plus,
   Box,
   AlertTriangle,
-  TrendingUp,
   IndianRupee,
+  Sparkles,
+  Package,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
-import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/admin/page-header";
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
     where: {
-      category: {
-        is: {
-          id: { not: undefined },
-        },
-      },
+      category: { is: { id: { not: undefined } } },
     },
     include: {
-      category: {
-        select: { name: true },
-      },
+      category: { select: { name: true } },
     },
     orderBy: { createdAt: "desc" },
   });
 
-  // Business Analytics for SaaS Header
-  const totalStock = products.reduce((acc, curr) => acc + curr.stock, 0);
+  const totalStock = products.reduce((acc, p) => acc + p.stock, 0);
   const lowStockItems = products.filter((p) => p.stock < 10).length;
   const totalValue = products.reduce(
-    (acc, curr) => acc + curr.price * curr.stock,
-    0,
+    (acc, p) => acc + p.price * p.stock,
+    0
   );
+  const totalBV = products.reduce((acc, p) => acc + p.bvAmount * p.stock, 0);
 
   return (
-    <div className="space-y-10">
-      <PageHeader
-        title="Product"
-        highlight="Management"
-        subtitle="Live Inventory"
-        description="Add, edit, and manage your product catalog with ease. Keep your inventory up-to-date and organized."
-        buttonLink="/admin/products/new"
-        buttonText="Create New Entry"
-        icon={<Plus size={16} />}
-        showBackButton={true}
+    <div
+      className="space-y-8"
+      style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+    >
+      {/* ── Page header ── */}
+      <PageHeader 
+        title="Product Management"
+        subtitle="Admin Console"
+        description="Manage your catalog, track inventory, and configure BV points for
+            every listing."
+
       />
+    
+      {/* ── Stat cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* Total inventory */}
+        <StatCard
+          icon={<Box size={18} strokeWidth={2} />}
+          label="Total Inventory"
+          value={`${totalStock.toLocaleString("en-IN")} units`}
+          iconClass="bg-zinc-100 text-zinc-500"
+        />
 
-      {/* 2. Quick Insight Cards (The "SaaS" touch) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 rounded-[2.5rem] border-none bg-white shadow-sm ring-1 ring-slate-100 flex items-center gap-5">
-          <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
-            <Box size={24} />
-          </div>
-          <div>
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
-              Total Inventory
-            </p>
-            <p className="text-2xl font-black text-slate-900  ">
-              {totalStock} Units
-            </p>
-          </div>
-        </Card>
+        {/* Low stock */}
+        <StatCard
+          icon={<AlertTriangle size={18} strokeWidth={2} />}
+          label="Low Stock Alerts"
+          value={`${lowStockItems} items`}
+          valueClass={lowStockItems > 0 ? "text-red-500" : "text-zinc-900"}
+          iconClass={
+            lowStockItems > 0
+              ? "bg-red-50 text-red-400 border-red-100"
+              : "bg-zinc-100 text-zinc-400"
+          }
+        />
 
-        <Card className="p-6 rounded-[2.5rem] border-none bg-white shadow-sm ring-1 ring-slate-100 flex items-center gap-5">
-          <div className="h-14 w-14 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-500">
-            <AlertTriangle size={24} />
-          </div>
-          <div>
-            <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
-              Low Stock Alerts
-            </p>
-            <p className="text-2xl font-black text-orange-600  ">
-              {lowStockItems} Items
-            </p>
-          </div>
-        </Card>
+        {/* Asset value */}
+        <StatCard
+          icon={<IndianRupee size={18} strokeWidth={2} />}
+          label="Asset Valuation"
+          value={`₹${totalValue.toLocaleString("en-IN")}`}
+          iconClass="bg-zinc-100 text-zinc-500"
+        />
 
-        <Card className="p-6 rounded-[2.5rem] border-none bg-emerald-600 shadow-xl shadow-emerald-900/10 flex items-center gap-5 text-white">
-          <div className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center">
-            <IndianRupee size={24} />
-          </div>
-          <div>
-            <p className="text-[10px] font-black uppercase text-emerald-100 tracking-widest">
-              Asset Valuation
+        {/* Total BV — emerald prestige card */}
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-emerald-950 via-emerald-900 to-zinc-900 p-6 shadow-xl">
+          <div className="absolute -top-6 -right-6 h-28 w-28 rounded-full bg-emerald-400/10 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles size={13} className="text-emerald-400" />
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">
+                Total BV in Stock
+              </p>
+            </div>
+            <p
+              className="text-3xl font-black text-emerald-100 leading-none"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              {totalBV.toLocaleString("en-IN")}
             </p>
-            <p className="text-2xl font-black  ">
-              ₹{totalValue.toLocaleString("en-IN")}
+            <p className="text-[10px] font-bold text-emerald-700 mt-1.5 tracking-wide">
+              Business Value Points
             </p>
           </div>
-        </Card>
+        </div>
       </div>
 
-      {/* 3. The Data Table Container */}
-      <DataTable data={products} columns={columns} />
+      {/* ── Data table ── */}
+     
+
+        <DataTable data={products} columns={columns} />
+      </div>
+  );
+}
+
+/* ─── Stat card ──────────────────────────────────────────────── */
+function StatCard({
+  icon,
+  label,
+  value,
+  iconClass = "",
+  valueClass = "text-zinc-900",
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  iconClass?: string;
+  valueClass?: string;
+}) {
+  return (
+    <div className="rounded-[2rem] border border-zinc-100 bg-white p-6 shadow-sm flex items-center gap-4">
+      <div
+        className={cn(
+          "h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 border border-transparent",
+          iconClass
+        )}
+      >
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-1">
+          {label}
+        </p>
+        <p className={cn("text-xl font-black leading-tight truncate", valueClass)}>
+          {value}
+        </p>
+      </div>
     </div>
   );
 }

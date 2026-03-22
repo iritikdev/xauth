@@ -3,15 +3,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   MoreHorizontal,
-  ArrowUpDown,
-  Package,
   Tag,
   TrendingUp,
   Edit,
-  Trash2,
-  Copy,
+  Sparkles,
+  ArrowUpDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { deleteProduct } from "@/lib/actions/product";
 import {
   DropdownMenu,
@@ -22,10 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { DeleteProductModal } from "./DeleteProductModal";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export type ProductColumn = {
   id: string;
@@ -35,12 +32,19 @@ export type ProductColumn = {
   bvAmount: number;
   image: string;
   stock: number;
-  category?: {
-    name: string;
-  };
+  category?: { name: string };
 };
 
+/* ─── shared header label ─────────────────────────────────────── */
+const ColHeader = ({ children }: { children: React.ReactNode }) => (
+  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400">
+    {children}
+  </span>
+);
+
+/* ─── columns ─────────────────────────────────────────────────── */
 export const columns: ColumnDef<ProductColumn>[] = [
+  /* ── select ── */
   {
     id: "select",
     header: ({ table }) => (
@@ -49,140 +53,165 @@ export const columns: ColumnDef<ProductColumn>[] = [
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
         aria-label="Select all"
+        className="rounded-md border-zinc-300"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(v) => row.toggleSelected(!!v)}
         aria-label="Select row"
+        className="rounded-md border-zinc-300"
       />
     ),
   },
+
+  /* ── product details ── */
   {
     accessorKey: "name",
-    header: "Product Details",
+    header: () => <ColHeader>Product</ColHeader>,
     cell: ({ row }) => {
-      const product = row.original;
+      const p = row.original;
       return (
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 relative rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-            />
+        <div className="flex items-center gap-3.5">
+          <div className="relative h-11 w-11 rounded-2xl overflow-hidden bg-zinc-50 border border-zinc-100 shrink-0">
+            <Image src={p.image} alt={p.name} fill className="object-cover" />
           </div>
-          <div className="flex flex-col">
-            <span className="font-black text-slate-900 uppercase italic text-xs tracking-tight">
-              {product.name}
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-[13px] font-black text-zinc-900 tracking-tight truncate capitalize">
+              {p.name}
             </span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
-              <Tag size={10} /> {product.category?.name || "Uncategorized"}
+            <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em] text-zinc-400">
+              <Tag size={9} strokeWidth={2.5} />
+              {p.category?.name || "Uncategorized"}
             </span>
           </div>
         </div>
       );
     },
   },
+
+  /* ── pricing ── */
   {
     accessorKey: "price",
-    header: "Pricing (MRP/DP)",
+    header: () => <ColHeader>MRP / Net</ColHeader>,
     cell: ({ row }) => {
       const mrp = row.original.price;
-      const discount = row.original.discount;
-      const dp = mrp - (mrp * discount) / 100; // Distributor Price
-
+      const dp = mrp - (mrp * row.original.discount) / 100;
       return (
-        <div className="flex flex-col">
-          <span className="text-xs font-black text-slate-900 italic tracking-tighter">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[13px] font-black text-zinc-900 tabular-nums">
             ₹{dp.toFixed(2)}
           </span>
-          <span className="text-[10px] font-bold text-slate-400 line-through">
-            MRP: ₹{mrp}
+          <span className="text-[10px] font-medium text-zinc-400 line-through tabular-nums">
+            ₹{mrp.toFixed(2)}
           </span>
         </div>
       );
     },
   },
+
+  /* ── BV ── */
   {
     accessorKey: "bvAmount",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="p-0 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:bg-transparent"
+      <button
+        className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400 hover:text-zinc-700 transition-colors"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        BV Value <TrendingUp className="ml-1 h-3 w-3" />
-      </Button>
+        BV Points
+        <TrendingUp size={11} strokeWidth={2.5} />
+      </button>
     ),
     cell: ({ row }) => (
-      <Badge className="bg-emerald-50 text-emerald-600 border-none font-black text-[10px] px-3 py-1">
+      <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1 tracking-[0.08em]">
+        <Sparkles size={9} strokeWidth={2.5} className="text-emerald-500" />
         {row.getValue("bvAmount")} BV
-      </Badge>
+      </span>
     ),
   },
+
+  /* ── stock ── */
   {
     accessorKey: "stock",
-    header: "Inventory",
+    header: () => <ColHeader>Inventory</ColHeader>,
     cell: ({ row }) => {
       const stock = row.original.stock;
       const isLow = stock < 10;
+      const pct = Math.min(stock, 100);
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5 w-20">
           <span
-            className={`text-xs font-black italic ${isLow ? "text-red-500" : "text-slate-900"}`}
+            className={cn(
+              "text-[13px] font-black tabular-nums",
+              isLow ? "text-red-500" : "text-zinc-900"
+            )}
           >
-            {stock} Units
+            {stock}
+            <span className="text-[10px] font-medium text-zinc-400 ml-1">
+              units
+            </span>
           </span>
-          <div className="h-1 w-16 bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-1 w-full bg-zinc-100 rounded-full overflow-hidden">
             <div
-              className={`h-full ${isLow ? "bg-red-500" : "bg-emerald-500"}`}
-              style={{ width: `${Math.min(stock, 100)}%` }}
+              className={cn(
+                "h-full rounded-full transition-all",
+                isLow ? "bg-red-400" : "bg-emerald-400"
+              )}
+              style={{ width: `${pct}%` }}
             />
           </div>
         </div>
       );
     },
   },
+
+  /* ── actions ── */
   {
     id: "actions",
     cell: ({ row }) => {
-    const product = row.original;
+      const product = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="h-8 w-8 flex items-center justify-center rounded-xl border border-transparent text-zinc-300 hover:text-zinc-700 hover:bg-zinc-100 hover:border-zinc-200 transition-all duration-150">
+              <MoreHorizontal size={15} />
+            </button>
+          </DropdownMenuTrigger>
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0 rounded-xl hover:bg-slate-100 transition-colors">
-            <MoreHorizontal className="h-4 w-4 text-slate-400" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 rounded-2xl border-slate-100 p-2 shadow-2xl bg-white">
-          <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-3 py-2">
-            Operations
-          </DropdownMenuLabel>
-          
-          <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer gap-2">
-            <Link className="flex gap-2" href={`/admin/products/${product.id}/edit`}>
-            
-            <Edit size={14} /> Edit Details
-            </Link>
+          <DropdownMenuContent
+            align="end"
+            className="w-48 rounded-2xl border-zinc-100 p-1.5 shadow-xl bg-white"
+            style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          >
+            <DropdownMenuLabel className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-400 px-3 py-2">
+              Operations
+            </DropdownMenuLabel>
 
-          </DropdownMenuItem>
+            <DropdownMenuItem
+              asChild
+              className="rounded-xl text-[11px] font-bold uppercase tracking-widest px-3 py-2.5 cursor-pointer gap-2 text-zinc-700 focus:bg-zinc-50 focus:text-zinc-900"
+            >
+              <Link
+                href={`/admin/products/${product.id}/edit`}
+                className="flex items-center gap-2"
+              >
+                <Edit size={13} strokeWidth={2} />
+                Edit Details
+              </Link>
+            </DropdownMenuItem>
 
-          <DropdownMenuSeparator className="my-1 bg-slate-50" />
+            <DropdownMenuSeparator className="my-1 bg-zinc-50" />
 
-          {/* Use the Custom Modal Component here */}
-          <DeleteProductModal 
-            productId={product.id} 
-            productName={product.name} 
-          />
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  },
+            <DeleteProductModal
+              productId={product.id}
+              productName={product.name}
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
