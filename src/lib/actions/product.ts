@@ -124,6 +124,7 @@ export async function getAllProducts() {
           is: {
             id: { not: undefined },
           },
+          
         },
       },
       include: {
