@@ -118,10 +118,19 @@ export async function getRecommendedProducts(currentProductId?: string) {
 export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
+       where: {
+      category: {
+        is: {
+          id: { not: undefined },
+        },
+      },
+    },
       include: {
         category: true, // category property missing error yahan se fix hoga
       },
     });
+
+    console.log("product", products)
     return JSON.parse(JSON.stringify(products));
   } catch (error) {
     console.error("Fetch Error:", error);
