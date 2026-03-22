@@ -16,7 +16,7 @@ export default function ProfilePage() {
   if (isLoading) return <div>Loading Profile...</div>
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container">
       {isEditing ? (
         // Show the Form when editing
         <UserProfileForm 
