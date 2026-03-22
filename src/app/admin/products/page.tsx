@@ -15,6 +15,13 @@ import { PageHeader } from "@/components/admin/page-header";
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
+    where: {
+        category: {
+          is: {
+            id: { not: undefined },
+          },
+        },
+      },
     include: {
       category: {
         select: { name: true },
