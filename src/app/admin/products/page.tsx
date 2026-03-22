@@ -101,10 +101,26 @@ export default async function AdminProductsPage() {
       </div>
 
       {/* ── Data table ── */}
-     
+      {/* ── Data table ── */}
+      {/* <div className="rounded-[2rem] border border-zinc-100 bg-white overflow-hidden shadow-sm">
+        <div className="px-6 py-4 flex items-center justify-between border-b border-zinc-100 bg-zinc-50/60">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-white border border-zinc-200 text-zinc-400">
+              <Package size={13} strokeWidth={2} />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
+              Live Catalog
+            </span>
+          </div>
+          <span className="text-[10px] font-black text-zinc-400 bg-white border border-zinc-200 rounded-2xl px-3 py-1">
+            {products.length} products
+          </span>
+        </div>
+      */}
 
         <DataTable data={products} columns={columns} />
-      </div>
+        </div>
+      // </div>
   );
 }
 

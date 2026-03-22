@@ -1,66 +1,65 @@
 import prisma from "@/lib/prisma";
 import AdminDashboardClient from "./dashboard-client";
 
-export const dynamic = "force-dynamic"; 
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  // 1. Fetch Real Stats
-  const [revenueData, userCount, ordersToday, pendingKycCount] = await Promise.all([
-    // Aapke schema mein 'totalAmount' hai, 'total' nahi
-    prisma.order.aggregate({ 
-      _sum: { totalAmount: true }, 
-      where: { status: "DELIVERED" } // Amaze Ayurveda mein DELIVERED hi completed hai
-    }),
-    prisma.user.count(),
-    prisma.order.count({
-      where: {
-        createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) }
-      }
-    }),
-    // FIX: Yahan sirf count lijiye, poora object array nahi
-    prisma.user.count({ 
-       where: { kycDocument: {status : "PENDING"} } // Schema field check karein (kycStatus ya kycDocument)
-    })
-  ]);
+  const [revenueData, userCount, ordersToday, pendingKycCount] =
+    await Promise.all([
+      prisma.order.aggregate({
+        _sum: { totalAmount: true },
+        where: { status: "DELIVERED" },
+      }),
+      prisma.user.count(),
+      prisma.order.count({
+        where: {
+          createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+        },
+      }),
+      prisma.user.count({
+        where: { kycDocument: { status: "PENDING" } },
+      }),
+    ]);
 
-  // 2. Fetch Recent Activity
   const recentOrders = await prisma.order.findMany({
-    take: 5,
-    orderBy: { createdAt: 'desc' },
-    include: { 
-      user: { 
-        select: { name: true } 
-      } 
-    }
+    take: 6,
+    orderBy: { createdAt: "desc" },
+    include: { user: { select: { name: true } } },
   });
 
-  // 3. Prepare Chart Data (Static for now)
+  // Top products by order volume
+  const topProducts = await prisma.orderItem.groupBy({
+    by: ["productId"],
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: "desc" } },
+    take: 5,
+  });
+
   const chartData = [
-    { name: 'Mon', sales: 4000 },
-    { name: 'Tue', sales: 3000 },
-    { name: 'Wed', sales: 5000 },
-    { name: 'Thu', sales: 2780 },
-    { name: 'Fri', sales: 1890 },
-    { name: 'Sat', sales: 2390 },
-    { name: 'Sun', sales: 3490 },
+    { name: "Mon", sales: 4000 },
+    { name: "Tue", sales: 3000 },
+    { name: "Wed", sales: 5000 },
+    { name: "Thu", sales: 2780 },
+    { name: "Fri", sales: 1890 },
+    { name: "Sat", sales: 2390 },
+    { name: "Sun", sales: 3490 },
   ];
 
   return (
-    <AdminDashboardClient 
+    <AdminDashboardClient
       stats={{
         revenue: revenueData._sum.totalAmount || 0,
         users: userCount,
         orders: ordersToday,
-        // FIX: Object ki jagah number/string bhej rahe hain
-        pending: pendingKycCount.toString() 
+        pending: pendingKycCount,
       }}
       chartData={chartData}
-      // Ensure karein recentActivity mein sirf zaroori strings hon
-      recentActivity={recentOrders.map(order => ({
-        id: order.id,
-        userName: order.user.name || "Unknown",
-        amount: order.totalAmount,
-        status: order.status
+      recentActivity={recentOrders.map((o) => ({
+        id: o.id,
+        userName: o.user.name || "Unknown",
+        amount: o.totalAmount,
+        status: o.status,
+        createdAt: o.createdAt.toISOString(),
       }))}
     />
   );
