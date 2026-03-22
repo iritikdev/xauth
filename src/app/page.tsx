@@ -7,7 +7,7 @@ import { ProductCarousel } from "@/components/LatestReleases";
 import { Navbar } from "@/components/navbar";
 import { FeaturedProducts } from "@/components/ecommerce/featured-products";
 import prisma from "@/lib/prisma";
-import AmazeAyurvedaPlan from "@/components/AmazeAyurvedaPlan";
+import PlanCalculator from "@/components/plan-calculator";
 import FaqSection from "@/components/faq-section";
 
 interface Props {

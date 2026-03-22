@@ -1,9 +1,9 @@
-import AmazeAyurvedaPlan from '@/components/AmazeAyurvedaPlan'
+import PlanCalculator from '@/components/plan-calculator'
 import React from 'react'
 
 function page() {
   return (
-    <AmazeAyurvedaPlan/>
+    <PlanCalculator/>
   )
 }
 

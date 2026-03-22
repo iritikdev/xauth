@@ -192,11 +192,11 @@ export const DASHBOARD_SIDEBAR = {
           url: "/dashboard/wallet", 
           icon: "ArrowRightLeft" 
         },
-        {
-          title: "Income Reports",
-          url: "/dashboard/income",
-          icon: "BarChart3",
-        },
+        // {
+        //   title: "Income Reports",
+        //   url: "/dashboard/income",
+        //   icon: "BarChart3",
+        // },
         {
           title: "Plan Calculator",
           url: "/dashboard/businessPlanCalculator",
@@ -211,8 +211,8 @@ export const DASHBOARD_SIDEBAR = {
       icon: "Network",
       items: [
         { title: "Genealogy Tree", url: "/dashboard/generology", icon: "GitGraph" },
-        { title: "Direct Referrals", url: "/dashboard/referrals", icon: "UserPlus" },
-        { title: "Downline Team", url: "/dashboard/team", icon: "Users2" },
+        // { title: "Direct Referrals", url: "/dashboard/referrals", icon: "UserPlus" },
+        // { title: "Downline Team", url: "/dashboard/team", icon: "Users2" },
       ],
     },
     /* --- Shopping & Commerce --- */
