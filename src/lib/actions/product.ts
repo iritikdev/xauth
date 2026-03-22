@@ -145,3 +145,54 @@ export async function getProductById(id: string) {
     include: { category: true },
   });
 }
+export interface IProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;       // MRP (Retail)
+  discount: number;    // 0 to 100 percentage
+  bvAmount: number;    // Business Volume
+  image: string;       // Image URL or Base64
+  stock: number;
+  categoryId: string;
+  createdAt: Date | string;
+}
+
+
+
+export async function updateProduct(id: string, prevState: any, formData: FormData) {
+  try {
+    const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+    const price = parseFloat(formData.get("price") as string);
+    const discount = parseFloat(formData.get("discount") as string) || 0;
+    const bvAmount = parseFloat(formData.get("bvAmount") as string);
+    const stock = parseInt(formData.get("stock") as string);
+    const image = formData.get("image") as string;
+    const categoryId = formData.get("categoryId") as string;
+
+    if (!id) return { success: false, error: "Product ID is missing" };
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        name,
+        description,
+        price,
+        discount,
+        bvAmount,
+        stock,
+        image,
+        categoryId,
+      },
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/${id}/edit`);
+    
+    return { success: true, product, error: null };
+  } catch (error: any) {
+    console.error("Update Error:", error);
+    return { success: false, product: null, error: error.message };
+  }
+}

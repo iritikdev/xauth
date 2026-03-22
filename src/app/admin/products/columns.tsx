@@ -23,9 +23,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
 import Image from "next/image";
 import { DeleteProductModal } from "./DeleteProductModal";
+import Link from "next/link";
 
 export type ProductColumn = {
   id: string;
@@ -166,7 +166,11 @@ export const columns: ColumnDef<ProductColumn>[] = [
           </DropdownMenuLabel>
           
           <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer gap-2">
+            <Link className="flex gap-2" href={`/admin/products/${product.id}/edit`}>
+            
             <Edit size={14} /> Edit Details
+            </Link>
+
           </DropdownMenuItem>
 
           <DropdownMenuSeparator className="my-1 bg-slate-50" />
