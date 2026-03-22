@@ -231,7 +231,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
         </div>
 
         {/* ── Referral Section ── */}
-        <motion.div {...fadeUp(0.32)} className="grid lg:grid-cols-[1fr_300px] gap-5">
+        <motion.div {...fadeUp(0.32)} className="grid grid-cols-1 lg:grid-cols-[1fr_330px] gap-5">
 
           {/* Left — link + stats */}
           <div className="rounded-[2rem] border border-zinc-100 bg-white p-7 shadow-sm space-y-6">

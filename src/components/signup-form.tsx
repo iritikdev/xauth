@@ -118,14 +118,14 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
 
   return (
     <div
-      className={cn("min-h-screen w-full flex items-center justify-center p-4 sm:p-8", className)}
+      className={cn("min-h-screen w-full flex items-center justify-center sm:p-6 md:p-8", className)}
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
       {...props}
     >
-      <div className="w-full max-w-5xl rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(4,47,46,0.2)] grid md:grid-cols-[1fr_420px]">
+      <div className="w-full max-w-5xl sm:rounded-[2rem] md:rounded-[2.5rem] overflow-hidden sm:shadow-[0_40px_100px_-20px_rgba(4,47,46,0.2)] grid grid-cols-1 md:grid-cols-[1fr_420px] min-h-screen sm:min-h-0">
 
         {/* ══════════════ LEFT HERO ══════════════ */}
-        <div className="relative hidden md:flex flex-col justify-between bg-zinc-950 p-12 overflow-hidden">
+        <div className="relative hidden md:flex flex-col justify-between bg-zinc-950 p-10 overflow-hidden">
           {["tl","tr","bl","br"].map((p) => (
             <span key={p} className={cn("absolute h-6 w-6 border-emerald-400/30",
               p==="tl"&&"top-5 left-5 border-t-2 border-l-2 rounded-tl-md",
@@ -177,7 +177,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
             </div>
             {/* referral hint */}
             <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
-              <Gift size={14} className="text-emerald-400 shrink-0" />
+              <Gift size={14} className="text-emerald-400 shrink-0 mt-0.5" />
               <p className="text-[11px] text-white/40 leading-snug">
                 Have a referral link? It auto-fills your sponsor — just open the link to register.
               </p>
@@ -193,7 +193,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
         </div>
 
         {/* ══════════════ RIGHT FORM ══════════════ */}
-        <div className="bg-white flex flex-col justify-center px-8 py-10 sm:px-10">
+        <div className="bg-white flex flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 md:px-10">
           <AnimatePresence mode="wait">
 
             {!signupSuccess ? (
@@ -201,10 +201,27 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                 initial={{ opacity:0,x:16 }} animate={{ opacity:1,x:0 }} exit={{ opacity:0,x:-16 }}
                 transition={{ duration:0.28 }} className="space-y-6">
 
+                {/* ── mobile brand bar (hidden on md+) ── */}
+                <div className="flex md:hidden items-center justify-between mb-2 pb-5 border-b border-zinc-100">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-950">
+                      <Leaf size={14} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-black text-zinc-900" style={{ fontFamily:"'Manrope',system-ui,sans-serif" }}>Amaze Ayurveda</p>
+                      <p className="text-[9px] font-medium text-zinc-400">Pvt. Ltd.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-100 px-3 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-widest">Registering</span>
+                  </div>
+                </div>
+
                 {/* header */}
                 <div className="space-y-1">
                   <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-600">New Account</p>
-                  <h1 className="text-3xl font-black text-zinc-900 tracking-tight"
+                  <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 tracking-tight"
                     style={{ fontFamily:"'Manrope',system-ui,sans-serif" }}>Register</h1>
                   <p className="text-zinc-400 text-sm">
                     Already a member?{" "}
@@ -337,7 +354,20 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
               <motion.div key="success"
                 initial={{ opacity:0,scale:0.94 }} animate={{ opacity:1,scale:1 }}
                 transition={{ type:"spring",stiffness:260,damping:22 }}
-                className="flex flex-col items-center text-center space-y-5 py-6">
+                className="flex flex-col items-center text-center space-y-5 py-4 sm:py-6">
+
+                {/* mobile brand bar in success */}
+                <div className="flex md:hidden w-full items-center justify-between pb-4 border-b border-zinc-100 text-left">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-zinc-950">
+                      <Leaf size={12} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-black text-zinc-900" style={{ fontFamily:"'Manrope',system-ui,sans-serif" }}>Amaze Ayurveda</p>
+                      <p className="text-[9px] font-medium text-zinc-400">Pvt. Ltd.</p>
+                    </div>
+                  </div>
+                </div>
 
                 <motion.div initial={{ scale:0 }} animate={{ scale:1 }}
                   transition={{ type:"spring",stiffness:300,damping:18,delay:0.1 }} className="relative">
