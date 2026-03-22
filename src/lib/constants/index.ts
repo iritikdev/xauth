@@ -221,7 +221,7 @@ export const DASHBOARD_SIDEBAR = {
       url: "#",
       icon: "ShoppingBag",
       items: [
-        { title: "Browse Products", url: "/shop", icon: "Store" },
+        { title: "Browse Products", url: "/dashboard/store", icon: "Store" },
         { title: "My Orders", url: "/dashboard/orders", icon: "BaggageClaim" },
       ],
     },
