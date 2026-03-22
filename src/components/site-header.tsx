@@ -65,7 +65,7 @@ export function SiteHeader() {
                     className="text-sm font-black text-[#1c3320] tracking-tight leading-none"
                     style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                   >
-                    Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
+                    Amaze <span className="text-emerald-500 italic">Ayurveda</span>
                   </span>
                   <span className="text-[8px] font-bold text-[#1c3320]/30 uppercase tracking-[0.3em] mt-0.5">
                     Associate Portal

@@ -29,7 +29,7 @@ import Image from "next/image";
 
 /* ─── design tokens (shared with ProductEditForm) ─────────────── */
 const field =
-  "w-full h-11 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-400/60 focus:border-amber-400 transition-all";
+  "w-full h-11 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-emerald-400 transition-all";
 
 const label =
   "block text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-1.5";
@@ -110,7 +110,7 @@ export default function NewProductForm({
               <span
                 key={pos}
                 className={cn(
-                  "absolute h-5 w-5 border-amber-400/40",
+                  "absolute h-5 w-5 border-emerald-400/40",
                   pos === "tl" && "top-5 left-5 border-t-2 border-l-2 rounded-tl-md",
                   pos === "tr" && "top-5 right-5 border-t-2 border-r-2 rounded-tr-md",
                   pos === "bl" && "bottom-5 left-5 border-b-2 border-l-2 rounded-bl-md",
@@ -167,7 +167,7 @@ export default function NewProductForm({
                   </AnimatePresence>
 
                   <div className="absolute bottom-0 left-0 right-0 rounded-b-[2rem] bg-gradient-to-t from-black/70 to-transparent px-6 py-5">
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-amber-400">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-400">
                       Product Media
                     </p>
                     <p className="text-xs text-white/50 mt-0.5">
@@ -184,21 +184,21 @@ export default function NewProductForm({
                   htmlFor="product-image-input"
                   className="absolute inset-0 flex flex-col items-center justify-center gap-5 p-8 cursor-pointer group"
                 >
-                  <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-amber-400/30 bg-amber-400/10 transition-all duration-300 group-hover:bg-amber-400/20 group-hover:scale-110">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-emerald-400/30 bg-emerald-400/10 transition-all duration-300 group-hover:bg-emerald-400/20 group-hover:scale-110">
                     <UploadCloud
                       size={28}
-                      className="text-amber-400 group-hover:text-amber-300"
+                      className="text-emerald-400 group-hover:text-emerald-300"
                     />
                   </div>
                   <div className="text-center">
-                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-amber-400">
+                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-400">
                       Upload Product Image
                     </p>
                     <p className="mt-1.5 text-[11px] text-zinc-500">
                       JPG · PNG · WEBP
                     </p>
                   </div>
-                  <div className="rounded-2xl border border-zinc-700 px-6 py-2 text-[11px] font-bold text-zinc-400 transition group-hover:border-amber-400/50 group-hover:text-amber-400">
+                  <div className="rounded-2xl border border-zinc-700 px-6 py-2 text-[11px] font-bold text-zinc-400 transition group-hover:border-emerald-400/50 group-hover:text-emerald-400">
                     Browse Files
                   </div>
                   <input
@@ -214,12 +214,12 @@ export default function NewProductForm({
           </div>
 
           {/* BV Prestige Card */}
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-950 via-amber-900 to-zinc-900 p-7 shadow-2xl">
-            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber-500/10 blur-3xl" />
+          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-emerald-950 via-emerald-900 to-zinc-900 p-7 shadow-2xl">
+            <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-emerald-500/10 blur-3xl" />
             <div className="relative space-y-4">
               <div className="flex items-center gap-2">
-                <Sparkles size={13} className="text-amber-400" />
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-amber-400">
+                <Sparkles size={13} className="text-emerald-400" />
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-emerald-400">
                   Business Value Points
                 </p>
               </div>
@@ -227,18 +227,18 @@ export default function NewProductForm({
                 name="bvAmount"
                 type="number"
                 placeholder="0"
-                className="w-full bg-transparent text-5xl font-black tracking-tight text-amber-100 outline-none placeholder:text-amber-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-full bg-transparent text-5xl font-black tracking-tight text-emerald-100 outline-none placeholder:text-emerald-900 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               />
-              <p className="text-[11px] text-amber-700 font-bold tracking-wide">
+              <p className="text-[11px] text-emerald-700 font-bold tracking-wide">
                 BV redeemable by distributors
               </p>
-              <div className="flex items-start gap-3 rounded-2xl bg-amber-400/10 border border-amber-400/20 px-4 py-3">
+              <div className="flex items-start gap-3 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 px-4 py-3">
                 <BarChart3
                   size={14}
-                  className="text-amber-400 shrink-0 mt-0.5"
+                  className="text-emerald-400 shrink-0 mt-0.5"
                 />
-                <p className="text-[11px] text-amber-300/70 leading-snug">
+                <p className="text-[11px] text-emerald-300/70 leading-snug">
                   Higher BV drives deeper distributor engagement and downline
                   activity
                 </p>

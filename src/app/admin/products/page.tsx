@@ -39,7 +39,7 @@ export default async function AdminProductsPage() {
   );
 
   return (
-    <div className="space-y-10 pb-20 pt-10 px-6">
+    <div className="space-y-10">
       {/* 1. SaaS Header Section */}
         <div>
           <div className="flex items-center gap-2 mb-2">
