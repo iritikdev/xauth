@@ -27,9 +27,10 @@ export default async function KycApprovalsPage() {
   console.log("Fetched", usersWithKyc);
 
   return (
-    <div className="p-6 space-y-6 bg-slate-50/50 min-h-screen">
+    <div className="space-y-6 min-h-screen">
       
       <PageHeader 
+      subtitle="live KYC"
         title="KYC"
         highlight="Management"
         description="Review and manage all KYC submissions (Pending, Verified, and Rejected)."

@@ -13,7 +13,7 @@ export default async function CategoryPage() {
   });
 
   return (
-    <div className="py-10 px-6 space-y-10">
+    <div className="space-y-10">
       <div className="border-b border-slate-100 pb-8 flex justify-between items-end">
         <PageHeader 
         title="Manage"

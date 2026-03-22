@@ -25,15 +25,15 @@ export default async function AdminUsersPage({
   }));
 
   return (
-    <div className="space-y-8 pb-20 pt-10 px-6">
+    <div className="space-y-8">
       <PageHeader
-        title="Partners "
-        highlight="Registry"
-        description={`Total Users: ${totalUsers}`}
+        title="Partners"
+        highlight=" Registry"
+        subtitle="Live Directory"
+        description="Manage and track your global associate network and their performance."
+        showBackButton={true}
       />
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-        <DataTable data={transformedUsers} columns={columns} />
-      </div>
+      <DataTable data={transformedUsers} columns={columns} />
     </div>
   );
 }

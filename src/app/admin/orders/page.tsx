@@ -35,7 +35,7 @@ export default async function AdminOrdersPage() {
   const revenue = orders.reduce((acc, curr) => acc + curr.totalAmount, 0);
 
   return (
-    <div className="space-y-10 pb-10 pt-10 px-6">
+    <div className="space-y-10 ">
       {/* SaaS Header */}
 
       <PageHeader

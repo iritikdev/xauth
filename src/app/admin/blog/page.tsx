@@ -10,7 +10,7 @@ export default async function AdminBlogPage() {
   const posts = await prisma.post.findMany();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
 
 
       <PageHeader

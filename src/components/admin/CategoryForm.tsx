@@ -2,71 +2,133 @@
 
 import { useFormStatus } from "react-dom";
 import { createCategory } from "@/lib/actions/category";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import { FolderPlus } from "lucide-react";
+import { FolderPlus, Loader2, GitBranch } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function CategoryForm({ categories }: { categories: any[] }) {
+/* ─── shared tokens ───────────────────────────────────────────── */
+const field =
+  "w-full h-11 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-emerald-400 transition-all";
+
+const label =
+  "block text-[10px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-1.5";
+
+/* ─── component ───────────────────────────────────────────────── */
+export default function CategoryForm({
+  categories,
+}: {
+  categories: any[];
+}) {
   return (
-    <Card className="p-8 rounded-[2.5rem] border-none shadow-2xl bg-white space-y-6">
-      <div className="flex items-center gap-2 mb-2">
-        <FolderPlus className="text-emerald-500 w-5 h-5" />
-        <h2 className="font-black uppercase text-sm tracking-tight italic">Add Category</h2>
+    <div
+      className="rounded-[2rem] border border-zinc-100 bg-white p-7 shadow-sm"
+      style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+    >
+      {/* Header */}
+      <div className="flex items-center gap-2.5 mb-7">
+        <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">
+          <FolderPlus size={14} strokeWidth={2} />
+        </div>
+        <h2 className="text-[10px] font-black uppercase tracking-[0.15em] text-zinc-600">
+          Add Category
+        </h2>
       </div>
-      
-      <form action={async (formData) => {
-        const res = await createCategory(formData);
-        if (res?.error) toast.error(res.error);
-        else {
-          toast.success("Category Created");
-          (document.getElementById("cat-form") as HTMLFormElement)?.reset();
-        }
-      }} id="cat-form" className="space-y-5">
-        
-        <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase text-slate-400">Title</Label>
-          <Input name="name" placeholder="Health Care" required className="h-12 rounded-xl bg-slate-50" />
+
+      <form
+        action={async (formData) => {
+          const res = await createCategory(formData);
+          if (res?.error) toast.error(res.error);
+          else {
+            toast.success("Category created!");
+            (document.getElementById("cat-form") as HTMLFormElement)?.reset();
+          }
+        }}
+        id="cat-form"
+        className="space-y-5"
+      >
+        {/* Title */}
+        <div>
+          <label className={label}>Title</label>
+          <input
+            name="name"
+            placeholder="e.g. Health Care"
+            required
+            className={field}
+          />
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase text-slate-400">Parent</Label>
+        {/* Parent */}
+        <div>
+          <label className={cn(label, "flex items-center gap-1.5")}>
+            <GitBranch size={10} className="text-zinc-400" />
+            Parent Category
+          </label>
           <Select name="parentId" defaultValue="none">
-            <SelectTrigger className="h-12 rounded-xl bg-slate-50">
-              <SelectValue placeholder="Root" />
+            <SelectTrigger className={cn(field, "flex items-center justify-between")}>
+              <SelectValue placeholder="Root Category" />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="none">Root Category</SelectItem>
+            <SelectContent className="rounded-2xl shadow-xl border-zinc-100">
+              <SelectItem value="none" className="text-sm font-medium">
+                Root Category
+              </SelectItem>
               {categories.map((c) => (
-                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                <SelectItem key={c.id} value={c.id} className="text-sm font-medium">
+                  {c.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase text-slate-400">Description</Label>
-          <Textarea name="description" className="min-h-[100px] rounded-xl bg-slate-50" />
+        {/* Description */}
+        <div>
+          <label className={label}>Description</label>
+          <textarea
+            name="description"
+            placeholder="Briefly describe this category…"
+            rows={3}
+            className={cn(field, "h-auto py-3 resize-none leading-relaxed")}
+          />
         </div>
 
         <SubmitButton />
       </form>
-    </Card>
+    </div>
   );
 }
 
+/* ─── submit button ──────────────────────────────────────────── */
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button 
+    <button
+      type="submit"
       disabled={pending}
-      className="w-full h-14 rounded-2xl bg-slate-900 text-white font-black uppercase text-[10px]"
+      className={cn(
+        "w-full h-12 rounded-2xl text-[10px] font-black uppercase tracking-[0.22em] transition-all flex items-center justify-center gap-2",
+        pending
+          ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
+          : "bg-zinc-950 text-white hover:bg-zinc-800 shadow-sm shadow-zinc-900/20 active:scale-[0.98]"
+      )}
     >
-      {pending ? "Syncing..." : "Create Category"}
-    </Button>
+      {pending ? (
+        <>
+          <Loader2 size={13} className="animate-spin" />
+          Creating…
+        </>
+      ) : (
+        <>
+          <FolderPlus size={13} />
+          Create Category
+        </>
+      )}
+    </button>
   );
 }

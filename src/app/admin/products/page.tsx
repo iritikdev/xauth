@@ -16,12 +16,12 @@ import { PageHeader } from "@/components/admin/page-header";
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
     where: {
-        category: {
-          is: {
-            id: { not: undefined },
-          },
+      category: {
+        is: {
+          id: { not: undefined },
         },
       },
+    },
     include: {
       category: {
         select: { name: true },
@@ -40,24 +40,16 @@ export default async function AdminProductsPage() {
 
   return (
     <div className="space-y-10">
-      {/* 1. SaaS Header Section */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">
-              Live Inventory System
-            </span>
-          </div>
-
-          <PageHeader
-            title="Product"
-            highlight="Management"
-            description="Add, edit, and manage your product catalog with ease. Keep your inventory up-to-date and organized."
-            buttonLink="/admin/products/new"
-            buttonText="Create New Entry"
-            icon={<Plus size={16} />}
-          />
-        </div>
+      <PageHeader
+        title="Product"
+        highlight="Management"
+        subtitle="Live Inventory"
+        description="Add, edit, and manage your product catalog with ease. Keep your inventory up-to-date and organized."
+        buttonLink="/admin/products/new"
+        buttonText="Create New Entry"
+        icon={<Plus size={16} />}
+        showBackButton={true}
+      />
 
       {/* 2. Quick Insight Cards (The "SaaS" touch) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
