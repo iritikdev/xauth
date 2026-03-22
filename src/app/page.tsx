@@ -23,11 +23,18 @@ const messages = [
 
 const Home = async (props: Props) => {
   const products = await prisma.product.findMany({
-    include : {category:true},
+    where: {
+      category: {
+        is: {
+          id: { not: undefined },
+        },
+      },
+    },
+    include: { category: true },
     take: 6,
     orderBy: { createdAt: "desc" },
   });
-  console.log("Product", products)
+  console.log("Product", products);
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -36,7 +43,7 @@ const Home = async (props: Props) => {
       <AboutUs />
       <BusinessOpportunity />
       <Testimonial />
-      <FaqSection/>
+      <FaqSection />
       <Footer />
     </div>
   );
