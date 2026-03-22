@@ -21,7 +21,7 @@ function Layout({ children }: LayoutProps) {
           <AppSidebar  navigation={ADMIN_SIDEBAR}/>
           {/* <BackButton /> */}
           <SidebarInset className="flex-1 overflow-y-auto">
-            <AppBreadcrumb />
+            {/* <AppBreadcrumb /> */}
             {children}
           </SidebarInset>
         </div>
