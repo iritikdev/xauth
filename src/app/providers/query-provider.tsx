@@ -5,14 +5,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState } from 'react'
 
 export default function QueryProvider({ children }: { children: React.ReactNode }) {
-  // We use useState to ensure the QueryClient is created only once per session
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5, // Data is "fresh" for 5 minutes
-        gcTime: 1000 * 60 * 30,    // Cache is kept for 30 minutes
-        retry: 1,                 // Retry failed requests once
-        refetchOnWindowFocus: false, // Don't refetch when user switches tabs
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 30,
+        retry: 1,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+      },
+      mutations: {
+        retry: 1,
       },
     },
   }))
@@ -20,7 +23,7 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   )
 }

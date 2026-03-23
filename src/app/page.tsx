@@ -1,45 +1,24 @@
+import Hero from "@/components/hero";
 import AboutUs from "@/components/aboutus";
 import BusinessOpportunity from "@/components/business";
-import Hero from "@/components/hero";
 import Testimonial from "@/components/testimonial";
 import { Footer } from "@/components/footer";
-import { ProductCarousel } from "@/components/LatestReleases";
 import { Navbar } from "@/components/navbar";
 import { FeaturedProducts } from "@/components/ecommerce/featured-products";
 import prisma from "@/lib/prisma";
-import PlanCalculator from "@/components/plan-calculator";
 import FaqSection from "@/components/faq-section";
 
-interface Props {
-  companyName?: string;
-}
-
-const messages = [
-  "🔥 Hot Deal: 50% Off!",
-  "🎉 New Feature Released!",
-  "🚀 Launching Soon!",
-  "📢 Follow us on Twitter!",
-];
-
-const Home = async (props: Props) => {
+const Home = async () => {
   const products = await prisma.product.findMany({
-    where: {
-      category: {
-        is: {
-          id: { not: undefined },
-        },
-      },
-    },
-    include: { category: true },
     take: 6,
     orderBy: { createdAt: "desc" },
   });
-  console.log("Product", products);
+  const productsWithCategory = products.filter(p => p.categoryId);
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
-      <FeaturedProducts initialProducts={products} />
+      <FeaturedProducts initialProducts={productsWithCategory} />
       <AboutUs />
       <BusinessOpportunity />
       <Testimonial />

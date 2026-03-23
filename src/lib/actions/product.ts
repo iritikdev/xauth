@@ -120,15 +120,10 @@ export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
       where: {
-        category: {
-          is: {
-            id: { not: undefined },
-          },
-          
-        },
+        categoryId: { not: "" },
       },
       include: {
-        category: true, // category property missing error yahan se fix hoga
+        category: true,
       },
     });
 
