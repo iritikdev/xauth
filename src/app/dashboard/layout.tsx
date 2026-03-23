@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import AppBreadcrumb from "@/components/breadcrumb";
 import { NewsTicker } from "@/components/new-ticker";
-import { SiteHeader } from "@/components/site-header";
+import { UserDashboardHeader } from "@/components/user-dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React, { ReactNode } from "react";
 import { DASHBOARD_SIDEBAR } from "@/lib/constants";
@@ -16,7 +16,7 @@ function Layout({ children }: LayoutProps) {
   return (
     <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
-        <SiteHeader />
+        <UserDashboardHeader />
         {/* <NewsTicker /> */}
         <div className="flex flex-row">
           <AppSidebar navigation={DASHBOARD_SIDEBAR} />

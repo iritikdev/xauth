@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import AppBreadcrumb from "@/components/breadcrumb";
-import { SiteHeader } from "@/components/site-header";
+import { UserDashboardHeader } from "@/components/user-dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ADMIN_SIDEBAR } from "@/lib/constants";
 import React, { ReactNode } from "react";
@@ -16,7 +16,7 @@ function Layout({ children }: LayoutProps) {
   return (
     <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
-        <SiteHeader />
+        <UserDashboardHeader />
         <div className="flex flex-row">
           <AppSidebar  navigation={ADMIN_SIDEBAR}/>
           {/* <BackButton /> */}
