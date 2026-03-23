@@ -120,7 +120,11 @@ export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
       where: {
-        categoryId: { not: "" },
+        category: {
+          is: {
+            id: { not: undefined },
+          },
+        },
       },
       include: {
         category: true,
@@ -144,18 +148,20 @@ export interface IProduct {
   id: string;
   name: string;
   description: string;
-  price: number;       // MRP (Retail)
-  discount: number;    // 0 to 100 percentage
-  bvAmount: number;    // Business Volume
-  image: string;       // Image URL or Base64
+  price: number; // MRP (Retail)
+  discount: number; // 0 to 100 percentage
+  bvAmount: number; // Business Volume
+  image: string; // Image URL or Base64
   stock: number;
   categoryId: string;
   createdAt: Date | string;
 }
 
-
-
-export async function updateProduct(id: string, prevState: any, formData: FormData) {
+export async function updateProduct(
+  id: string,
+  prevState: any,
+  formData: FormData,
+) {
   try {
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
@@ -184,7 +190,7 @@ export async function updateProduct(id: string, prevState: any, formData: FormDa
 
     revalidatePath("/admin/products");
     revalidatePath(`/admin/products/${id}/edit`);
-    
+
     return { success: true, product, error: null };
   } catch (error: any) {
     console.error("Update Error:", error);
