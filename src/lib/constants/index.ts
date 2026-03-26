@@ -93,110 +93,34 @@ export const products = [
 ];
 
 export const DASHBOARD_SIDEBAR = {
-  // navMain: [
-  //   {
-  //     title: "Overview",
-  //     icon: "LayoutDashboard",
-  //     url: "/dashboard",
-  //     isActive: true,
-  //   },
-  //   {
-  //     title: "Identity & Profile",
-  //     url: "#",
-  //     icon: "UserCircle2",
-  //     items: [
-  //       {
-  //         title: "Personal Profile",
-  //         url: "/dashboard/profile",
-  //         icon: "Contact2",
-  //       },
-  //       {
-  //         title: "KYC Verification",
-  //         url: "/dashboard/kyc",
-  //         icon: "BadgeCheck",
-  //       },
-  //       {
-  //         title: "Welcome Letter",
-  //         url: "/dashboard/welcome-letter",
-  //         icon: "FileText",
-  //       },
-  //       {
-  //         title: "Digital ID Card",
-  //         url: "/dashboard/partnerIdentityCard",
-  //         icon: "CreditCard",
-  //       },
-  //       {
-  //         title: "Change Password",
-  //         url: "/dashboard/updatePassword",
-  //         icon: "Lock",
-  //       },
-  //     ],
-  //   },
-  //   {
-      
-  //     title: "Shop",
-  //     icon: "ShoppingBag",
-  //     url: "/shop",
-  //     isActive: true,
-  //   },
-  //   {
-      
-  //     title: "My Orders",
-  //     icon: "BaggageClaim",
-  //     url: "/dashboard/orders",
-  //     isActive: true,
-  //   },
-  //   {
-  //     title: "My Network",
-  //     url: "#",
-  //     icon: "Network",
-  //     items: [
-  //       { title: "Genealogy Tree", url: "/dashboard/generology" },
-  //       // { title: "Direct Referrals", url: "/dashboard/referrals" },
-  //       // { title: "Downline Team", url: "/dashboard/team" },
-  //     ],
-  //   },
-  //   {
-  //     title: "Finances",
-  //     url: "#",
-  //     icon: "PiggyBank",
-  //     items: [
-  //       { title: "E-Wallet", url: "/dashboard/wallet", icon: "ArrowRightLeft" },
-  //       {
-  //         title: "Business Plan Calculator",
-  //         url: "/dashboard/businessPlanCalculator",
-  //         icon: "FileText",
-  //       },
-  //       // { title: "Income Reports", url: "/dashboard/income", icon: "BarChart3" },
-  //       // { title: "Payout Summary", url: "/dashboard/payouts" },
-  //     ],
-  //   },
-  // ],
+  
   
   navMain: [
     {
       title: "Overview",
       icon: "LayoutDashboard",
       url: "/dashboard",
-      isActive: true,
+      isActive: true, // Default active page
     },
-    /* --- Earning & Business (Sabse Important) --- */
+  
+    /* --- Financial Hub (High Priority) --- */
     {
-      title: "Business Center",
-      url: "#",
-      icon: "PiggyBank", // Or "Wallet"
-      isActive: true,
+      title: "My E-Wallet",
+      url: "/dashboard/wallet",
+      icon: "Wallet", // Suggestion: Use "Wallet" icon if available
+    },
+  
+    /* --- Network & Growth (Core MLM) --- */
+    {
+      title: "My Network",
+      icon: "Network", // Better UX icon for network than "Network"
+      url: "#", 
       items: [
-        { 
-          title: "My E-Wallet", 
-          url: "/dashboard/wallet", 
-          icon: "ArrowRightLeft" 
+        {
+          title: "Genealogy Tree",
+          url: "/dashboard/generology",
+          icon: "Network",
         },
-        // {
-        //   title: "Income Reports",
-        //   url: "/dashboard/income",
-        //   icon: "BarChart3",
-        // },
         {
           title: "Plan Calculator",
           url: "/dashboard/businessPlanCalculator",
@@ -204,35 +128,34 @@ export const DASHBOARD_SIDEBAR = {
         },
       ],
     },
-    /* --- Network & Growth --- */
-    {
-      title: "My Network",
-      url: "#",
-      icon: "Network",
-      items: [
-        { title: "Genealogy Tree", url: "/dashboard/generology", icon: "GitGraph" },
-        // { title: "Direct Referrals", url: "/dashboard/referrals", icon: "UserPlus" },
-        // { title: "Downline Team", url: "/dashboard/team", icon: "Users2" },
-      ],
-    },
+  
     /* --- Shopping & Commerce --- */
     {
-      title: "Shop & Orders",
-      url: "#",
+      title: "Storefront",
       icon: "ShoppingBag",
+      url: "#",
       items: [
-        { title: "Browse Products", url: "/dashboard/store", icon: "Store" },
-        { title: "My Orders", url: "/dashboard/orders", icon: "BaggageClaim" },
+        {
+          title: "Browse Products",
+          url: "/dashboard/store",
+          icon: "Store",
+        },
+        {
+          title: "My Orders",
+          url: "/dashboard/orders",
+          icon: "BaggageClaim",
+        },
       ],
     },
-    /* --- Profile & Compliance (Secondary) --- */
+  
+    /* --- Account & Compliance --- */
     {
-      title: "Identity & KYC",
+      title: "Identity & Profile",
       url: "#",
       icon: "ShieldCheck",
       items: [
         {
-          title: "My Profile",
+          title: "Account Profile",
           url: "/dashboard/profile",
           icon: "User",
         },
@@ -253,11 +176,12 @@ export const DASHBOARD_SIDEBAR = {
         },
       ],
     },
-    /* --- Settings & Security --- */
+  
+    /* --- System Settings --- */
     {
-      title: "Security",
+      title: "Settings",
       url: "#",
-      icon: "Lock",
+      icon: "Settings",
       items: [
         {
           title: "Change Password",
