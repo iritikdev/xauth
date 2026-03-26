@@ -76,7 +76,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
   };
   return (
     <main className="min-h-screen pb-16" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="container mx-auto px-4 md:px-8 py-8 space-y-6 max-w-7xl">
+      <div className="container space-y-6">
 
         {/* ── Hero ── */}
         <motion.section {...fadeUp(0)} className="relative overflow-hidden rounded-[2rem] bg-zinc-950">
