@@ -20,25 +20,25 @@ import Image from "next/image";
 /* ── Botanical leaf SVG ── */
 const LeafDecor = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 120 180" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15"/>
-    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3"/>
-    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
-    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
+    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15" />
+    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
+    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2" />
   </svg>
 );
 
 const NAV_LINKS = [
-  { label: "Shop Swadeshi", href: "/shop",  icon: Leaf          },
-  { label: "Our Story",     href: "/about", icon: Info          },
-  { label: "Business Plan", href: "/plan",  icon: LayoutDashboard },
+  { label: "Shop Swadeshi", href: "/shop", icon: Leaf },
+  { label: "Our Story", href: "/about", icon: Info },
+  { label: "Business Plan", href: "/plan", icon: LayoutDashboard },
 ];
 
 export const Navbar = () => {
-  const [isScrolled, setIsScrolled]   = useState(false);
-  const [isCartOpen, setIsCartOpen]   = useState(false);
-  const [mounted,    setMounted]      = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const cart              = useCart();
+  const cart = useCart();
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export const Navbar = () => {
             <div className="hidden md:block w-px h-5 bg-white/10 mx-1" />
 
             {/* Auth — desktop */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="items-center gap-2">
               {session ? (
                 <UserDropdown user={session?.user} />
               ) : (
@@ -200,7 +200,7 @@ export const Navbar = () => {
                     {NAV_LINKS.map((link) => (
                       <SheetClose asChild key={link.href}>
                         <Link href={link.href}>
-                          <div className="flex items-center gap-3.5 h-13 px-4 py-3.5 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 hover:border-[#e8a020]/20 transition-all group cursor-pointer">
+                          <div className="flex mb-2 items-center gap-3.5 h-13 px-4 py-3.5 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 hover:border-[#e8a020]/20 transition-all group cursor-pointer">
                             <link.icon className="w-4 h-4 text-[#e8a020]/60 group-hover:text-[#e8a020] transition-colors" />
                             <span className="text-sm font-medium text-white/55 group-hover:text-white transition-colors">
                               {link.label}
@@ -215,25 +215,38 @@ export const Navbar = () => {
                   <div className="h-px bg-white/8" />
 
                   {/* Account CTA */}
-                  <div className="space-y-2.5">
-                    <p className="text-[9px] font-black text-white/25 uppercase tracking-[0.28em] px-1 mb-3">
-                      Account
-                    </p>
-                    <SheetClose asChild>
-                      <Link href="/sign-in">
-                        <button className="w-full h-12 rounded-xl border border-white/12 bg-white/5 hover:bg-white/8 text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all mb-2">
-                          Login to Portal
-                        </button>
-                      </Link>
-                    </SheetClose>
-                    <SheetClose asChild>
-                      <Link href="/sign-up">
-                        <button className="w-full h-12 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-[0_4px_20px_rgba(232,160,32,0.2)]">
-                          Register Yourself
-                        </button>
-                      </Link>
-                    </SheetClose>
+                  <div className="items-center gap-2">
+                    {session ? (
+                      <>
+                        <Link href="/dashboard">
+                          <button className="w-full h-12 rounded-xl border border-white/12 bg-white/5 hover:bg-white/8 text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all mb-2">
+                            Dashboard
+                          </button>
+                        </Link>
+                      </>
+                    ) : (
+                      <div className="space-y-2.5">
+                        <p className="text-[9px] font-black text-white/25 uppercase tracking-[0.28em] px-1 mb-3">
+                          Account
+                        </p>
+                        <SheetClose asChild>
+                          <Link href="/sign-in">
+                            <button className="w-full h-12 rounded-xl border border-white/12 bg-white/5 hover:bg-white/8 text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all mb-2">
+                              Login to Portal
+                            </button>
+                          </Link>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Link href="/sign-up">
+                            <button className="w-full h-12 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-[0_4px_20px_rgba(232,160,32,0.2)]">
+                              Register Yourself
+                            </button>
+                          </Link>
+                        </SheetClose>
+                      </div>
+                    )}
                   </div>
+
 
                   {/* Bottom tagline */}
                   <div className="mt-auto pt-4 flex items-center gap-2">
