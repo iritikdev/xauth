@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import {
   Search, Menu, ShoppingCart,
-  LayoutDashboard, Leaf, Info
+  LayoutDashboard, Leaf, Info,
+  User, LogIn, UserPlus, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,7 +44,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     setMounted(true);
-    const onScroll = () => setIsScrolled(window.scrollY > 10);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -54,56 +55,39 @@ export const Navbar = () => {
     <>
       <nav
         className={cn(
-          "fixed top-0 z-50 w-full transition-all duration-500",
+          "fixed top-0 z-[60] w-full transition-all duration-500",
           isScrolled
-            ? "bg-[#1c3320]/95 backdrop-blur-xl border-b border-white/8 py-2 shadow-[0_4px_30px_rgba(28,50,32,0.25)]"
-            : "bg-[#1c3320] py-3"
+            ? "bg-[#1c3320]/90 backdrop-blur-xl border-b border-white/10 py-2.5 shadow-2xl"
+            : "bg-[#1c3320] py-4"
         )}
-        style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        {/* Leaf watermark — visible only when not scrolled */}
-        <div
-          className={cn(
-            "pointer-events-none absolute inset-0 overflow-hidden transition-opacity duration-500",
-            isScrolled ? "opacity-0" : "opacity-100"
-          )}
-        >
-          <LeafDecor className="absolute -top-4 right-20 w-16 text-emerald-400 opacity-30" />
-          <LeafDecor className="absolute -bottom-6 left-10 w-12 text-[#c8860a] opacity-20 rotate-[20deg]" />
+        {/* Botanical Background Elements */}
+        <div className={cn("absolute inset-0 overflow-hidden transition-opacity duration-700", isScrolled ? "opacity-30" : "opacity-100")}>
+          <LeafDecor className="absolute -top-10 right-[15%] w-24 text-emerald-500 opacity-20 rotate-12" />
+          <LeafDecor className="absolute -bottom-10 left-[10%] w-20 text-amber-500 opacity-10 -rotate-12" />
         </div>
 
         <div className="relative z-10 container mx-auto flex items-center justify-between px-5 md:px-8">
-
-          {/* ── Logo ── */}
+          
+          {/* ── Brand Logo ── */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white/8 border border-white/10 overflow-hidden flex-shrink-0">
-              <Image
-                src="/amaze-logo.png"
-                alt="Amaze Ayurveda"
-                fill
-                className="object-contain p-1.5 group-hover:scale-110 transition-transform duration-500"
-              />
-              {/* Gold glow on hover */}
-              <div className="absolute inset-0 rounded-xl bg-[#e8a020]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative w-11 h-11 rounded-2xl bg-white/10 border border-white/10 p-1.5 transition-transform duration-500 group-hover:scale-105 group-hover:bg-white/15">
+              <Image src="/amaze-logo.png" alt="Logo" fill className="object-contain p-2" />
+              <div className="absolute inset-0 rounded-2xl shadow-[0_0_15px_rgba(232,160,32,0.2)] group-hover:shadow-[0_0_25px_rgba(232,160,32,0.4)] transition-all" />
             </div>
             <div className="hidden sm:flex flex-col">
-              <span
-                className="font-black text-white leading-none text-lg tracking-tight"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-              >
-                Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
+              <span className="font-black text-white text-xl tracking-tighter uppercase italic leading-none">
+                Amaze <span className="text-[#e8a020] not-italic">Ayurveda</span>
               </span>
-              <span className="text-[8px] font-bold text-white/30 uppercase tracking-[0.38em] mt-1">
-                Swadeshi Movement
-              </span>
+              <span className="text-[7px] font-black text-emerald-400/50 uppercase tracking-[0.4em] mt-1">Swadeshi Sanctuary</span>
             </div>
           </Link>
 
-          {/* ── Desktop nav pill ── */}
-          <div className="hidden lg:flex items-center gap-0.5 bg-white/5 border border-white/8 p-1 rounded-2xl">
+          {/* ── Desktop Navigation ── */}
+          <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1.5 rounded-[2rem]">
             {NAV_LINKS.map((link) => (
               <Link key={link.href} href={link.href}>
-                <button className="flex items-center gap-2 h-9 px-4 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200">
+                <button className="flex items-center gap-2 h-10 px-5 rounded-[1.5rem] text-[11px] font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300">
                   <link.icon className="w-3.5 h-3.5" />
                   {link.label}
                 </button>
@@ -111,148 +95,117 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* ── Actions ── */}
-          <div className="flex items-center gap-1.5 md:gap-2">
-
-            {/* Search */}
-            <button className="hidden md:flex h-9 w-9 rounded-xl bg-white/5 border border-white/8 items-center justify-center text-white/40 hover:text-[#e8a020] hover:border-[#e8a020]/30 hover:bg-[#e8a020]/8 transition-all">
-              <Search className="w-4 h-4" />
+          {/* ── Right Actions ── */}
+          <div className="flex items-center gap-2">
+            
+            {/* Search (Icon only on mobile) */}
+            <button className="flex h-11 w-11 rounded-2xl bg-white/5 border border-white/10 items-center justify-center text-white/50 hover:text-[#e8a020] hover:bg-white/10 transition-all">
+              <Search size={18} />
             </button>
 
-            {/* Cart */}
+            {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-2 h-9 px-3 rounded-xl bg-white/5 border border-white/8 text-white/50 hover:text-[#e8a020] hover:border-[#e8a020]/30 hover:bg-[#e8a020]/8 transition-all"
+              className="relative flex items-center gap-2 h-11 px-4 rounded-2xl bg-white/5 border border-white/10 text-white/60 hover:text-[#e8a020] hover:bg-white/10 transition-all group"
             >
-              <ShoppingCart className="w-4 h-4" />
-              <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest">Cart</span>
+              <ShoppingCart size={18} />
+              <span className="hidden md:block text-[11px] font-bold uppercase tracking-widest">Cart</span>
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-[#e8a020] text-[#1c3320] text-[8px] font-black h-4 w-4 flex items-center justify-center rounded-full border-2 border-[#1c3320]">
+                <span className="absolute -top-1 -right-1 bg-[#e8a020] text-[#1c3320] text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-[#1c3320] animate-in zoom-in">
                   {cartCount}
                 </span>
               )}
             </button>
 
-            {/* Divider */}
-            <div className="hidden md:block w-px h-5 bg-white/10 mx-1" />
-
-            {/* Auth — desktop */}
-            <div className="items-center gap-2">
+            {/* Auth/User Dropdown */}
+            <div className="hidden md:flex items-center gap-2 ml-2">
               {session ? (
                 <UserDropdown user={session?.user} />
               ) : (
-                <div className="hidden md:flex items-center gap-2">
+                <>
                   <Link href="/sign-in">
-                    <button className="h-9 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/45 hover:text-white hover:bg-white/8 transition-all">
-                      Login
-                    </button>
+                    <Button variant="ghost" className="text-white/50 hover:text-white text-[11px] uppercase tracking-widest font-bold">Login</Button>
                   </Link>
                   <Link href="/sign-up">
-                    <button className="h-9 px-5 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.18em] transition-all shadow-[0_0_20px_rgba(232,160,32,0.25)] hover:shadow-[0_0_28px_rgba(232,160,32,0.4)] active:scale-[0.97]">
-                      Join
-                    </button>
+                    <Button className="bg-[#e8a020] hover:bg-[#c8860a] text-[#1c3320] rounded-2xl px-6 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-amber-900/20">Join</Button>
                   </Link>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Mobile menu trigger */}
+            {/* Mobile Menu Trigger */}
             <Sheet>
               <SheetTrigger asChild>
-                <button className="lg:hidden h-9 w-9 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/12 transition-all">
-                  <Menu className="h-5 w-5" />
+                <button className="lg:hidden h-11 w-11 rounded-2xl bg-[#e8a020] flex items-center justify-center text-[#1c3320] shadow-lg active:scale-90 transition-all ml-1">
+                  <Menu size={20} strokeWidth={3} />
                 </button>
               </SheetTrigger>
 
-              <SheetContent
-                side="right"
-                className="w-[82%] max-w-sm p-0 border-none bg-[#1c3320] overflow-hidden"
-              >
-                {/* Sheet header */}
-                <div className="relative px-7 pt-8 pb-7 border-b border-white/8 overflow-hidden">
-                  <LeafDecor className="absolute -top-4 right-4 w-20 text-emerald-400 opacity-20" />
-                  <div className="relative z-10 flex items-center gap-3">
-                    <div className="relative w-10 h-10 rounded-xl bg-white/8 border border-white/10 overflow-hidden flex-shrink-0">
-                      <Image src="/amaze-logo.png" alt="Logo" fill className="object-contain p-1.5" />
+              <SheetContent side="right" className="w-[85%] max-w-sm p-0 border-none bg-[#1c3320] text-white z-[100]">
+                {/* Mobile Header */}
+                <div className="relative p-8 border-b border-white/10 overflow-hidden">
+                  <LeafDecor className="absolute -top-6 -right-6 w-32 text-emerald-400 opacity-20" />
+                  <div className="relative z-10 flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/10 p-2 flex items-center justify-center">
+                      <Image src="/amaze-logo.png" alt="L" width={40} height={40} className="object-contain" />
                     </div>
                     <div>
-                      <SheetTitle
-                        className="text-white text-lg font-black tracking-tight leading-none"
-                        style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-                      >
-                        Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
+                      <SheetTitle className="text-white text-2xl font-black italic tracking-tighter uppercase leading-none">
+                        Amaze <span className="text-[#e8a020]">Ayurveda</span>
                       </SheetTitle>
-                      <p className="text-[8px] font-bold text-white/25 uppercase tracking-[0.35em] mt-1">
-                        Associate Portal
-                      </p>
+                      <p className="text-[9px] font-bold text-emerald-400/40 uppercase tracking-[0.3em] mt-2">Associate Network</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Sheet body */}
-                <div className="flex flex-col h-[calc(100%-105px)] px-5 py-7 space-y-7 overflow-y-auto">
-
-                  {/* Nav links */}
-                  <div className="space-y-2">
-                    <p className="text-[9px] font-black text-white/25 uppercase tracking-[0.28em] px-1 mb-3">
-                      Navigation
-                    </p>
+                {/* Mobile Links */}
+                <div className="px-6 py-10 space-y-8 h-full overflow-y-auto">
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] px-2 mb-4">Main Menu</p>
                     {NAV_LINKS.map((link) => (
                       <SheetClose asChild key={link.href}>
-                        <Link href={link.href}>
-                          <div className="flex mb-2 items-center gap-3.5 h-13 px-4 py-3.5 rounded-xl bg-white/5 border border-white/8 hover:bg-white/8 hover:border-[#e8a020]/20 transition-all group cursor-pointer">
-                            <link.icon className="w-4 h-4 text-[#e8a020]/60 group-hover:text-[#e8a020] transition-colors" />
-                            <span className="text-sm font-medium text-white/55 group-hover:text-white transition-colors">
-                              {link.label}
-                            </span>
+                        <Link href={link.href} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-[#e8a020] hover:text-[#1c3320] transition-all group">
+                          <div className="flex items-center gap-4">
+                            <link.icon size={20} className="text-[#e8a020] group-hover:text-[#1c3320]" />
+                            <span className="text-[13px] font-bold uppercase tracking-widest">{link.label}</span>
                           </div>
                         </Link>
                       </SheetClose>
                     ))}
                   </div>
 
-                  {/* Divider */}
-                  <div className="h-px bg-white/8" />
-
-                  {/* Account CTA */}
-                  <div className="items-center gap-2">
+                  {/* Mobile Account Section */}
+                  <div className="space-y-4 pt-6 border-t border-white/10">
+                    <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em] px-2 mb-4">Account Access</p>
                     {session ? (
-                      <>
-                        <Link href="/dashboard">
-                          <button className="w-full h-12 rounded-xl border border-white/12 bg-white/5 hover:bg-white/8 text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all mb-2">
-                            Dashboard
-                          </button>
+                      <SheetClose asChild>
+                        <Link href="/dashboard" className="flex items-center gap-4 p-4 rounded-2xl bg-emerald-600/20 border border-emerald-500/20 text-emerald-400">
+                          <LayoutDashboard size={20} />
+                          <span className="font-bold text-sm uppercase tracking-widest">Go to Dashboard</span>
                         </Link>
-                      </>
+                      </SheetClose>
                     ) : (
-                      <div className="space-y-2.5">
-                        <p className="text-[9px] font-black text-white/25 uppercase tracking-[0.28em] px-1 mb-3">
-                          Account
-                        </p>
+                      <div className="grid grid-cols-2 gap-3">
                         <SheetClose asChild>
-                          <Link href="/sign-in">
-                            <button className="w-full h-12 rounded-xl border border-white/12 bg-white/5 hover:bg-white/8 text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all mb-2">
-                              Login to Portal
-                            </button>
+                          <Link href="/sign-in" className="flex flex-col items-center justify-center p-5 rounded-[2rem] bg-white/5 border border-white/10 gap-2">
+                            <LogIn size={20} className="text-emerald-400" />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Login</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
-                          <Link href="/sign-up">
-                            <button className="w-full h-12 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-[0_4px_20px_rgba(232,160,32,0.2)]">
-                              Register Yourself
-                            </button>
+                          <Link href="/sign-up" className="flex flex-col items-center justify-center p-5 rounded-[2rem] bg-[#e8a020] text-[#1c3320] gap-2">
+                            <UserPlus size={20} />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Join Us</span>
                           </Link>
                         </SheetClose>
                       </div>
                     )}
                   </div>
 
-
-                  {/* Bottom tagline */}
-                  <div className="mt-auto pt-4 flex items-center gap-2">
-                    <div className="h-px flex-1 bg-white/8" />
-                    <p className="text-[8px] text-white/20 uppercase tracking-widest">🌿 Vocal for Local</p>
-                    <div className="h-px flex-1 bg-white/8" />
+                  {/* Mobile Footer Tagline */}
+                  <div className="pt-10 flex flex-col items-center gap-4 opacity-30">
+                    <div className="h-px w-full bg-white/20" />
+                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">🌿 Vocal for Local</p>
                   </div>
                 </div>
               </SheetContent>
@@ -261,8 +214,11 @@ export const Navbar = () => {
         </div>
       </nav>
 
+      {/* Cart Drawer */}
       <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
-      <div className="h-[68px]" />
+      
+      {/* Spacer to prevent content from going under fixed navbar */}
+      <div className={cn("transition-all duration-500", isScrolled ? "h-[72px]" : "h-[80px]")} />
     </>
   );
 };
