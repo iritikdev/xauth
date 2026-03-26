@@ -141,7 +141,7 @@ export const Navbar = () => {
               {session ? (
                 <UserDropdown user={session?.user} />
               ) : (
-                <>
+                <div className="hidden md:flex items-center gap-2">
                   <Link href="/sign-in">
                     <button className="h-9 px-4 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white/45 hover:text-white hover:bg-white/8 transition-all">
                       Login
@@ -152,7 +152,7 @@ export const Navbar = () => {
                       Join
                     </button>
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
