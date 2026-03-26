@@ -99,7 +99,7 @@ export const DASHBOARD_SIDEBAR = {
         },
         {
           title: "Digital ID Card",
-          url: "/dashboard/partnerIdentityCard",
+          url: "/dashboard/id-card",
           icon: "Contact2",
         },
         {

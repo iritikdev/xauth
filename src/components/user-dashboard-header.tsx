@@ -11,14 +11,16 @@ import { CartDrawer } from "@/components/ecommerce/cart-drawer"
 import UserDropdown from "./dashboard/user-dropdown"
 import { NotificationDrawer } from "./dashboard/notification-drawer"
 import { SettingsDrawer } from "./dashboard/settings-drawer"
+import Link from "next/link"
+
 export function UserDashboardHeader() {
   const { toggleSidebar, state } = useSidebar()
-  const { data: session }        = useSession()
+  const { data: session } = useSession()
 
-  const [isCartOpen,          setIsCartOpen]          = useState(false)
-  const [isNotifOpen,         setIsNotifOpen]         = useState(false)
-  const [isSettingsOpen,      setIsSettingsOpen]      = useState(false)
-  const [mounted,             setMounted]             = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isNotifOpen, setIsNotifOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   const cart = useCart()
   useEffect(() => { setMounted(true) }, [])
@@ -59,10 +61,13 @@ export function UserDashboardHeader() {
 
               {/* Brand */}
               <div className="flex items-center gap-2.5 group cursor-pointer">
-                <div className="relative h-8 w-8 rounded-xl bg-zinc-950 flex items-center justify-center shadow-sm overflow-hidden transition-shadow group-hover:shadow-md">
-                  <Image src="/amaze-logo.png" alt="Amaze Ayurveda" fill className="object-contain p-1" />
-                  <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/8 transition-colors duration-200" />
-                </div>
+                <Link href="/">
+
+                  <div className="relative h-8 w-8 rounded-xl flex items-center justify-center shadow-sm overflow-hidden transition-shadow group-hover:shadow-md">
+                    <Image src="/amaze-logo.png" alt="Amaze Ayurveda" fill className="object-contain p-1" />
+                    <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/8 transition-colors duration-200" />
+                  </div>
+                </Link>
                 <div className="hidden md:flex flex-col leading-none">
                   <span
                     className="text-sm font-black text-zinc-900 tracking-tight leading-none"
@@ -120,9 +125,9 @@ export function UserDashboardHeader() {
         <div className="h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/25 to-transparent pointer-events-none" />
       </header>
 
-      <CartDrawer         open={isCartOpen}     setOpen={setIsCartOpen}     />
-      <NotificationDrawer open={isNotifOpen}    setOpen={setIsNotifOpen}    />
-      <SettingsDrawer     open={isSettingsOpen} setOpen={setIsSettingsOpen} />
+      <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
+      <NotificationDrawer open={isNotifOpen} setOpen={setIsNotifOpen} />
+      <SettingsDrawer open={isSettingsOpen} setOpen={setIsSettingsOpen} />
     </>
   )
 }
