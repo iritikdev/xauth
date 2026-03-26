@@ -98,17 +98,17 @@ export const Navbar = () => {
           {/* ── Right Actions ── */}
           <div className="flex items-center gap-2">
             
-            {/* Search (Icon only on mobile) */}
+            {/* Search (Icon only on mobile)
             <button className="flex h-11 w-11 rounded-2xl bg-white/5 border border-white/10 items-center justify-center text-white/50 hover:text-[#e8a020] hover:bg-white/10 transition-all">
               <Search size={18} />
-            </button>
+            </button> */}
 
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative flex items-center gap-2 h-11 px-4 rounded-2xl bg-white/5 border border-white/10 text-white/60 hover:text-[#e8a020] hover:bg-white/10 transition-all group"
             >
-              <ShoppingCart size={18} />
+              <ShoppingCart size={16} />
               <span className="hidden md:block text-[11px] font-bold uppercase tracking-widest">Cart</span>
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#e8a020] text-[#1c3320] text-[9px] font-black h-5 w-5 flex items-center justify-center rounded-full border-2 border-[#1c3320] animate-in zoom-in">
@@ -118,18 +118,18 @@ export const Navbar = () => {
             </button>
 
             {/* Auth/User Dropdown */}
-            <div className="hidden md:flex items-center gap-2 ml-2">
+            <div className="items-center gap-2 ml-2">
               {session ? (
                 <UserDropdown user={session?.user} />
               ) : (
-                <>
+                <div className="hidden md:flex items-center gap-2">
                   <Link href="/sign-in">
                     <Button variant="ghost" className="text-white/50 hover:text-white text-[11px] uppercase tracking-widest font-bold">Login</Button>
                   </Link>
                   <Link href="/sign-up">
                     <Button className="bg-[#e8a020] hover:bg-[#c8860a] text-[#1c3320] rounded-2xl px-6 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-amber-900/20">Join</Button>
                   </Link>
-                </>
+                </div>
               )}
             </div>
 
