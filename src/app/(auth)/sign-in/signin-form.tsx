@@ -48,29 +48,28 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    setError(null);
     try {
       const res = await signIn("credentials", {
         username: data.username.trim(),
         password: data.password,
-        redirectTo:"/dashboard",
-        redirect: true,
+        redirect: false, // Hum manual handle karenge
       });
-
-      // if (!res || res.error) {
-      //   setError("Invalid Credentials. Please check your Associate ID.");
-      //   toast.error("Access Denied", { description: "Invalid Username or Password" });
-      //   return;
-      // }
-
-      toast.success("Welcome Back!", { description: "Redirecting to your dashboard..." });
-      
-      // setTimeout(() => {
-      //   router.push("/dashboard");
-      //   router.refresh();
-      // }, 800);
+  
+      if (res?.error) {
+        toast.error("Invalid Login");
+        return;
+      }
+  
+      toast.success("Login Successful!");
+  
+      // 🔥 Next.js 16 Trick: Hard refresh zaroori ho sakta hai 
+      // taaki middleware ko naya cookie mil jaye
+      setTimeout(() => {
+        window.location.href = "/dashboard"; 
+      }, 500);
+  
     } catch (err) {
-      setError("Server connection failed. Try again.");
+      console.error(err);
     }
   };
 
