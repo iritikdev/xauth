@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ import {
   AlertCircle, ChevronRight, ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
-
+import { LoaderIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { LOADING_TIPS } from "@/lib/constants";
 
 // Schema (In case it's not imported)
 const loginSchema = z.object({
@@ -38,6 +39,15 @@ const SignInForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [randomTip, setRandomTip] = useState("");
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    if (isPending) {
+      const randomIndex = Math.floor(Math.random() * LOADING_TIPS.length);
+      setRandomTip(LOADING_TIPS[randomIndex]);
+    }
+  }, [isPending]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -48,6 +58,8 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    setIsPending(true); // Loader start
+  setError(null);
     try {
       const res = await signIn("credentials", {
         username: data.username.trim(),
@@ -71,6 +83,51 @@ const SignInForm = () => {
   };
 
   return (
+    <>
+    {isPending && (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 z-[100] bg-[#fcfdfc] flex flex-col items-center justify-center p-6 text-center"
+  >
+    {/* Animated Pulse Logo */}
+    <div className="relative mb-12">
+      <div className="absolute inset-0 bg-emerald-100 rounded-full blur-3xl animate-pulse" />
+      <img src="/logo.png" className="w-24 h-24 relative z-10 opacity-80" alt="Amaze Logo" />
+      <div className="absolute -inset-4 border border-emerald-500/20 rounded-full animate-[spin_10s_linear_infinite]" />
+    </div>
+
+    {/* Dynamic Tip Section */}
+    <motion.div 
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      className="max-w-xs space-y-4"
+    >
+      <span className="text-[10px] font-black uppercase tracking-[0.5em] text-emerald-600/60">
+        Daily Wellness Tip
+      </span>
+      <p className="text-lg font-serif italic text-slate-800 leading-relaxed">
+        "{randomTip}"
+      </p>
+      
+      {/* Progress bar loader */}
+      <div className="w-48 h-1 bg-slate-100 rounded-full mx-auto overflow-hidden mt-8">
+        <motion.div 
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="h-full bg-emerald-600"
+        />
+      </div>
+    </motion.div>
+
+    <p className="fixed bottom-12 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+      Securing your Ayurvedic Workspace...
+    </p>
+  </motion.div>
+)}
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
 
@@ -198,6 +255,7 @@ const SignInForm = () => {
         </div>
       </form>
     </Form>
+    </>
   );
 };
 

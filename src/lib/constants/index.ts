@@ -247,3 +247,13 @@ export const payments: Payment[] = [
   },
   // ...
 ];
+
+export const LOADING_TIPS = [
+  "Abhyanga (Self-massage) boosts circulation and calms the nervous system.",
+  "Drinking warm water in the morning helps flush out toxins (Ama).",
+  "Consuming seasonal fruits aligns your body with nature's rhythm.",
+  "Consistent efforts in business lead to compounding success. Keep growing!",
+  "Amaze Ayurveda: Bringing the purity of Bihar's herbs to your home.",
+  "Daily meditation for 10 minutes improves focus and leadership skills.",
+  "Tulsi and Ginger tea is a natural shield for your immunity."
+];
