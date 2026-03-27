@@ -53,21 +53,22 @@ const SignInForm = () => {
       const res = await signIn("credentials", {
         username: data.username.trim(),
         password: data.password,
-        redirect: false,
+        redirectTo:"/dashboard",
+        redirect: true,
       });
 
-      if (!res || res.error) {
-        setError("Invalid Credentials. Please check your Associate ID.");
-        toast.error("Access Denied", { description: "Invalid Username or Password" });
-        return;
-      }
+      // if (!res || res.error) {
+      //   setError("Invalid Credentials. Please check your Associate ID.");
+      //   toast.error("Access Denied", { description: "Invalid Username or Password" });
+      //   return;
+      // }
 
       toast.success("Welcome Back!", { description: "Redirecting to your dashboard..." });
       
-      setTimeout(() => {
-        router.push("/dashboard");
-        router.refresh();
-      }, 800);
+      // setTimeout(() => {
+      //   router.push("/dashboard");
+      //   router.refresh();
+      // }, 800);
     } catch (err) {
       setError("Server connection failed. Try again.");
     }
