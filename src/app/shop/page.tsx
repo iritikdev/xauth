@@ -110,7 +110,7 @@ export default function ProductListPage() {
 
   return (
     <>
-      <Navbar />
+  
       <div className="min-h-screen bg-[#fcfdfc]">
         
         

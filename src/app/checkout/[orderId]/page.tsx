@@ -204,10 +204,10 @@ export default async function CheckoutSummaryPage({
                 </div>
               </div>
 
-              <Button className="w-full h-16 mt-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 font-black uppercase tracking-widest text-xs gap-3 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 group">
+              {/* <Button className="w-full h-16 mt-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 font-black uppercase tracking-widest text-xs gap-3 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 group">
                 <CreditCard className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                 Pay via Razorpay
-              </Button>
+              </Button> */}
             </div>
 
             {/* Background Decor */}
@@ -229,7 +229,7 @@ export default async function CheckoutSummaryPage({
                 <span className="text-slate-900 font-bold">
                   Business Wallet
                 </span>{" "}
-                instantly after a successful transaction.
+                instantly after a successful delivery.
               </p>
             </div>
           </div>
