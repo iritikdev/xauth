@@ -41,13 +41,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  session: { strategy: "jwt", maxAge: 15 * 60, updateAge: 5 * 60 },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id as string; // Explicitly map ID
+        token.id = user.id as string;
         token.username = user.username;
         token.mobile = user.mobile;
         token.photoUrl = user.photoUrl;
+        token.expiresAt = Math.floor(Date.now() / 1000) + (15 * 60);
         // token.role = user.role;
       }
       return token;
@@ -58,6 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.username = token.username as string;
         session.user.mobile = token.mobile as string;
         session.user.photoUrl = token.photoUrl as string;
+        session.user.expiresAt = token.expiresAt;
         // session.user.role = token.role as any; // Cast to Role if needed
       }
       return session;
@@ -66,7 +69,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/sign-in",
   },
-  session: { strategy: "jwt" },
-  // Important for NextAuth v5
+
   secret: process.env.AUTH_SECRET,
 });

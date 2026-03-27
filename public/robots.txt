@@ -1,0 +1,19 @@
+# * User-agent: * ka matlab hai saare search engines (Google, Bing, etc.)
+User-agent: *
+
+# Allow public pages
+Allow: /
+Allow: /shop
+Allow: /about
+Allow: /plan
+
+# Block private & technical routes
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+Disallow: /_next/
+Disallow: /sign-in
+Disallow: /sign-up
+
+# Link to your sitemap
+Sitemap: https://amazeayurveda.in/sitemap.xml
