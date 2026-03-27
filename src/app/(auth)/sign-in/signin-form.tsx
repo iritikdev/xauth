@@ -8,9 +8,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Eye, EyeOff, Loader2, User, Lock, 
-  AlertCircle, ChevronRight, ShieldCheck 
+import {
+  Eye, EyeOff, Loader2, User, Lock,
+  AlertCircle, ChevronRight, ShieldCheck
 } from "lucide-react";
 import Link from "next/link";
 
@@ -53,21 +53,18 @@ const SignInForm = () => {
         username: data.username.trim(),
         password: data.password,
         redirect: false, // Hum manual handle karenge
+      
       });
-  
+
       if (res?.error) {
         toast.error("Invalid Login");
         return;
       }
-  
+
       toast.success("Login Successful!");
-  
-      // 🔥 Next.js 16 Trick: Hard refresh zaroori ho sakta hai 
-      // taaki middleware ko naya cookie mil jaye
-      setTimeout(() => {
-        window.location.href = "/dashboard"; 
-      }, 500);
-  
+      router.push("/dashboard");
+      router.refresh();
+
     } catch (err) {
       console.error(err);
     }
@@ -76,7 +73,7 @@ const SignInForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        
+
         {/* Username Field */}
         <FormField
           control={form.control}
@@ -160,7 +157,7 @@ const SignInForm = () => {
         {/* Error Alert */}
         <AnimatePresence>
           {error && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -196,8 +193,8 @@ const SignInForm = () => {
 
         {/* Trust Footer */}
         <div className="pt-4 flex items-center justify-center gap-2 text-slate-400">
-           <ShieldCheck size={14} className="text-emerald-500" />
-           <span className="text-[9px] font-bold uppercase tracking-[0.1em]">Secure Swadeshi Access</span>
+          <ShieldCheck size={14} className="text-emerald-500" />
+          <span className="text-[9px] font-bold uppercase tracking-[0.1em]">Secure Swadeshi Access</span>
         </div>
       </form>
     </Form>
