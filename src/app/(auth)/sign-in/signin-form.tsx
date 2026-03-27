@@ -65,7 +65,7 @@ const SignInForm = () => {
       toast.success("Welcome Back!", { description: "Redirecting to your dashboard..." });
       
       setTimeout(() => {
-        router.replace("/dashboard");
+        router.push("/dashboard");
         router.refresh();
       }, 800);
     } catch (err) {
