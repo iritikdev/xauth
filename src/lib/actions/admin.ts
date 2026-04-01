@@ -32,8 +32,6 @@ export async function markOrderAsDelivered(orderId: string) {
 }
 
 
-
-
 export async function updatePayoutStatus(transactionId: string, status: "COMPLETED" | "FAILED") {
   try {
     const session = await auth();
@@ -85,4 +83,46 @@ export async function updatePayoutStatus(transactionId: string, status: "COMPLET
   } catch (error: any) {
     return { success: false, error: error.message };
   }
+}
+
+
+
+export async function changeUserSponsor(userId: string, newSponsorUsername: string) {
+  try {
+    // 1. Check if new sponsor exists
+    const newSponsor = await prisma.user.findUnique({
+      where: { username: newSponsorUsername }
+    });
+
+    if (!newSponsor) throw new Error("New sponsor not found.");
+
+    // 2. Prevent Circular Reference (User cannot be their own sponsor or their downline's)
+    // Simple check: user != newSponsor
+    if (userId === newSponsor.id) {
+      throw new Error("A user cannot be their own sponsor.");
+    }
+
+    // 3. Update the User
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        sponsorId: newSponsor.username, // Hamare schema mein username reference hai
+      }
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: "Sponsorship updated successfully!" };
+
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+export async function getUsernameInfo(username: string) {
+  if (!username || username.length < 3) return null;
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: { name: true }
+  });
+  return user;
 }

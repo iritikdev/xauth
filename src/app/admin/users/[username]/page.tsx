@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { format } from "date-fns";
+import { ChangeSponsorModal } from "@/components/admin/ChangeSponsorModal";
 
 export default async function UserProfilePage({ params }: { params: { username: string } }) {
   const {username} = await params  
@@ -27,6 +28,13 @@ export default async function UserProfilePage({ params }: { params: { username: 
 
   return (
     <div className="p-6 lg:p-10 space-y-10 bg-[#fafafa]">
+      {/* Sponsorship Management Section */}
+      <section className="space-y-4">
+          <h2 className="text-sm font-black uppercase tracking-widest text-slate-400">
+            Hierarchy Management
+          </h2>
+          <ChangeSponsorModal user={user} />
+        </section>
       
       {/* --- HERO SECTION --- */}
       <div className="flex flex-col md:flex-row gap-8 items-start md:items-center bg-white p-8 rounded-[3rem] shadow-sm border border-slate-100">
