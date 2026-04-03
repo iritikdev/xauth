@@ -208,6 +208,12 @@ export const columns: ColumnDef<UserRegistry>[] = [
               >
                 <Link href={`/admin/users/${user.username}`}>View Full Profile</Link>
               </DropdownMenuItem>
+              <DropdownMenuItem
+                className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer"
+                asChild
+              >
+                <Link href={`/admin/users/${user.username}/edit`}>Edit Profile</Link>
+              </DropdownMenuItem>
               <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer">
                 Network Genealogy
               </DropdownMenuItem>
