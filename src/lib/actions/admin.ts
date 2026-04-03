@@ -2,6 +2,7 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "../auth";
+import bcrypt from "bcryptjs";
 
 export async function markOrderAsDelivered(orderId: string) {
   try {
@@ -86,7 +87,6 @@ export async function updatePayoutStatus(transactionId: string, status: "COMPLET
 }
 
 
-
 export async function changeUserSponsor(userId: string, newSponsorUsername: string) {
   try {
     // 1. Check if new sponsor exists
@@ -125,4 +125,52 @@ export async function getUsernameInfo(username: string) {
     select: { name: true }
   });
   return user;
+}
+
+
+
+export async function updateUserDetails(userId: string, formData: any) {
+  try {
+    const { kycData, ...userData } = formData;
+
+    await prisma.$transaction([
+      // Update User Main Table
+      prisma.user.update({
+        where: { id: userId },
+        data: userData,
+      }),
+      // Update KYC Table
+      prisma.kycDocument.upsert({
+        where: { userId: userId },
+        update: kycData,
+        create: { ...kycData, userId: userId },
+      }),
+    ]);
+
+    revalidatePath(`/admin/users/${userData.username}`);
+    return { success: true, message: "Profile updated successfully!" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+}
+
+
+
+
+
+export async function updateUserPassword(userId: string, newPassword: string) {
+  try {
+    // 1. Password ko hash karna zaroori hai
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword.trim(), salt);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword }, 
+    });
+
+    return { success: true, message: "Password updated & encrypted!" };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
 }

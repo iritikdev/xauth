@@ -41,3 +41,12 @@ export const getBase64ImageFromURL = async (url: string) => {
     reader.readAsDataURL(blob);
   });
 };
+
+export const formatAadhaar = (value: string) => {
+  // Sirf numbers rakho aur 12 digits tak limit karo
+  const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "").slice(0, 12);
+  
+  // Har 4 digit ke baad space add karo
+  const parts = v.match(/.{1,4}/g);
+  return parts ? parts.join(" ") : v;
+};
