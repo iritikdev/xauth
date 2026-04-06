@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 export function CartDrawer({
   open,
@@ -24,8 +25,8 @@ export function CartDrawer({
   setOpen: (o: boolean) => void;
 }) {
   const { data: session } = useSession();
-  const cart              = useCart();
-  const router            = useRouter();
+  const cart = useCart();
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   /* ── totals ── */
@@ -34,24 +35,16 @@ export function CartDrawer({
     return acc + net * item.quantity;
   }, 0);
 
-  const totalBV = cart.items.reduce(
-    (acc, item) => acc + item.bvAmount * item.quantity,
-    0
-  );
+  const totalBV = cart.items.reduce((acc, item) => acc + item.bvAmount * item.quantity, 0);
+  const savings = cart.items.reduce((acc, item) => acc + item.price * (item.discount / 100) * item.quantity, 0);
 
-  const savings = cart.items.reduce((acc, item) => {
-    return acc + item.price * (item.discount / 100) * item.quantity;
-  }, 0);
-
-  /* ── checkout ── */
   const handleCheckout = async () => {
     if (!session) {
-      toast.error("Please sign in to complete your order.");
+      toast.error("Please sign in to order.");
       setOpen(false);
       router.push("/sign-in");
       return;
     }
-    if (cart.items.length === 0) return;
     try {
       setIsPending(true);
       const result = await createOrder(cart.items);
@@ -63,7 +56,7 @@ export function CartDrawer({
         toast.error(result.error);
       }
     } catch {
-      toast.error("Checkout failed. Please try again.");
+      toast.error("Checkout failed.");
     } finally {
       setIsPending(false);
     }
@@ -72,233 +65,97 @@ export function CartDrawer({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent
-        className="w-full sm:max-w-[420px] flex flex-col bg-white border-none rounded-l-[2rem] p-0 overflow-hidden z-[101]"
-        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+        // Mobile par niche se aur round corners ke saath, desktop par side se
+        side="bottom" 
+        className="h-[92vh] sm:h-screen w-full sm:max-w-[440px] sm:side-right flex flex-col bg-[#F8F9FA] border-none rounded-t-[2.5rem] sm:rounded-t-none sm:rounded-l-[2.5rem] p-0 z-[101] shadow-2xl"
       >
-        {/* ── Header ── */}
-        <div className="relative overflow-hidden bg-zinc-950 px-6 py-6 flex-shrink-0">
-          {/* ambient orb */}
-          <div className="absolute -top-10 -right-10 h-36 w-36 rounded-full bg-emerald-400/8 blur-3xl pointer-events-none" />
-          {/* corner marks */}
-          {(["tl","tr"] as const).map((p) => (
-            <span key={p} className={cn(
-              "absolute h-4 w-4 border-emerald-400/25",
-              p==="tl" && "top-3 left-3 border-t border-l rounded-tl",
-              p==="tr" && "top-3 right-3 border-t border-r rounded-tr",
-            )} />
-          ))}
+        {/* ── Mobile Drag Handle ── */}
+        <div className="w-12 h-1.5 bg-zinc-300 rounded-full mx-auto mt-3 mb-1 sm:hidden opacity-40" />
 
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
-                <ShoppingCart size={16} className="text-emerald-400" strokeWidth={2} />
+        {/* ── Header ── */}
+        <div className="px-6 py-4 flex items-center justify-between bg-white/50 backdrop-blur-md sticky top-0 z-20 border-b border-zinc-100">
+           <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-600/20">
+                <ShoppingCart size={18} strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-[9px] font-black uppercase tracking-[0.22em] text-emerald-400/70 mb-0.5">
-                  Business Cart
+                <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Your Basket</h3>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">
+                  {cart.items.length} Formulation{cart.items.length !== 1 ? 's' : ''}
                 </p>
-                <SheetTitle
-                  className="text-[15px] font-black text-white leading-none"
-                  style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}
-                >
-                  {cart.items.length === 0
-                    ? "Your cart"
-                    : `${cart.items.length} item${cart.items.length !== 1 ? "s" : ""}`}
-                </SheetTitle>
               </div>
-            </div>
-
-            <button
-              onClick={() => setOpen(false)}
-              className="h-8 w-8 rounded-xl border border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white flex items-center justify-center transition-all"
-            >
-              <X size={14} strokeWidth={2.5} />
-            </button>
-          </div>
-
-          {/* emerald hairline */}
-          <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-gradient-to-r from-transparent via-emerald-400/25 to-transparent" />
+           </div>
+           <button onClick={() => setOpen(false)} className="h-10 w-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500 active:scale-90 transition-all">
+             <X size={20} />
+           </button>
         </div>
 
-        {/* ── Cart items ── */}
-        <div className="flex-1 overflow-y-auto">
+        {/* ── Cart Items ── */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
           {cart.items.length === 0 ? (
-            /* Empty state */
-            <div className="flex flex-col items-center justify-center h-full gap-5 px-6 py-16">
-              <div className="h-16 w-16 rounded-3xl bg-zinc-50 border border-zinc-100 flex items-center justify-center">
-                <ShoppingBag size={24} className="text-zinc-300" strokeWidth={1.5} />
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-4">
+              <div className="h-20 w-20 bg-white rounded-[2rem] shadow-sm flex items-center justify-center">
+                <ShoppingBag size={32} className="text-zinc-200" />
               </div>
-              <div className="text-center">
-                <p className="text-sm font-black text-zinc-500 mb-1"
-                  style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}>
-                  Your cart is empty
-                </p>
-                <p className="text-[11px] font-medium text-zinc-400">
-                  Add products to earn BV and unlock rewards
-                </p>
-              </div>
-              <Link
-                href="/dashboard/store"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2 h-10 rounded-2xl bg-zinc-950 text-white px-5 text-[10px] font-black uppercase tracking-[0.16em] hover:bg-zinc-800 transition-all"
-              >
-                <Package size={13} strokeWidth={2} /> Browse Store
-              </Link>
+              <p className="text-sm font-black text-zinc-400 uppercase tracking-widest">Basket is empty</p>
+              <Button onClick={() => setOpen(false)} variant="outline" className="rounded-full px-8 border-emerald-200 text-emerald-700">Explore Products</Button>
             </div>
           ) : (
-            <div className="px-5 py-4 space-y-3">
-              {cart.items.map((item) => {
-                const net = item.price - item.price * (item.discount / 100);
-                const lineTotal = net * item.quantity;
-                return (
-                  <div
-                    key={item.id}
-                    className="group flex gap-3 rounded-[1.5rem] border border-zinc-100 bg-zinc-50/40 p-3.5 hover:border-zinc-200 hover:bg-white transition-all"
-                  >
-                    {/* thumbnail */}
-                    <div className="relative h-16 w-16 rounded-2xl bg-white border border-zinc-100 overflow-hidden flex-shrink-0 shadow-sm">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-contain p-2"
-                      />
-                    </div>
-
-                    {/* info */}
-                    <div className="flex-1 min-w-0 space-y-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <p
-                          className="text-[13px] font-black text-zinc-900 line-clamp-1 leading-snug"
-                          style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}
-                        >
-                          {item.name}
-                        </p>
-                        <button
-                          onClick={() => cart.removeItem(item.id)}
-                          className="h-6 w-6 rounded-lg border border-zinc-200 bg-white text-zinc-400 hover:text-red-500 hover:border-red-200 flex items-center justify-center transition-all shrink-0 opacity-0 group-hover:opacity-100"
-                        >
-                          <X size={10} strokeWidth={2.5} />
-                        </button>
+            cart.items.map((item) => {
+              const net = item.price - item.price * (item.discount / 100);
+              return (
+                <div key={item.id} className="bg-white p-4 rounded-[2rem] shadow-sm border border-zinc-100 flex gap-4 items-center">
+                  <div className="h-20 w-20 rounded-2xl bg-slate-50 border border-slate-100 relative shrink-0 overflow-hidden">
+                    <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-black text-zinc-900 line-clamp-1 uppercase italic tracking-tighter">{item.name}</p>
+                    <p className="text-[10px] font-bold text-emerald-600 uppercase mt-0.5">+{item.bvAmount * item.quantity} BV Earned</p>
+                    
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center bg-zinc-50 rounded-xl p-1 border border-zinc-100">
+                        <button onClick={() => cart.updateQuantity(item.id, Math.max(1, item.quantity - 1))} className="h-6 w-6 rounded-lg bg-white shadow-sm flex items-center justify-center"><Minus size={12} /></button>
+                        <span className="w-8 text-center text-xs font-black">{item.quantity}</span>
+                        <button onClick={() => cart.updateQuantity(item.id, item.quantity + 1)} className="h-6 w-6 rounded-lg bg-white shadow-sm flex items-center justify-center"><Plus size={12} /></button>
                       </div>
-
-                      <div className="flex items-center justify-between">
-                        {/* qty stepper */}
-                        <div className="flex items-center bg-white border border-zinc-200 rounded-xl h-7 px-1 gap-0.5">
-                          <button
-                            onClick={() => cart.updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                            className="h-5 w-5 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-all"
-                          >
-                            <Minus size={10} strokeWidth={2.5} />
-                          </button>
-                          <span className="px-2 text-[12px] font-black text-zinc-900 min-w-[20px] text-center"
-                            style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}>
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
-                            className="h-5 w-5 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-all"
-                          >
-                            <Plus size={10} strokeWidth={2.5} />
-                          </button>
-                        </div>
-
-                        {/* price + BV */}
-                        <div className="text-right">
-                          <p
-                            className="text-[13px] font-black text-zinc-900"
-                            style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}
-                          >
-                            ₹{lineTotal.toLocaleString("en-IN")}
-                          </p>
-                          <p className="text-[10px] font-black text-emerald-600">
-                            +{item.bvAmount * item.quantity} BV
-                          </p>
-                        </div>
-                      </div>
+                      <p className="font-black text-sm italic">₹{(net * item.quantity).toLocaleString()}</p>
                     </div>
                   </div>
-                );
-              })}
-
-              {/* clear all */}
-              <button
-                onClick={cart.clearCart}
-                className="w-full flex items-center justify-center gap-1.5 h-8 rounded-xl border border-zinc-200 bg-white text-[10px] font-bold text-zinc-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all"
-              >
-                <Trash2 size={11} strokeWidth={2} /> Clear Cart
-              </button>
-            </div>
+                </div>
+              )
+            })
           )}
         </div>
 
-        {/* ── Footer summary ── */}
+        {/* ── Bottom Summary Dock ── */}
         {cart.items.length > 0 && (
-          <div className="flex-shrink-0 border-t border-zinc-100 bg-white px-5 py-5 space-y-4">
-
-            {/* BV earned */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-emerald-900 to-zinc-900 px-5 py-4">
-              <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-emerald-400/10 blur-2xl pointer-events-none" />
-              <div className="relative z-10 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={13} className="text-emerald-400" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-400">
-                    BV Earned This Order
-                  </span>
-                </div>
-                <span
-                  className="text-xl font-black text-emerald-300"
-                  style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}
-                >
-                  {totalBV} BV
-                </span>
-              </div>
+          <div className="bg-white border-t border-zinc-100 px-6 py-6 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.04)] space-y-4">
+            
+            <div className="flex items-center justify-between">
+               <div>
+                  <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Business Value</p>
+                  <p className="text-2xl font-black italic text-emerald-600 tracking-tighter">{totalBV} <span className="text-xs uppercase not-italic">Points</span></p>
+               </div>
+               <div className="text-right">
+                  <p className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Total Payable</p>
+                  <p className="text-2xl font-black italic text-zinc-900 tracking-tighter">₹{totalPrice.toLocaleString()}</p>
+               </div>
             </div>
 
-            {/* price breakdown */}
-            <div className="space-y-2 px-1">
-              {savings > 0 && (
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-medium text-zinc-400">Partner Savings</span>
-                  <span className="font-black text-emerald-600">
-                    − ₹{savings.toLocaleString("en-IN")}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-500">Total Payable</span>
-                <span
-                  className="text-2xl font-black text-zinc-900"
-                  style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}
-                >
-                  ₹{totalPrice.toLocaleString("en-IN")}
-                </span>
-              </div>
-            </div>
-
-            {/* checkout button */}
-            <button
-              onClick={handleCheckout}
+            <Button 
+              onClick={handleCheckout} 
               disabled={isPending}
-              className={cn(
-                "w-full h-12 rounded-2xl text-[11px] font-black uppercase tracking-[0.18em]",
-                "flex items-center justify-center gap-2 transition-all active:scale-[0.98]",
-                isPending
-                  ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
-                  : "bg-zinc-950 hover:bg-zinc-800 text-white shadow-sm shadow-zinc-900/20"
-              )}
-              style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+              className="w-full h-14 rounded-2xl bg-zinc-900 hover:bg-black text-white font-black uppercase tracking-[0.2em] text-[11px] gap-3 shadow-xl shadow-zinc-900/20 active:scale-95 transition-all"
             >
-              {isPending ? (
-                <><Loader2 size={14} className="animate-spin" /> Processing…</>
-              ) : (
-                <>Secure Checkout <ArrowRight size={13} strokeWidth={2.5} /></>
-              )}
-            </button>
+              {isPending ? <Loader2 className="animate-spin w-4 h-4" /> : <><Sparkles size={16} className="text-emerald-400" /> Confirm Order</>}
+            </Button>
 
-            <p className="text-center text-[10px] font-medium text-zinc-400">
-              Cash on Delivery · BV credited on delivery
-            </p>
+            {savings > 0 && (
+              <p className="text-center text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 py-2 rounded-full border border-emerald-100">
+                You saved ₹{savings.toLocaleString()} on this order
+              </p>
+            )}
           </div>
         )}
       </SheetContent>

@@ -38,7 +38,7 @@ export function UserDashboardHeader() {
     <>
       <header
         className="sticky top-0 z-50 w-full"
-        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+        
       >
         <div className="bg-white/90 backdrop-blur-xl border-b border-zinc-100 shadow-[0_1px_0_rgba(9,9,11,0.04)]">
           <div className="flex h-14 items-center justify-between px-4 md:px-6 max-w-[1600px] mx-auto">

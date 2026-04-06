@@ -70,7 +70,7 @@ export const PartnerIdentityCard = () => {
   const generatePDF = useCallback(
     async (options: DownloadOptions) => {
       await document.fonts.ready;
-await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 1000));
       if (!photoBase64) {
         toast.error("Photo अभी load नहीं हुआ, please wait...");
         return;
@@ -106,15 +106,15 @@ await new Promise((r) => setTimeout(r, 1000));
         // Generate front side
         if (options.frontOnly || options.complete) {
           const images = frontRef.current?.querySelectorAll("img");
-await Promise.all(
-  Array.from(images || []).map(
-    (img: any) =>
-      new Promise((resolve) => {
-        if (img.complete) resolve(true);
-        else img.onload = img.onerror = resolve;
-      })
-  )
-);
+          await Promise.all(
+            Array.from(images || []).map(
+              (img: any) =>
+                new Promise((resolve) => {
+                  if (img.complete) resolve(true);
+                  else img.onload = img.onerror = resolve;
+                })
+            )
+          );
           const canvasFront = await html2canvas(
             frontRef.current!,
             canvasOptions,
@@ -259,9 +259,9 @@ await Promise.all(
               Since:{" "}
               {userData?.createdAt
                 ? new Date(userData.createdAt).toLocaleDateString("en-IN", {
-                    month: "short",
-                    year: "numeric",
-                  })
+                  month: "short",
+                  year: "numeric",
+                })
                 : "N/A"}
             </span>
           </div>
