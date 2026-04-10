@@ -13,7 +13,7 @@ import {
   SidebarHeader, SidebarMenu, SidebarMenuItem,
   SidebarMenuButton, useSidebar,
 } from "@/components/ui/sidebar";
-import Image from "next/image";
+
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 

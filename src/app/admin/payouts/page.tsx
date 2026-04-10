@@ -6,7 +6,9 @@ import Image from "next/image";
 import { getTransactions } from "@/lib/actions/transaction";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-export const dynamic = 'force-dynamic'; // Ensure fresh data on every request
+
+export const dynamic = "force-dynamic"; 
+export const revalidate = 0;
 
 export default async function AdminPayoutsPage() {
   const allRes = await getTransactions();
