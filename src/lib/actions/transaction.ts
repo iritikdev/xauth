@@ -1,19 +1,22 @@
 import prisma from "@/lib/prisma";
-
+import { revalidatePath } from "next/cache";
 
 export async function getTransactions(status?: "PENDING" | "COMPLETED" | "FAILED") {
   try {
     const transactions = await prisma.transaction.findMany({
-      where: status ? { status } : {}, // Agar status hai toh filter karo, nahi toh {} (All)
+      where: status ? { status } : {},
       include: {
-      user: {
-        include: {
-          kycDocument: true // Ensure aapke schema mein user -> kyc relation hai
+        user: {
+          include: {
+            kycDocument: true 
+          }
         }
-      }
-    },
+      },
       orderBy: { createdAt: "desc" }
     });
+    
+    // ✅ Revalidate ko return se PEHLE rakhein
+    revalidatePath("/admin/payouts");
     
     return { success: true, data: transactions };
   } catch (error) {

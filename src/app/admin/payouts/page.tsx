@@ -1,12 +1,12 @@
-// app/admin/payouts/page.tsx
-import prisma from "@/lib/prisma";
+
 import { format } from "date-fns";
-import { User, Clock, Landmark, CreditCard, Copy, History, ListFilter, AlertCircle } from "lucide-react";
+import { Clock, Landmark,  Copy, History,  } from "lucide-react";
 import PayoutActions from "./payout-actions";
 import Image from "next/image";
 import { getTransactions } from "@/lib/actions/transaction";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+export const dynamic = 'force-dynamic'; // Ensure fresh data on every request
 
 export default async function AdminPayoutsPage() {
   const allRes = await getTransactions();
