@@ -1,5 +1,4 @@
-import { Footer } from "@/components/footer";
-import { Navbar } from "@/components/navbar";
+
 import { ReactNode } from "react";
 
 type LayoutProps = {
@@ -9,7 +8,7 @@ type LayoutProps = {
 const SignInLayout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Navbar  />
+      
       <div>{children}</div>
     </>
   );
