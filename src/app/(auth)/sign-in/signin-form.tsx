@@ -206,7 +206,7 @@ const SignInForm = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span>Open Dashboard</span>
+                  <span>Login To Dashboard</span>
                   <ChevronRight size={14} strokeWidth={3} />
                 </div>
               )}

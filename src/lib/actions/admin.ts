@@ -37,9 +37,9 @@ export async function updatePayoutStatus(transactionId: string, status: "COMPLET
   try {
     const session = await auth();
     // Ensure only ADMIN can access this (Check your user role logic)
-    if (!session?.user ) { //|| session.user.role !== "ADMIN"
-      return { success: false, error: "Unauthorized Access" };
-    }
+    // if (!session?.user ) { //|| session.user.role !== "ADMIN"
+    //   return { success: false, error: "Unauthorized Access" };
+    // }
 
     const result = await prisma.$transaction(async (tx) => {
       // 1. Transaction fetch karein
@@ -174,3 +174,4 @@ export async function updateUserPassword(userId: string, newPassword: string) {
     return { success: false, message: error.message };
   }
 }
+
