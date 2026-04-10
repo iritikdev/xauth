@@ -28,14 +28,14 @@ export function WithdrawMoneyModal({
   const [open, setOpen]       = useState(false);
 
   const num       = parseFloat(amount) || 0;
-  const tooLow    = num > 0 && num < 500;
+  const tooLow    = num > 0 && num < 100;
   const tooHigh   = num > balance;
-  const isValid   = num >= 500 && num <= balance;
+  const isValid   = num >= 100 && num <= balance;
   const afterBal  = balance - num;
 
   const handleWithdraw = async () => {
     if (!isValid) {
-      if (tooLow)  return toast.error("Minimum withdrawal is ₹500");
+      if (tooLow)  return toast.error("Minimum withdrawal is ₹100");
       if (tooHigh) return toast.error("Insufficient balance");
       return toast.error("Enter a valid amount");
     }

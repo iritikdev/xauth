@@ -14,6 +14,7 @@ import { createOrder } from "@/lib/actions/order";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
 
 export function CartDrawer({
   open,
@@ -102,56 +103,65 @@ export function CartDrawer({
             cart.items.map((item) => {
               const net = item.price - item.price * (item.discount / 100);
               return (
-                <div 
-      key={item.id} 
-      className="group relative bg-white p-4 rounded-[2rem] shadow-sm border border-zinc-100 flex gap-4 items-center transition-all hover:border-emerald-100"
-    >
-      {/* ── REMOVE BUTTON (New Feature) ── */}
-      <button 
-        onClick={() => cart.removeItem(item.id)}
-        className="absolute -top-1 -right-1 h-7 w-7 rounded-full bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white shadow-sm z-10"
-        title="Remove Item"
-      >
-        <Trash2 size={12} strokeWidth={2.5} />
-      </button>
+                <div
+                  key={item.id}
+                  className="group relative bg-white p-4 rounded-[2.5rem] shadow-sm border border-zinc-100 flex gap-4 items-center transition-all hover:border-emerald-100"
+                >
+                  {/* ── REMOVE BUTTON ── */}
+                  <button
+                    onClick={() => cart.removeItem(item.id)}
+                    className={cn(
+                      "absolute -top-1 -right-1 h-8 w-8 rounded-full shadow-md z-20 flex items-center justify-center transition-all active:scale-90",
+                      "bg-rose-500 text-white border-2 border-white", // Mobile: Bright & Visible
+                      "md:bg-rose-50 md:text-rose-500 md:border md:border-rose-100 md:opacity-0 md:group-hover:opacity-100 md:hover:bg-rose-500 md:hover:text-white" // Desktop: Hover effects
+                    )}
+                    title="Remove Item"
+                  >
+                    <Trash2 size={14} strokeWidth={3} />
+                  </button>
 
-      {/* thumbnail */}
-      <div className="h-20 w-20 rounded-2xl bg-slate-50 border border-slate-100 relative shrink-0 overflow-hidden">
-        <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
-      </div>
-      
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-black text-zinc-900 line-clamp-1 uppercase italic tracking-tighter pr-4">
-          {item.name}
-        </p>
-        <p className="text-[10px] font-bold text-emerald-600 uppercase mt-0.5">
-          +{item.bvAmount * item.quantity} BV Earned
-        </p>
-        
-        <div className="flex items-center justify-between mt-3">
-          {/* qty stepper */}
-          <div className="flex items-center bg-zinc-50 rounded-xl p-1 border border-zinc-100">
-            <Button 
-              onClick={() => cart.updateQuantity(item.id, Math.max(1, item.quantity - 1))} 
-              className="h-6 w-6 rounded-lg bg-white shadow-sm flex items-center justify-center hover:text-emerald-600 transition-colors"
-            >
-              <Minus size={12} color="#000" />
-            </Button>
-            <span className="w-8 text-center text-xs font-black">{item.quantity}</span>
-            <Button 
-              onClick={() => cart.updateQuantity(item.id, item.quantity + 1)} 
-              className="h-6 w-6 rounded-lg bg-white shadow-sm flex items-center justify-center hover:text-emerald-600 transition-colors"
-            >
-              <Plus size={12} color="#000" />
-            </Button>
-          </div>
+                  {/* thumbnail */}
+                  <div className="h-20 w-20 rounded-2xl bg-slate-50 border border-slate-100 relative shrink-0 overflow-hidden shadow-inner">
+                    <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
+                  </div>
 
-          <p className="font-black text-sm italic text-zinc-900">
-            ₹{(net * item.quantity).toLocaleString()}
-          </p>
-        </div>
-      </div>
-    </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-1">
+                      <p className="text-xs font-black text-zinc-900 line-clamp-1 uppercase italic tracking-tighter">
+                        {item.name}
+                      </p>
+                    </div>
+
+                    <p className="text-[10px] font-bold text-emerald-600 uppercase">
+                      +{item.bvAmount * item.quantity} BV Earned
+                    </p>
+
+                    <div className="flex items-center justify-between mt-3">
+                      {/* qty stepper */}
+                      <div className="flex items-center bg-zinc-50 rounded-xl p-1 border border-zinc-100">
+                        <button
+                          onClick={() => cart.updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                          className="h-7 w-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-zinc-900 hover:text-emerald-600 transition-colors"
+                        >
+                          <Minus size={12} strokeWidth={3} />
+                        </button>
+                        <span className="w-8 text-center text-xs font-black text-zinc-900">{item.quantity}</span>
+                        <button
+                          onClick={() => cart.updateQuantity(item.id, item.quantity + 1)}
+                          className="h-7 w-7 rounded-lg bg-white shadow-sm flex items-center justify-center text-zinc-900 hover:text-emerald-600 transition-colors"
+                        >
+                          <Plus size={12} strokeWidth={3} />
+                        </button>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="font-black text-sm italic text-zinc-900">
+                          ₹{(net * item.quantity).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )
             })
           )}

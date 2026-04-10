@@ -18,12 +18,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { username: credentials.username as string },
         });
 
+        console.log("user found:", user);
         if (!user || !user.password) return null;
 
         const isPasswordMatch = await bcrypt.compare(
           credentials.password as string,
           user.password,
         );
+
+        console.log("password match:", isPasswordMatch);
 
         if (isPasswordMatch) {
           return {
