@@ -166,7 +166,7 @@ export const ADMIN_SIDEBAR = {
           url: "/admin/kyc",
           icon: "ShieldCheck",
         },
-        { title: "Genealogy Master", url: "/admin/genealogy", icon: "History" },
+        // { title: "Genealogy Master", url: "/admin/genealogy", icon: "History" },
       ],
     },
     {
@@ -179,13 +179,13 @@ export const ADMIN_SIDEBAR = {
           url: "/admin/payouts",
           icon: "ReceiptIndianRupee",
         },
-        {
-          title: "Commission Logs",
-          url: "/admin/commissions",
-          icon: "History",
-        },
-        { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
-        { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
+        // {
+        //   title: "Commission Logs",
+        //   url: "/admin/commissions",
+        //   icon: "History",
+        // },
+        // { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
+        // { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
       ],
     },
     {
