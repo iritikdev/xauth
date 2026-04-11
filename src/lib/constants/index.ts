@@ -179,11 +179,11 @@ export const ADMIN_SIDEBAR = {
           url: "/admin/payouts",
           icon: "ReceiptIndianRupee",
         },
-        // {
-        //   title: "Commission Logs",
-        //   url: "/admin/commissions",
-        //   icon: "History",
-        // },
+        {
+          title: "Commission Logs",
+          url: "/admin/commissions",
+          icon: "History",
+        },
         // { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
         // { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
       ],

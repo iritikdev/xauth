@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { PayoutChart } from "@/components/admin/payout-chart";
+import { PageHeader } from "@/components/admin/page-header";
 
 export default function PayoutsClientContent({ initialData = [] }: { initialData?: any[] }) {
     const [startDate, setStartDate] = useState<string>("");
@@ -111,20 +112,14 @@ export default function PayoutsClientContent({ initialData = [] }: { initialData
         <div className="min-h-screen pb-20 font-sans">
 
             {/* --- SaaS STATS HEADER --- */}
-            <div className=" pb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2">
-                    <motion.h1
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="text-5xl md:text-7xl font-[1000] tracking-tighter uppercase italic text-slate-900 leading-none mb-4"
-                    >
-                        Payout <span className="text-emerald-500">Hub</span>
-                    </motion.h1>
-                    <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        System Live • {filteredData.length} records in view
-                    </p>
-                </div>
+            <div className="pb-8 flex justify-between gap-6">
+                <PageHeader
+                    title="Payout"
+                    highlight=" Hub"
+                    subtitle="Finances"
+                    description={`System Live • ${filteredData.length} records in view.`}
+                    showBackButton={true}
+                />
 
                 <motion.div
                     whileHover={{ y: -5 }}
@@ -141,59 +136,59 @@ export default function PayoutsClientContent({ initialData = [] }: { initialData
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
-            <motion.div
-                whileHover={{ y: -5 }}
-                className="bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-sm flex flex-col justify-between relative overflow-hidden"
-            >
-                {/* Decorative Background Icon */}
-                <TrendingUp className="absolute -right-4 -bottom-4 w-32 h-32 text-slate-50 -rotate-12" />
+                <motion.div
+                    whileHover={{ y: -5 }}
+                    className="bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-sm flex flex-col justify-between relative overflow-hidden"
+                >
+                    {/* Decorative Background Icon */}
+                    <TrendingUp className="absolute -right-4 -bottom-4 w-32 h-32 text-slate-50 -rotate-12" />
 
-                <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="h-12 w-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
-                            <History size={20} />
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="h-12 w-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
+                                <History size={20} />
+                            </div>
+
+                            {/* Trend Badge */}
+                            <div className={cn(
+                                "px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1",
+                                percentageChange >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                            )}>
+                                {percentageChange >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                {Math.abs(percentageChange).toFixed(1)}%
+                            </div>
                         </div>
 
-                        {/* Trend Badge */}
-                        <div className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1",
-                            percentageChange >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                        )}>
-                            {percentageChange >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                            {Math.abs(percentageChange).toFixed(1)}%
-                        </div>
-                    </div>
-
-                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-1">
-                        Monthly Volume
-                    </p>
-                    <p className="text-4xl font-[1000] text-slate-900 tracking-tighter italic">
-                        ₹{currentMonthTotal.toLocaleString()}
-                    </p>
-
-                    <div className="mt-6 pt-6 border-t border-slate-50">
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                            Vs Last Month: <span className="text-slate-900 ml-1">₹{prevMonthTotal.toLocaleString()}</span>
+                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-1">
+                            Monthly Volume
                         </p>
-                    </div>
-                </div>
-            </motion.div>
-            <div className="col-span-2 bg-white border border-slate-200 p-6 rounded-[2.5rem] shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                    <div>
-                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Weekly Volume</p>
-                        <p className="text-xs font-bold text-slate-900 mt-1">Transaction trends (Last 7 Days)</p>
-                    </div>
-                    <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                        Real-time
-                    </div>
-                </div>
-                <PayoutChart transactions={filteredData} />
-            </div>
-            </div>
-           
+                        <p className="text-4xl font-[1000] text-slate-900 tracking-tighter italic">
+                            ₹{currentMonthTotal.toLocaleString()}
+                        </p>
 
-          
+                        <div className="mt-6 pt-6 border-t border-slate-50">
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                Vs Last Month: <span className="text-slate-900 ml-1">₹{prevMonthTotal.toLocaleString()}</span>
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+                <div className="col-span-2 bg-white border border-slate-200 p-6 rounded-[2.5rem] shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                        <div>
+                            <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Weekly Volume</p>
+                            <p className="text-xs font-bold text-slate-900 mt-1">Transaction trends (Last 7 Days)</p>
+                        </div>
+                        <div className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            Real-time
+                        </div>
+                    </div>
+                    <PayoutChart transactions={filteredData} />
+                </div>
+            </div>
+
+
+
 
             {/* --- FLOATING FILTER BAR --- */}
             <div className="sticky top-6 z-50 mb-12">
@@ -203,7 +198,7 @@ export default function PayoutsClientContent({ initialData = [] }: { initialData
                         <input
                             type="text"
                             placeholder="Search Associate Name or ID..."
-                            className="w-full h-14 pl-14 pr-6 rounded-full bg-slate-50 border-none text-sm font-bold focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                            className="w-full h-12 pl-14 pr-6 rounded-full bg-slate-50 border-none text-sm font-bold focus:ring-2 focus:ring-emerald-500/20 transition-all"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -219,9 +214,9 @@ export default function PayoutsClientContent({ initialData = [] }: { initialData
 
                         <Button
                             onClick={exportToExcel}
-                            className="h-14 rounded-full bg-slate-900 text-white px-8 font-black text-[10px] uppercase tracking-widest gap-2 shrink-0 hover:bg-emerald-600 transition-all active:scale-95"
+                            className="rounded-full font-black text-[10px] uppercase  gap-2 shrink-0 hover:bg-emerald-600 transition-all active:scale-95"
                         >
-                            <FileSpreadsheet size={16} /> Export
+                            <FileSpreadsheet size={12} /> Export
                         </Button>
 
                         {(startDate || endDate || searchQuery) && (

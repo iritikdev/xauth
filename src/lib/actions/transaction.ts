@@ -1,14 +1,23 @@
 import prisma from "@/lib/prisma";
 
 
-export async function getTransactions(status?: "PENDING" | "COMPLETED" | "FAILED") {
+export async function getTransactions({ 
+  status, 
+  type 
+}: { 
+  status?: "PENDING" | "COMPLETED" | "FAILED", 
+  type?: "DEBIT" | "CREDIT" 
+} = {}) {
   try {
     const transactions = await prisma.transaction.findMany({
-      where: status ? { status } : {}, // Agar status hai toh filter karo, nahi toh {} (All)
+      where: {
+        status: status,
+        type: type
+      },
       include: {
       user: {
         include: {
-          kycDocument: true // Ensure aapke schema mein user -> kyc relation hai
+          kycDocument: true 
         }
       }
     },
