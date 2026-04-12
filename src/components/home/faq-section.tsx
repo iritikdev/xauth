@@ -5,17 +5,35 @@ import { motion } from "framer-motion";
 import { HelpCircle, MessageCircle, Phone, ArrowRight, Leaf, Plus, Minus } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 /* ── Shared botanical leaf SVG ── */
 const LeafDecor = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 120 180" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15"/>
-    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3"/>
-    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
-    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2"/>
-    <path d="M60 120 C42 110 30 115 22 128" stroke="currentColor" strokeWidth="1" opacity="0.15"/>
+    <path d="M60 170 C60 170 10 120 10 70 C10 30 35 5 60 5 C85 5 110 30 110 70 C110 120 60 170 60 170Z" fill="currentColor" opacity="0.15" />
+    <path d="M60 170 L60 5" stroke="currentColor" strokeWidth="1.5" opacity="0.3" />
+    <path d="M60 60 C40 50 25 55 15 70" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 90 C80 78 95 82 105 95" stroke="currentColor" strokeWidth="1" opacity="0.2" />
+    <path d="M60 120 C42 110 30 115 22 128" stroke="currentColor" strokeWidth="1" opacity="0.15" />
   </svg>
 );
+
+const supportItems = [
+  {
+    icon: MessageCircle,
+    label: "WhatsApp Support",
+    accent: "#1c6634",
+    // WhatsApp link generator
+    action: () => window.open("https://wa.me/919204260719", "_blank"),
+  },
+  {
+    icon: Phone,
+    label: "+91 92042 60719",
+    accent: "#c8860a",
+    // Direct call logic
+    action: () => (window.location.href = "tel:+919204260719"),
+  },
+];
 
 /* ── Data ── */
 const FAQS = [
@@ -230,37 +248,44 @@ const FaqSection = () => (
               </div>
 
               {/* Contact options */}
-              <div className="space-y-2.5">
-                {[
-                  { icon: MessageCircle, label: "WhatsApp Support",  accent: "#1c6634" },
-                  { icon: Phone,         label: "+91 92042 60719",   accent: "#c8860a" },
-                ].map(({ icon: Icon, label, accent }) => (
+              <div className="space-y-2.5 max-w-sm">
+                {supportItems.map(({ icon: Icon, label, accent, action }) => (
                   <div
                     key={label}
-                    className="group/item flex items-center gap-3.5 p-3.5 rounded-xl bg-white/5 border border-white/8 hover:border-white/15 hover:bg-white/8 cursor-pointer transition-all"
+                    onClick={action}
+                    className="group/item flex items-center gap-3.5 p-3.5 rounded-xl bg-white/5 border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/5 cursor-pointer transition-all duration-300 active:scale-95"
                   >
+                    {/* Icon Container with subtle glow */}
                     <div
-                      className="h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
-                      style={{ backgroundColor: `${accent}25` }}
+                      className="h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all shadow-inner"
+                      style={{
+                        backgroundColor: `${accent}25`,
+                        border: `1px solid ${accent}40`
+                      }}
                     >
                       <Icon
                         className="w-4 h-4 transition-colors"
                         style={{ color: accent === "#c8860a" ? "#e8a020" : "#4ade80" }}
                       />
                     </div>
-                    <span className="text-sm font-bold text-white/60 group-hover/item:text-white transition-colors">
+
+                    {/* Label */}
+                    <span className="text-sm font-bold text-white/60 group-hover/item:text-white transition-colors tracking-tight">
                       {label}
                     </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-white/20 group-hover/item:text-[#e8a020] group-hover/item:translate-x-1 transition-all ml-auto" />
+
+                    {/* Animated Arrow */}
+                    <ArrowRight className="w-3.5 h-3.5 text-white/20 group-hover/item:text-emerald-400 group-hover/item:translate-x-1 transition-all ml-auto" />
                   </div>
                 ))}
               </div>
 
               {/* CTA button */}
-              <button className="w-full h-12 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.2em] shadow-[0_4px_20px_rgba(232,160,32,0.3)] hover:shadow-[0_6px_28px_rgba(232,160,32,0.45)] active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-2">
+
+              <Button onClick={() => window.open("https://wa.me/919204260719", "_blank")} className="w-full h-12 rounded-xl bg-[#e8a020] hover:bg-[#d4911a] text-[#1c3320] font-black text-[10px] uppercase tracking-[0.2em] shadow-[0_4px_20px_rgba(232,160,32,0.3)] hover:shadow-[0_6px_28px_rgba(232,160,32,0.45)] active:scale-[0.97] transition-all duration-200 flex items-center justify-center gap-2">
                 Contact Us Now
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </Button>
             </div>
           </motion.div>
         </div>

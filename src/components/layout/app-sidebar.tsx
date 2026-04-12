@@ -4,7 +4,7 @@ import * as React from "react";
 import * as LucideIcons from "lucide-react";
 
 
-import { NavMain } from "@/components/nav-main";
+import { NavMain } from "@/components/layout/nav-main";
 
 import {
   Sidebar, SidebarContent, SidebarFooter,

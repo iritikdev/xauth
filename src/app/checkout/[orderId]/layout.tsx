@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/layout/app-header";
 
 export const metadata: Metadata = {
   title: "Order Summary | Amaze Ayurveda",

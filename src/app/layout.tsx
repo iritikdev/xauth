@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import QueryProvider from "@/app/providers/query-provider";
-import AppLoader from "@/components/Loader";
+import AppLoader from "@/components/ui/Loader";
 import SessionWatcher from "@/components/SessionWatcher";
 
 // Inter for body, Manrope for premium headlines

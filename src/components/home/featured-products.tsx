@@ -6,7 +6,7 @@ import { ArrowRight, Leaf } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/hooks/use-cart";
 import { toast } from "sonner";
-import ProductCard from "./ProductCard";
+import ProductCard from "../ecommerce/ProductCard";
 
 /* ── Botanical leaf SVG ── */
 const LeafDecor = ({ className }: { className?: string }) => (

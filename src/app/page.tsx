@@ -1,12 +1,12 @@
-import Hero from "@/components/hero";
-import AboutUs from "@/components/aboutus";
-import BusinessOpportunity from "@/components/business";
-import Testimonial from "@/components/testimonial";
-import { Footer } from "@/components/footer";
-import { Navbar } from "@/components/navbar";
-import { FeaturedProducts } from "@/components/ecommerce/featured-products";
+import Hero from "@/components/home/hero";
+import AboutUs from "@/components/home/aboutus";
+import BusinessOpportunity from "@/components/home/business";
+import Testimonial from "@/components/home/testimonial";
+import { Footer } from "@/components/layout/footer";
+import { AppHeader } from "@/components/layout/app-header";
+import { FeaturedProducts } from "@/components/home/featured-products";
 import prisma from "@/lib/prisma";
-import FaqSection from "@/components/faq-section";
+import FaqSection from "@/components/home/faq-section";
 
 const Home = async () => {
   const products = await prisma.product.findMany({
@@ -16,7 +16,7 @@ const Home = async () => {
   const productsWithCategory = products.filter(p => p.categoryId);
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+      <AppHeader />
       <Hero />
       <FeaturedProducts initialProducts={productsWithCategory} />
       <AboutUs />

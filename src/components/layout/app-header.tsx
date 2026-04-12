@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 import { CartDrawer } from "@/components/ecommerce/cart-drawer";
 import { useSession } from "next-auth/react";
-import UserDropdown from "./dashboard/user-dropdown";
+import UserDropdown from "../dashboard/user-dropdown";
 import Image from "next/image";
 
 /* ── Botanical leaf SVG ── */
@@ -34,7 +34,7 @@ const NAV_LINKS = [
   { label: "Business Plan", href: "/plan", icon: LayoutDashboard },
 ];
 
-export const Navbar = () => {
+export const AppHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [mounted, setMounted] = useState(false);

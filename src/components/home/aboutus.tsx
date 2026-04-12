@@ -4,9 +4,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   Users, Globe, Leaf, Award,
-  ShieldCheck, Target, Zap, ArrowRight,
+  ShieldCheck, Target, Zap,
 } from "lucide-react";
-import Link from "next/link";
+
 
 /* ─────────────────────── Shared decorative SVGs ─────────────────────── */
 const LeafDecor = ({ className }: { className?: string }) => (

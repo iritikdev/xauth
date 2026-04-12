@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeft, CheckCircle2, Leaf, Shield } from "lucide-react";
+import MinimalFooter from "@/components/layout/minimal-footer";
 
 /* ─────────── Decorative SVGs ─────────── */
 const LeafDecor = ({ className }: { className?: string }) => (
@@ -229,36 +230,8 @@ const Page = async () => {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════
-          FOOTER STRIP
-      ══════════════════════════════════════════════ */}
-      <div className="relative border-t border-white/6 py-7 px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <LeafDecor className="absolute right-6 bottom-0 w-14 text-emerald-400 opacity-10 pointer-events-none" />
-
-        <div className="flex items-center gap-3">
-          <div className="relative w-7 h-7 rounded-lg bg-white/8 border border-white/10 overflow-hidden">
-            <Image src="/amaze-logo.png" alt="Logo" fill className="object-contain p-1" />
-          </div>
-          <span
-            className="text-sm font-black text-white/60"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            Amaze <span className="text-[#e8a020] italic">Ayurveda</span>
-          </span>
-        </div>
-
-        <p className="text-[9px] font-medium text-white/18 uppercase tracking-widest text-center">
-          © 2026 Amaze Ayurveda Pvt. Ltd. · CIN: U82990BR2023PTC066853
-        </p>
-
-        <div className="flex items-center gap-2">
-          <div className="h-px w-5 bg-[#e8a020]/20" />
-          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/25">
-            Proudly Made in Bharat 🇮🇳
-          </span>
-          <div className="h-px w-5 bg-[#e8a020]/20" />
-        </div>
-      </div>
+      
+     <MinimalFooter/>
 
     </div>
   );

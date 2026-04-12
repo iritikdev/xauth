@@ -269,7 +269,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                         <FormLabel className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Sponsor ID</FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Input {...field} placeholder="AMZ251100123" onBlur={handleSponsorBlur}
+                            <Input {...field} placeholder="AMZXXXXXXX" onBlur={handleSponsorBlur}
                               readOnly={refPrefilled && !!sponsorInfo}
                               className={cn(fieldCls, "pr-10",
                                 refPrefilled && sponsorInfo && "border-emerald-200 bg-emerald-50/60 text-emerald-800")} />
@@ -303,7 +303,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"div">)
                     <FormField control={form.control} name="name" render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Full Name</FormLabel>
-                        <FormControl><Input {...field} placeholder="John Doe" className={fieldCls} /></FormControl>
+                        <FormControl><Input {...field} placeholder="Ravi Shankar Prasad" className={fieldCls} /></FormControl>
                         <FormMessage className="text-[11px] text-red-400 font-medium" />
                       </FormItem>
                     )} />

@@ -15,8 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/layout/app-header";
+import { Footer } from "@/components/layout/footer";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 24 as any},

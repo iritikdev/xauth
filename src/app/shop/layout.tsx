@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/layout/app-header";
 
 export const metadata: Metadata = {
     title: "Shop Sanctuary | Amaze Ayurveda",

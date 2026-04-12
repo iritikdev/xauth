@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import AppBreadcrumb from "@/components/breadcrumb";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import AppBreadcrumb from "@/components/ui/app-breadcrumb";
 import { NewsTicker } from "@/components/new-ticker";
 import { UserDashboardHeader } from "@/components/user-dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

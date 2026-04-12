@@ -4,8 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Leaf, ShieldCheck, Users, Globe, Sprout, Award } from "lucide-react";
 import Image from "next/image";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/layout/app-header";
+import { Footer } from "@/components/layout/footer";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },

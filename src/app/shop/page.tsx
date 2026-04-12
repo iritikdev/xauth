@@ -27,7 +27,7 @@ import ProductCard from "@/components/ecommerce/ProductCard";
 import { getAllProducts,  } from "@/lib/actions/product"; 
 import { getAllCategories } from "@/lib/actions/category";
 import { toast } from "sonner";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/layout/app-header";
 import { Badge } from "@/components/ui/badge";
 
 type SortOption = "newest" | "price-low" | "price-high" | "bv-high";
