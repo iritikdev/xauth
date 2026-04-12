@@ -22,10 +22,10 @@ const LeafDecor = ({ className }: { className?: string }) => (
 const exploreLinks = ["About Us", "Business Plan", "Products", "Careers", "T&C"];
 
 const socials = [
-  { Icon: Instagram, href: "#", label: "Instagram" },
-  { Icon: Twitter,   href: "#", label: "Twitter"   },
-  { Icon: Youtube,   href: "#", label: "YouTube"   },
-  { Icon: Facebook,  href: "#", label: "Facebook"  },
+  { Icon: Instagram, href: "https://www.instagram.com/amazeayurveda", label: "Instagram" },
+  { Icon: Twitter,   href: "https://twitter.com/amazeayurveda", label: "Twitter"   },
+  { Icon: Youtube,   href: "https://www.youtube.com/@amazeayurvedapvtltd", label: "YouTube"   },
+  { Icon: Facebook,  href: "https://www.facebook.com/share/1Jw3ZvZapn", label: "Facebook"  },
 ];
 
 const trustBadges = [

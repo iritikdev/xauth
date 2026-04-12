@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Leaf, ShieldCheck, Users, Globe, Sprout, Award } from "lucide-react";
 import Image from "next/image";
-import { Navbar } from "@/components/layout/app-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { Footer } from "@/components/layout/footer";
 
 const fadeUp = {
@@ -17,7 +17,7 @@ const fadeUp = {
 export default function OurStory() {
   return (
       <>  
-    <Navbar />
+    <AppHeader />
     <div className="bg-[#f8f9fa] min-h-screen pb-20">
       {/* ── Hero Section ── */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-[#1c3320]">

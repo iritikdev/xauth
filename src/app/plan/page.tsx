@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/layout/app-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { Footer } from "@/components/layout/footer";
 
 const fadeInUp = {
@@ -69,7 +69,7 @@ const RANKS = [
 export default function BusinessPlan() {
   return (
     <>  
-    <Navbar />
+    <AppHeader />
     <div className="min-h-screen bg-white text-slate-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#102417] pt-32 pb-24 px-6">

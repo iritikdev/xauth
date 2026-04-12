@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/app-header";
+import { AppHeader } from "@/components/layout/app-header";
 
 export const metadata: Metadata = {
     title: "Shop Sanctuary | Amaze Ayurveda",
@@ -17,7 +17,7 @@ export default function ShopLayout({
 }) {
     return (
         <div className="min-h-screen bg-[#fcfdfc]">
-            <Navbar />
+            <AppHeader />
 
 
 
