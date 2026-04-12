@@ -7,6 +7,7 @@ import { AppHeader } from "@/components/layout/app-header";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import prisma from "@/lib/prisma";
 import FaqSection from "@/components/home/faq-section";
+import BackToTop from "@/components/ui/back-top";
 
 const Home = async () => {
   const products = await prisma.product.findMany({
@@ -23,6 +24,7 @@ const Home = async () => {
       <BusinessOpportunity />
       <Testimonial />
       <FaqSection />
+      <BackToTop />
       <Footer />
     </div>
   );
