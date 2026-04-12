@@ -30,8 +30,8 @@ const LeafDecor = ({ className }: { className?: string }) => (
 
 const NAV_LINKS = [
   { label: "Shop Swadeshi", href: "/shop", icon: Leaf },
-  { label: "Our Story", href: "/about", icon: Info },
-  { label: "Business Plan", href: "/plan", icon: LayoutDashboard },
+  { label: "Our Story", href: "/about-us", icon: Info },
+  { label: "Business Plan", href: "/business-plan", icon: LayoutDashboard },
 ];
 
 export const AppHeader = () => {

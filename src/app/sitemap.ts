@@ -8,8 +8,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/shop",
-    "/plan",
-    "/about",
+    "/business-plan",
+    "/about-us",
     "/contact",
     "/sign-in",
   ].map((route) => ({

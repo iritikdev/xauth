@@ -149,7 +149,7 @@ const Hero = () => {
                   Shop Now
                 </button>
               </Link>
-              <Link href="/about" className="w-full sm:w-auto">
+              <Link href="/about-us" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-14 px-8 rounded-xl border-2 border-[#1c3320]/15 bg-transparent hover:bg-[#1c3320]/5 hover:border-[#1c3320]/25 text-[#1c3320]/65 hover:text-[#1c3320] font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-200">
                   Our Story
                   <ArrowRight className="w-4 h-4" />

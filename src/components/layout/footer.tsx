@@ -19,7 +19,7 @@ const LeafDecor = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const exploreLinks = ["About Us", "Business Plan", "Products", "Careers", "T&C"];
+const exploreLinks = ["About Us", "Business Plan", "Shop", "Careers", "T&C", "Privacy Policy"];
 
 const socials = [
   { Icon: Instagram, href: "https://www.instagram.com/amazeayurveda", label: "Instagram" },

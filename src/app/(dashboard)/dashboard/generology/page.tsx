@@ -41,7 +41,7 @@ import { cn } from "@/lib/utils";
 
 import { Member } from "@/types";
 import { getLevelCounts } from "@/lib/genealogy-utils";
-import { getGenealogyTree } from "@/app/actions/genealogy";
+import { getGenealogyTree } from "@/lib/actions/genealogy";
 
 const MAX_LEVEL = 16;
 const SEARCH_MIN_LENGTH = 2;

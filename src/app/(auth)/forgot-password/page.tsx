@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { toast } from "sonner";
-import { sendPasswordResetEmail } from "@/app/actions/auth";
+import { sendPasswordResetEmail } from "@/lib/actions/auth";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
