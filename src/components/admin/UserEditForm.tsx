@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2, Save, User, Landmark, ShieldCheck,
-  Heart, MapPin, CheckCircle2, AlertCircle,
-  Info, Search,
+  Heart, MapPin,
   CreditCard,
   EyeOff,
   Eye,
@@ -22,6 +21,9 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { cn, formatAadhaar } from "@/lib/utils";
 import { updateUserDetails, updateUserPassword } from "@/lib/actions/admin";
+import { PageHeader } from "./page-header";
+import { usePincodeAutoFill } from "@/hooks/use-pincode-autofill";
+import { useIfscAutoFill } from "@/hooks/use-ifsc-autofill";
 
 type StepId = "personal" | "address" | "banking" | "nominee" | "kyc" | "security";
 
@@ -37,8 +39,6 @@ const STEPS: { id: StepId; label: string; icon: any }[] = [
 export function UserEditForm({ user }: { user: any }) {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<StepId>("personal");
-  const [isFetchingGeo, setIsFetchingGeo] = useState(false);
-  const [isFetchingBank, setIsFetchingBank] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [newPass, setNewPass] = useState("");
   const [passLoading, setPassLoading] = useState(false);
@@ -80,47 +80,15 @@ export function UserEditForm({ user }: { user: any }) {
   const pincode = useWatch({ control, name: "pincode" });
   const ifsc = useWatch({ control, name: "ifsc" });
 
-  // Pincode Fetcher
-  useEffect(() => {
-    if (pincode?.length === 6) {
-      const fetchGeo = async () => {
-        setIsFetchingGeo(true);
-        try {
-          const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-          const data = await res.json();
-          if (data[0].Status === "Success") {
-            const { District, State } = data[0].PostOffice[0];
-            setValue("district", District, { shouldDirty: true });
-            setValue("state", State, { shouldDirty: true });
-            toast.success("Location identified");
-          }
-        } catch (e) { console.error("Pincode API Error"); }
-        finally { setIsFetchingGeo(false); }
-      };
-      fetchGeo();
-    }
-  }, [pincode, setValue]);
+  const { isFetchingGeo } = usePincodeAutoFill({
+    pincode,
+    setValue,
+  });
 
-  // IFSC Fetcher
-  useEffect(() => {
-    if (ifsc?.length === 11) {
-      const fetchBank = async () => {
-        setIsFetchingBank(true);
-        try {
-          const res = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
-          if (res.ok) {
-            const data = await res.json();
-            setValue("branch", `${data.BANK} - ${data.BRANCH}`, { shouldDirty: true });
-            toast.success("Bank details verified");
-          } else {
-            toast.error("Invalid IFSC Code");
-          }
-        } catch (e) { console.error("IFSC API Error"); }
-        finally { setIsFetchingBank(false); }
-      };
-      fetchBank();
-    }
-  }, [ifsc, setValue]);
+  const { isFetchingBank } = useIfscAutoFill({
+    ifsc,
+    setValue,
+  });
 
   const onSubmit = async (data: any) => {
     setLoading(true);
@@ -152,15 +120,12 @@ export function UserEditForm({ user }: { user: any }) {
   return (
     <div className="pb-20">
       <div className="mb-8 space-y-4 px-2">
-        <div className="flex justify-between items-end">
-          <div>
-            <h2 className="text-2xl font-black italic tracking-tighter uppercase text-slate-900">Partner <span className="text-emerald-600">Editor</span></h2>
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Syncing database with Amaze Ayurveda protocols.</p>
-          </div>
-          <div className="text-right hidden sm:block">
-            <span className="text-2xl font-black italic text-emerald-600">{Math.round(progressValue)}%</span>
-          </div>
-        </div>
+        <PageHeader
+          title="Edit Partner"
+          highlight="Profile"
+          description="Review and update partner's information across multiple categories. Ensure data accuracy and completeness for seamless operations."
+
+        />
         <Progress value={progressValue} className="h-1.5 bg-slate-100" />
       </div>
 
