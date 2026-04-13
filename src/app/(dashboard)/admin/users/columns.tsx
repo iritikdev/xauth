@@ -25,6 +25,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Image from "next/image";
+import { console } from "inspector";
+import { cn } from "@/lib/utils";
 
 // Define the type based on your Prisma Model
 export type UserRegistry = {
@@ -37,7 +39,9 @@ export type UserRegistry = {
   district: string | null;
   state: string | null;
   sponsorId: string | null;
-  kycDocument: string | null;
+  kycDocument: {
+    status: string;
+  } | null;
   _count?: {
     downlines: number;
   };
@@ -103,34 +107,49 @@ export const columns: ColumnDef<UserRegistry>[] = [
   {
     accessorKey: "mobile",
     header: "Contact",
-    cell: ({ row }) => (
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-          <Phone size={12} className="text-slate-400" />
-          {row.getValue("mobile")}
-        </div>
-        <div className="text-[10px] font-medium text-slate-400 lowercase italic">
-          {row.original.email}
-        </div>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "location",
-    header: "Region",
     cell: ({ row }) => {
-      const district = row.original.district;
-      const state = row.original.state;
+      const mobile = row.original.mobile;
+      const email = row.original.email;
+
       return (
-        <div className="flex items-center gap-2 text-slate-600 italic">
-          <MapPin size={14} className="text-slate-300" />
-          <span className="text-xs font-bold uppercase tracking-tighter">
-            {district ? `${district}, ${state}` : "Location Unset"}
-          </span>
+        <div className="flex flex-col gap-1.5">
+          {/* Mobile Link */}
+          <a 
+            href={`tel:${mobile}`}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-emerald-600 transition-colors group/phone w-fit"
+          >
+            <Phone size={12} className="text-slate-400 group-hover/phone:text-emerald-500 transition-colors" />
+            {mobile}
+          </a>
+
+          {/* Email Link */}
+          <a 
+            href={`mailto:${email}`}
+            className="flex items-center gap-1.5 text-[10px] font-medium text-slate-400 hover:text-emerald-500 lowercase italic transition-colors group/email w-fit"
+          >
+             <div className="h-1 w-1 rounded-full bg-slate-200 group-hover/email:bg-emerald-400 transition-colors" />
+             {email}
+          </a>
         </div>
       );
     },
   },
+  // {
+  //   accessorKey: "location",
+  //   header: "Region",
+  //   cell: ({ row }) => {
+  //     const district = row.original.district;
+  //     const state = row.original.state;
+  //     return (
+  //       <div className="flex items-center gap-2 text-slate-600 italic">
+  //         <MapPin size={14} className="text-slate-300" />
+  //         <span className="text-xs font-bold uppercase tracking-tighter">
+  //           {district ? `${district}, ${state}` : "Location Unset"}
+  //         </span>
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "sponsorId",
     header: "Sponsor",
@@ -143,17 +162,29 @@ export const columns: ColumnDef<UserRegistry>[] = [
       </Badge>
     ),
   },
-  {
+ {
     accessorKey: "kycDocument",
     header: "KYC Status",
-    cell: ({ row }) => (
-      <Badge
-        variant="outline"
-        className="rounded-lg border-slate-200 bg-slate-50 text-[10px] font-black uppercase text-slate-500"
-      >
-        {row.getValue("kycDocument.status") || "PENDING"}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      // ✅ Type-safe status extraction
+      const kyc = row.original.kycDocument;
+      const status = kyc?.status || "NOT_SUBMITTED";
+
+      return (
+        <Badge
+          variant="outline"
+          className={cn(
+            "rounded-lg border-slate-200 text-[10px] font-black uppercase tracking-widest px-2 py-0.5 shadow-sm",
+            status === "VERIFIED" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+            status === "PENDING" ? "bg-amber-50 text-amber-600 border-amber-100" :
+            status === "REJECTED" ? "bg-rose-50 text-rose-600 border-rose-100" :
+            "bg-slate-50 text-slate-400"
+          )}
+        >
+          {status}
+        </Badge>
+      );
+    },
   },
 
   {
