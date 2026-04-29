@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import QueryProvider from "@/components/providers/query-provider";
 import AppLoader from "@/components/ui/Loader";
 import SessionWatcher from "@/components/SessionWatcher";
+import ShutdownPage from "@/components/home/Shutdown";
 
 // Inter for body, Manrope for premium headlines
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -81,6 +82,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       "https://instagram.com/amazeayurveda"
     ]
   };
+ 
+   if (process.env.NEXT_PUBLIC_SITE_STATUS === "SHUTDOWN") {
+  return (
+    <html lang="en" className={`${inter.variable} `}>
+       <body className="font-sans antialiased bg-[#fcfdfc]">
+        <ShutdownPage />
+       </body>
+    </html>
+  );
+}
 
   return (
     <html lang="en" className={`${inter.variable} `}>

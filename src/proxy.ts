@@ -6,6 +6,7 @@ export async function proxy(req: NextRequest) {
   const session = await auth();
   const { pathname } = req.nextUrl;
   
+  
   // const adminId = process.env.ADMIN_USER_ID;
   // const token = await getToken({ req, secret: adminId });
 
