@@ -218,7 +218,7 @@ export const AppHeader = () => {
       <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
       
       {/* Spacer to prevent content from going under fixed navbar */}
-      <div className={cn("transition-all duration-500", isScrolled ? "h-[72px]" : "h-[70px]")} />
+      <div className={cn("transition-all duration-500", isScrolled ? "h-[72px]" : "h-[40px]")} />
     </>
   );
 };
