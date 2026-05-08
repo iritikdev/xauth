@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, Loader2, ArrowUpDown, 
+import {
+  Search, Loader2, ArrowUpDown,
   ChevronDown, FilterX, ListFilter,
   LayoutGrid, X, SlidersHorizontal
 } from "lucide-react";
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/sheet"; // Mobile categories ke liye
 import { cn } from "@/lib/utils";
 import ProductCard from "./ProductCard";
-import { getAllProducts } from "@/lib/actions/product"; 
+import { getAllProducts } from "@/lib/actions/product";
 import { getAllCategories } from "@/lib/actions/category";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/layout/app-header";
@@ -95,8 +95,8 @@ export default function ProductListPage() {
         onClick={() => { setActiveCategory("All"); closeSheet?.(); }}
         className={cn(
           "flex items-center justify-between px-5 py-4 rounded-2xl text-sm transition-all",
-          activeCategory === "All" 
-            ? "bg-[#1c3320] text-white shadow-lg font-black italic" 
+          activeCategory === "All"
+            ? "bg-[#1c3320] text-white shadow-lg font-black italic"
             : "text-slate-500 hover:bg-emerald-50 font-semibold"
         )}
       >
@@ -110,8 +110,8 @@ export default function ProductListPage() {
           onClick={() => { setActiveCategory(cat.name); closeSheet?.(); }}
           className={cn(
             "flex items-center justify-between px-5 py-4 rounded-2xl text-sm transition-all",
-            activeCategory === cat.name 
-              ? "bg-[#1c3320] text-white shadow-lg font-black italic" 
+            activeCategory === cat.name
+              ? "bg-[#1c3320] text-white shadow-lg font-black italic"
               : "text-slate-500 hover:bg-emerald-50 font-semibold"
           )}
         >
@@ -126,48 +126,48 @@ export default function ProductListPage() {
     <>
       <AppHeader />
       <div className="min-h-screen bg-[#fcfdfc] pb-10">
-        
+
         {/* ══════════════ 1. MOBILE HEADER (Search Toggle) ══════════════ */}
         <header className="sticky top-0 z-50 bg-[#fcfdfc] border-b border-slate-50 lg:hidden px-4 py-3 flex items-center justify-between gap-4">
-           {!isSearchVisible && (
-               <h1 className="text-lg font-[1000] tracking-tighter uppercase italic text-slate-900">
-                   Products
-               </h1>
-           )}
-           
-           <AnimatePresence>
-               {isSearchVisible && (
-                   <motion.div 
-                     initial={{ opacity: 0, width: 0 }}
-                     animate={{ opacity: 1, width: "100%" }}
-                     exit={{ opacity: 0, width: 0 }}
-                     className="relative flex-1"
-                   >
-                     <Input 
-                       placeholder="Search products..." 
-                       value={searchQuery}
-                       onChange={(e) => setSearchQuery(e.target.value)}
-                       className="h-10 pl-10 rounded-lg bg-white border-slate-100 shadow-inner text-sm focus:ring-emerald-500/10"
-                       autoFocus
-                     />
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                     <Button variant="ghost" className="absolute right-1 top-1 h-8 w-8 p-0" onClick={() => { setSearchQuery(""); setIsSearchVisible(false); }}>
-                       <X size={16} className="text-slate-400" />
-                     </Button>
-                   </motion.div>
-               )}
-           </AnimatePresence>
+          {!isSearchVisible && (
+            <h1 className="text-lg font-[1000] tracking-tighter uppercase italic text-slate-900">
+              Products
+            </h1>
+          )}
 
-           {!isSearchVisible && (
-               <Button variant="outline" className="h-10 w-10 p-0 rounded-lg border-slate-100 shadow-sm" onClick={() => setIsSearchVisible(true)}>
-                   <Search size={18} className="text-emerald-700" />
-               </Button>
-           )}
+          <AnimatePresence>
+            {isSearchVisible && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "100%" }}
+                exit={{ opacity: 0, width: 0 }}
+                className="relative flex-1"
+              >
+                <Input
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-10 pl-10 rounded-lg bg-white border-slate-100 shadow-inner text-sm focus:ring-emerald-500/10"
+                  autoFocus
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                <Button variant="ghost" className="absolute right-1 top-1 h-8 w-8 p-0" onClick={() => { setSearchQuery(""); setIsSearchVisible(false); }}>
+                  <X size={16} className="text-slate-400" />
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {!isSearchVisible && (
+            <Button variant="outline" className="h-10 w-10 p-0 rounded-lg border-slate-100 shadow-sm" onClick={() => setIsSearchVisible(true)}>
+              <Search size={18} className="text-emerald-700" />
+            </Button>
+          )}
         </header>
 
 
         <div className="container mx-auto px-4 md:px-6 py-6 lg:py-8 flex flex-col lg:flex-row gap-10">
-          
+
           {/* ══════════════ 2. DESKTOP SIDEBAR (Static) ══════════════ */}
           <aside className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-28 space-y-8">
@@ -183,12 +183,12 @@ export default function ProductListPage() {
 
           {/* ══════════════ 3. MAIN CONTENT (Grid) ══════════════ */}
           <main className="flex-1 space-y-6">
-            
+
             {/* Desktop Search Bar (Collapsed on Mobile) */}
             <div className="relative hidden lg:block group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input 
-                placeholder="Search formulations..." 
+              <Input
+                placeholder="Search formulations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-12 pl-11 rounded-xl bg-white border-slate-100 shadow-sm text-sm focus:ring-emerald-500/10"
@@ -197,15 +197,15 @@ export default function ProductListPage() {
 
             {/* Product Stats */}
             <div className="flex items-center justify-between px-1">
-               <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">
-                  Showing {processedProducts.length} results
-               </p>
-               {activeCategory !== "All" && (
-                  <Badge className="lg:hidden bg-emerald-50 text-emerald-700 border-emerald-100 rounded-lg px-3 py-1 text-[10px] font-black uppercase gap-1.5">
-                    {activeCategory}
-                    <X size={12} className="cursor-pointer" onClick={() => setActiveCategory("All")} />
-                  </Badge>
-               )}
+              <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">
+                Showing {processedProducts.length} results
+              </p>
+              {activeCategory !== "All" && (
+                <Badge className="lg:hidden bg-emerald-50 text-emerald-700 border-emerald-100 rounded-lg px-3 py-1 text-[10px] font-black uppercase gap-1.5">
+                  {activeCategory}
+                  <X size={12} className="cursor-pointer" onClick={() => setActiveCategory("All")} />
+                </Badge>
+              )}
             </div>
 
             {/* Grid Area */}
@@ -245,48 +245,69 @@ export default function ProductListPage() {
       </div>
 
       {/* ══════════════ 4. MOBILE STICKY BOTTOM BAR (Like Myntra) ══════════════ */}
-      <footer className="fixed bottom-0 left-0 w-full h-10 bg-white border-t border-slate-100 z-50 flex lg:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
-          {/* SORT BUTTON (Dropdown) */}
-          <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                  <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 border-r border-slate-100 active:bg-slate-50">
-                      <ArrowUpDown size={16} className="text-emerald-700" />
-                      Sort By
-                  </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="rounded-t-2xl h-[50vh] p-0 min-w-[300px] shadow-2xl border-none bg-white">
-                  <DropdownMenuLabel className="text-sm font-black uppercase italic tracking-tight px-6 py-4 border-b border-slate-50">
-                      Sort Options
-                  </DropdownMenuLabel>
-                  <div className="px-3 py-2">
-                  {sortOptions.map(opt => (
-                      <DropdownMenuItem key={opt.key} onClick={() => setSortBy(opt.key as SortOption)} className={cn("rounded-xl font-semibold text-xs uppercase py-3 px-4", sortBy === opt.key && "bg-emerald-50 text-emerald-700 font-black italic")}>
-                          {opt.label}
-                      </DropdownMenuItem>
-                  ))}
-                  </div>
-              </DropdownMenuContent>
-          </DropdownMenu>
+      <footer className="fixed bottom-0 left-0 w-full h-13 bg-white border-t border-slate-100 z-50 flex lg:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
+        {/* SORT BUTTON (Dropdown) */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 border-r border-slate-100 active:bg-slate-50">
+              <ArrowUpDown size={16} className="text-emerald-700" />
+              Sort By
+            </button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="rounded-t-[2rem] p-0 border-none bg-white outline-none">
+            {/* Handle bar for better UX */}
+            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-2" />
 
-          {/* FILTER BUTTON (Sheet) */}
-          <Sheet>
-              <SheetTrigger asChild>
-                  <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
-                      <SlidersHorizontal size={16} className="text-emerald-700" />
-                      Filter
-                  </button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="rounded-t-[2.5rem] h-[70vh] bg-white border-none p-0 overflow-hidden">
-                  <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-2" />
-                  <SheetHeader className="px-6 py-4 border-b border-slate-50 text-left">
-                    <SheetTitle className="text-xl font-black uppercase italic tracking-tight">Filter Categories</SheetTitle>
-                  </SheetHeader>
-                  <div className="p-6 overflow-y-auto h-full">
-                    {/* Ritik, closeSheet function mobile category button click hone par sheet band karega */}
-                    <CategoryList/>
-                  </div>
-              </SheetContent>
-          </Sheet>
+            <SheetHeader className="px-6 py-4 border-b border-slate-50">
+              <SheetTitle className="text-left text-sm font-[1000] uppercase italic tracking-tight text-slate-900">
+                Sort Options
+              </SheetTitle>
+            </SheetHeader>
+
+            <div className="p-4 space-y-1 pb-10">
+              {sortOptions.map((opt) => (
+                <button
+                  key={opt.key}
+                  onClick={() => {
+                    setSortBy(opt.key as SortOption);
+                    // Tip: Agar sheet ko automatic close karna hai toh state ya trigger ref use karein
+                  }}
+                  className={cn(
+                    "w-full flex items-center justify-between px-5 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all",
+                    sortBy === opt.key
+                      ? "bg-emerald-50 text-emerald-700 italic border border-emerald-100"
+                      : "text-slate-500 hover:bg-slate-50 border border-transparent"
+                  )}
+                >
+                  {opt.label}
+                  {sortBy === opt.key && (
+                    <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        {/* FILTER BUTTON (Sheet) */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
+              <SlidersHorizontal size={16} className="text-emerald-700" />
+              Filter
+            </button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="rounded-t-[2.5rem] h-[70vh] bg-white border-none p-0 overflow-hidden">
+            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-2" />
+            <SheetHeader className="px-6 py-4 border-b border-slate-50 text-left">
+              <SheetTitle className="text-xl font-black uppercase italic tracking-tight">Filter Categories</SheetTitle>
+            </SheetHeader>
+            <div className="p-6 overflow-y-auto h-full">
+              {/* Ritik, closeSheet function mobile category button click hone par sheet band karega */}
+              <CategoryList />
+            </div>
+          </SheetContent>
+        </Sheet>
       </footer>
     </>
   );
