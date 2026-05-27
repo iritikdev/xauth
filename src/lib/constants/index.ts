@@ -42,6 +42,11 @@ export const DASHBOARD_SIDEBAR = {
       url: "/dashboard/wallet",
       icon: "Wallet", // Suggestion: Use "Wallet" icon if available
     },
+    {
+      title: "Passive Wallet",
+      url: "/dashboard/passive-wallet",
+      icon: "Coins", // Suggestion: Use "Wallet" icon if available
+    },
   
     /* --- Network & Growth (Core MLM) --- */
     {

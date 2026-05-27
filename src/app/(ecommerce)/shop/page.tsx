@@ -42,6 +42,8 @@ export default function ProductListPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSortSheetOpen, setIsSortSheetOpen] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -247,7 +249,7 @@ export default function ProductListPage() {
       {/* ══════════════ 4. MOBILE STICKY BOTTOM BAR (Like Myntra) ══════════════ */}
       <footer className="fixed bottom-0 left-0 w-full h-13 bg-white border-t border-slate-100 z-50 flex lg:hidden shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
         {/* SORT BUTTON (Dropdown) */}
-        <Sheet>
+        <Sheet open={isSortSheetOpen} onOpenChange={setIsSortSheetOpen}>
           <SheetTrigger asChild>
             <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 border-r border-slate-100 active:bg-slate-50">
               <ArrowUpDown size={16} className="text-emerald-700" />
@@ -270,6 +272,7 @@ export default function ProductListPage() {
                   key={opt.key}
                   onClick={() => {
                     setSortBy(opt.key as SortOption);
+                    setTimeout(() => setIsSortSheetOpen(false), 300);
                     // Tip: Agar sheet ko automatic close karna hai toh state ya trigger ref use karein
                   }}
                   className={cn(
@@ -290,12 +293,12 @@ export default function ProductListPage() {
         </Sheet>
 
         {/* FILTER BUTTON (Sheet) */}
-        <Sheet>
+        <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
           <SheetTrigger asChild>
-            <button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
+            <Button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
               <SlidersHorizontal size={16} className="text-emerald-700" />
               Filter
-            </button>
+            </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="rounded-t-[2.5rem] h-[70vh] bg-white border-none p-0 overflow-hidden">
             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-2" />
@@ -303,6 +306,7 @@ export default function ProductListPage() {
               <SheetTitle className="text-xl font-black uppercase italic tracking-tight">Filter Categories</SheetTitle>
             </SheetHeader>
             <div className="p-6 overflow-y-auto h-full">
+              
               {/* Ritik, closeSheet function mobile category button click hone par sheet band karega */}
               <CategoryList />
             </div>
