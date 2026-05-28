@@ -1,265 +1,418 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Wallet, ArrowRight, QrCode, UploadCloud, 
-  CheckCircle2, AlertCircle, Copy, Loader2 
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useState } from "react"
+import {
+    ArrowDownLeft,
+    ArrowUpRight,
+    Download,
+    Wallet,
+    TrendingUp,
+    TrendingDown,
+    Clock3,
+    ChevronDown,
+    Loader2,
+} from "lucide-react"
 
-type FlowStep = "ACTIVATE_REQUEST" | "AMOUNT_INPUT" | "QR_PAYMENT" | "CONFIRMATION" | "RECEIPT_UPLOAD" | "SUCCESS";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 export default function PassiveWalletPage() {
-  const [step, setStep] = useState<FlowStep>("ACTIVATE_REQUEST");
-  const [amount, setAmount] = useState<string>("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [receiptUrl, setReceiptUrl] = useState<string>("");
+    const [walletBalance, setWalletBalance] = useState(722.5)
+    const [totalDebits, setTotalDebits] = useState(301)
+    const [totalCredits, setTotalCredits] = useState(935)
+    const [totalInvested, setTotalInvested] = useState(2500)
+    
+    const [withdrawOpen, setWithdrawOpen] = useState(false)
+    const [withdrawAmount, setWithdrawAmount] = useState("")
+    
+    const [investOpen, setInvestOpen] = useState(false)
+    const [investAmount, setInvestAmount] = useState("")
 
-  // Placeholder UPI String for QR Generator or Gateway (Amaze Business UPI)
-  const upiId = "amazeayurveda@naviaxis"; 
-  const upiLink = `upi://pay?pa=${upiId}&pn=Amaze%20Ayurveda&am=${amount}&cu=INR`;
-  // Using dynamic QR API for immediate scanning matching user input amount
-  const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiLink)}`;
+    const [isDownloading, setIsDownloading] = useState(false)
 
-  const handleCopyUPI = () => {
-    navigator.clipboard.writeText(upiId);
-    toast.success("UPI ID copied to clipboard");
-  };
+    const [transactions, setTransactions] = useState([
+        {
+            id: 1,
+            title: "L4 Income",
+            from: "AMZ251100120",
+            amount: "₹18",
+            status: "Completed",
+            date: "19 Apr 2026 · 03:04 PM",
+            type: "credit",
+        },
+    ])
 
-  // Mock Cloudinary Upload Action
-  const handleReceiptUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    // =========================
+    // Withdraw Function
+    // =========================
+    const handleWithdraw = () => {
+        const amount = Number(withdrawAmount)
 
-    setIsUploading(true);
-    // Simulate Cloudinary upload logic here
-    setTimeout(() => {
-      setReceiptUrl("https://cloudinary.com/mock-receipt-url.jpg");
-      setIsUploading(false);
-      toast.success("Receipt uploaded successfully!");
-    }, 2000);
-  };
+        if (!amount || amount <= 0) {
+            toast.error("Invalid Amount", {
+                description: "Enter a valid withdrawal amount.",
+            })
+            return
+        }
 
-  const handleSubmitInvestment = async () => {
-    if (!receiptUrl) {
-      toast.error("Please upload the payment receipt first.");
-      return;
+        if (amount > walletBalance) {
+            toast.error("Insufficient Balance", {
+                description: "You do not have enough balance in your wallet.",
+            })
+            return
+        }
+
+        // State Mutations
+        setWalletBalance((prev) => prev - amount)
+        setTotalDebits((prev) => prev + amount)
+
+        const newTransaction = {
+            id: Date.now(),
+            title: "Withdrawal Requested",
+            from: "Bank Account Transfer",
+            amount: `₹${amount}`,
+            status: "Processing",
+            date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+            type: "debit",
+        }
+
+        setTransactions((prev) => [newTransaction, ...prev])
+        setWithdrawOpen(false)
+        setWithdrawAmount("")
+
+        toast.success("Withdrawal Requested", {
+            description: `₹${amount} withdrawal request submitted successfully.`,
+        })
     }
 
-    try {
-      // Server Action to create investment ledger entry in DB
-      // await createPassiveInvestmentRequest({ amount: parseFloat(amount), receipt: receiptUrl });
-      
-      setStep("SUCCESS");
-      toast.success("Investment request submitted for verification!");
-    } catch (err) {
-      toast.error("Database submission failed.");
+    // =========================
+    // Invest Function
+    // =========================
+    const handleInvest = () => {
+        const amount = Number(investAmount)
+
+        if (!amount || amount <= 0) {
+            toast.error("Invalid Amount", {
+                description: "Enter a valid investment amount.",
+            })
+            return
+        }
+
+        // State Mutations
+        setTotalInvested((prev) => prev + amount)
+        setTotalCredits((prev) => prev + amount)
+
+        const newTransaction = {
+            id: Date.now(),
+            title: "Investment Added",
+            from: "Amaze Passive Plan",
+            amount: `₹${amount}`,
+            status: "Completed",
+            date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
+            type: "credit",
+        }
+
+        setTransactions((prev) => [newTransaction, ...prev])
+        setInvestOpen(false)
+        setInvestAmount("")
+
+        toast.success("Investment Successful", {
+            description: `₹${amount} invested successfully.`,
+        })
     }
-  };
 
-  return (
-    <div className="min-h-[85vh] bg-[#fcfdfc] flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-100/40 p-8 relative overflow-hidden">
-        
-        {/* Progress Bar Header */}
-        <div className="absolute top-0 left-0 h-1 bg-emerald-500 transition-all duration-500" 
-             style={{ width: `${(Object.keys(stepsMap).indexOf(step) + 1) * 16.6}%` }} />
+    // =========================
+    // Mock Download Function
+    // =========================
+    const handleDownloadStatement = () => {
+        setIsDownloading(true)
+        setTimeout(() => {
+            setIsDownloading(false)
+            toast.success("Statement Downloaded", {
+                description: "Your wallet statement file has been saved.",
+            })
+        }, 1500)
+    }
 
-        <AnimatePresence mode="wait">
-          
-          {/* STEP 1: REQUEST ACTIVATION */}
-          {step === "ACTIVATE_REQUEST" && (
-            <motion.div key="step1" {...fadeConfig} className="text-center space-y-6">
-              <div className="mx-auto h-16 w-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
-                <Wallet size={28} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-[1000] tracking-tighter uppercase italic text-slate-900">Passive Wallet</h2>
-                <p className="text-slate-400 text-xs font-semibold mt-1">Activate passive wallet to start compounding earnings.</p>
-              </div>
-              <Button 
-                onClick={() => setStep("AMOUNT_INPUT")}
-                className="w-full h-14 rounded-2xl bg-[#1c3320] text-white font-black uppercase tracking-widest text-xs hover:bg-emerald-950 transition-all gap-2"
-              >
-                Request Passive Allocation <ArrowRight size={14} />
-              </Button>
-            </motion.div>
-          )}
+    return (
+        <div className="min-h-screen text-zinc-900 selection:bg-emerald-500/30">
+            <div className="mx-auto max-w-5xl space-y-6">
+                
+                {/* Wallet Card */}
+                <Card className="overflow-hidden rounded-[32px] border-0 bg-zinc-950 text-white shadow-xl relative">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.15),transparent_45%)] pointer-events-none" />
+                    <CardContent className="relative z-10 p-6 md:p-10">
+                        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
+                                    <Wallet className="h-4 w-4" />
+                                    Amaze Passive Wallet
+                                </div>
+                                <h1 className="text-5xl font-black tracking-tight md:text-6xl font-mono">
+                                    ₹{walletBalance.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </h1>
+                                <p className="text-sm text-zinc-400 font-medium">
+                                    Available balance clean for immediate withdrawal
+                                </p>
+                            </div>
 
-          {/* STEP 2: AMOUNT INPUT */}
-          {step === "AMOUNT_INPUT" && (
-            <motion.div key="step2" {...fadeConfig} className="space-y-6">
-              <div>
-                <h3 className="text-xl font-[1000] tracking-tighter uppercase italic text-slate-900">Investment Amount</h3>
-                <p className="text-slate-400 text-xs font-semibold">Enter funds you want to lock in passive pool.</p>
-              </div>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-slate-400 italic text-lg">₹</span>
-                <Input 
-                  type="number" 
-                  placeholder="5000" 
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="h-14 pl-10 pr-4 rounded-xl border-slate-100 bg-slate-50 text-base font-bold focus:ring-emerald-500/10"
-                />
-              </div>
-              <Button 
-                disabled={!amount || parseFloat(amount) <= 0}
-                onClick={() => setStep("QR_PAYMENT")}
-                className="w-full h-14 rounded-2xl bg-emerald-600 text-white font-black uppercase tracking-widest text-xs hover:bg-emerald-700 transition-all"
-              >
-                Generate Payment Intent
-              </Button>
-            </motion.div>
-          )}
+                            {/* Actions Group */}
+                            <div className="flex flex-wrap gap-3">
+                                <Button
+                                    onClick={() => setWithdrawOpen(true)}
+                                    className="h-12 rounded-2xl bg-zinc-100 text-zinc-950 font-semibold hover:bg-zinc-200 transition-all shadow-sm"
+                                >
+                                    <ArrowUpRight className="mr-2 h-4 w-4 stroke-[2.5]" />
+                                    Withdraw
+                                </Button>
 
-          {/* STEP 3: QR PAYMENT SCAN */}
-          {step === "QR_PAYMENT" && (
-            <motion.div key="step3" {...fadeConfig} className="text-center space-y-6">
-              <div className="text-left">
-                <h3 className="text-lg font-[1000] tracking-tighter uppercase italic text-slate-900">Scan & Pay</h3>
-                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest text-emerald-600">Amount: ₹{amount}</p>
-              </div>
-              
-              {/* Dynamic QR Code */}
-              <div className="mx-auto border border-slate-100 p-4 rounded-3xl bg-white w-fit shadow-md relative group">
-                <img src={qrCodeSrc} alt="Payment QR" className="w-48 h-48 rounded-xl" />
-              </div>
+                                <Button
+                                    onClick={() => setInvestOpen(true)}
+                                    className="h-12 rounded-2xl bg-emerald-500 text-zinc-950 font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 hover:shadow-emerald-400/20 transition-all"
+                                >
+                                    <TrendingUp className="mr-2 h-4 w-4 stroke-[2.5]" />
+                                    Invest Money
+                                </Button>
 
-              {/* UPI ID Clipboard Copy block */}
-              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 text-left">
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Official Merchant UPI</span>
-                  <span className="text-xs font-black text-slate-700">{upiId}</span>
+                                <Button
+                                    variant="ghost"
+                                    disabled={isDownloading}
+                                    onClick={handleDownloadStatement}
+                                    className="h-12 rounded-2xl border border-zinc-800 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-900 hover:text-white"
+                                >
+                                    {isDownloading ? (
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Download className="mr-2 h-4 w-4" />
+                                    )}
+                                    Statement
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Grid Metrics Breakdown */}
+                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="flex items-center gap-4 p-5">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                                <TrendingUp className="h-6 w-6" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
+                                    Total Credits
+                                </p>
+                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
+                                    ₹{totalCredits.toLocaleString("en-IN")}
+                                </h2>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="flex items-center gap-4 p-5">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+                                <TrendingDown className="h-6 w-6" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
+                                    Total Debits
+                                </p>
+                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
+                                    ₹{totalDebits.toLocaleString("en-IN")}
+                                </h2>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
+                        <CardContent className="flex items-center gap-4 p-5">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                                <Wallet className="h-6 w-6" />
+                            </div>
+                            <div className="min-w-0">
+                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
+                                    Total Invested
+                                </p>
+                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
+                                    ₹{totalInvested.toLocaleString("en-IN")}
+                                </h2>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleCopyUPI} className="h-8 w-8 p-0">
-                  <Copy size={14} className="text-slate-400" />
-                </Button>
-              </div>
 
-              <div className="bg-amber-50 rounded-2xl p-4 text-left border border-amber-100/50 flex items-start gap-3">
-                <AlertCircle className="text-amber-600 shrink-0 mt-0.5" size={14} />
-                <p className="text-[10px] text-amber-900 font-bold leading-normal">
-                  Important: Scan via any UPI app (PhonePe, GPay, Paytm). Do not close this window while processing.
-                </p>
-              </div>
+                {/* History Section */}
+                <Card className="rounded-[28px] border border-zinc-200/80 bg-white shadow-sm overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-zinc-100 p-5 bg-zinc-50/50">
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-xl bg-zinc-100 p-2 text-zinc-600">
+                                <Clock3 className="h-5 w-5" />
+                            </div>
+                            <h3 className="text-base font-bold text-zinc-900">
+                                Transaction History
+                            </h3>
+                        </div>
+                        <Button variant="outline" size="sm" className="rounded-xl border-zinc-200 shadow-none text-xs font-semibold">
+                            All Activity
+                            <ChevronDown className="ml-1.5 h-3.5 w-3.5 text-zinc-500" />
+                        </Button>
+                    </div>
 
-              <Button 
-                onClick={() => setStep("CONFIRMATION")}
-                className="w-full h-14 rounded-2xl bg-[#1c3320] text-white font-black uppercase tracking-widest text-xs"
-              >
-                I Have Made The Payment
-              </Button>
-            </motion.div>
-          )}
+                    <div className="divide-y divide-zinc-100">
+                        {transactions.length === 0 ? (
+                            <div className="p-8 text-center text-sm text-zinc-400 font-medium">
+                                No recent activity found.
+                            </div>
+                        ) : (
+                            transactions.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 hover:bg-zinc-50/40 transition-colors"
+                                >
+                                    <div className="flex items-start gap-4">
+                                        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                                            item.type === "credit" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
+                                        }`}>
+                                            {item.type === "credit" ? (
+                                                <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
+                                            ) : (
+                                                <ArrowDownLeft className="h-5 w-5 stroke-[2.5]" />
+                                            )}
+                                        </div>
 
-          {/* STEP 4: DID YOU PAY CONFIRMATION */}
-          {step === "CONFIRMATION" && (
-            <motion.div key="step4" {...fadeConfig} className="text-center space-y-6 py-4">
-              <div className="mx-auto h-14 w-14 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center">
-                <AlertCircle size={24} />
-              </div>
-              <div>
-                <h3 className="text-xl font-[1000] tracking-tighter uppercase italic text-slate-900">Confirm Payment?</h3>
-                <p className="text-slate-400 text-xs font-semibold mt-1">Kya aapne sach me digital payment execute kar diya hai?</p>
-              </div>
-              <div className="flex gap-3">
-                <Button 
-                  variant="outline" 
-                  onClick={() => setStep("QR_PAYMENT")}
-                  className="flex-1 h-14 rounded-2xl border-slate-100 text-xs font-black uppercase tracking-widest text-slate-500"
-                >
-                  No, Go Back
-                </Button>
-                <Button 
-                  onClick={() => setStep("RECEIPT_UPLOAD")}
-                  className="flex-1 h-14 rounded-2xl bg-emerald-600 text-white text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-600/20"
-                >
-                  Yes, I Paid
-                </Button>
-              </div>
-            </motion.div>
-          )}
+                                        <div className="space-y-0.5">
+                                            <h4 className="font-semibold text-sm text-zinc-900">
+                                                {item.title}
+                                            </h4>
+                                            <p className="text-xs text-zinc-500 font-medium">
+                                                Ref: {item.from}
+                                            </p>
+                                            <div className="flex items-center gap-2 pt-1">
+                                                <span className="text-[11px] font-medium text-zinc-400">
+                                                    {item.date}
+                                                </span>
+                                                <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+                                                    item.status === "Completed" ? "bg-emerald-50 text-emerald-700 border border-emerald-200/50" : "bg-amber-50 text-amber-700 border border-amber-200/50"
+                                                }`}>
+                                                    {item.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-          {/* STEP 5: RECEIPT UPLOAD (CLOUDINARY) */}
-          {step === "RECEIPT_UPLOAD" && (
-            <motion.div key="step5" {...fadeConfig} className="space-y-6">
-              <div>
-                <h3 className="text-xl font-[1000] tracking-tighter uppercase italic text-slate-900">Upload Receipt</h3>
-                <p className="text-slate-400 text-xs font-semibold">Provide transaction reference screenshot for instant audit.</p>
-              </div>
+                                    <div className={`text-xl font-bold sm:text-right font-mono self-start sm:self-center ${
+                                        item.type === "credit" ? "text-emerald-600" : "text-rose-600"
+                                    }`}>
+                                        {item.type === "credit" ? "+" : "-"}{item.amount}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </Card>
 
-              <div className="relative border-2 border-dashed border-slate-200 rounded-[2rem] p-8 text-center hover:bg-slate-50 transition-colors cursor-pointer">
-                <input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={handleReceiptUpload}
-                  className="absolute inset-0 opacity-0 cursor-pointer" 
-                  disabled={isUploading}
-                />
-                <div className="space-y-3">
-                  <div className="mx-auto h-12 w-12 bg-slate-100 text-slate-400 rounded-xl flex items-center justify-center">
-                    {isUploading ? <Loader2 size={20} className="animate-spin text-emerald-500" /> : <UploadCloud size={20} />}
-                  </div>
-                  <div className="text-xs font-bold text-slate-600">
-                    {receiptUrl ? <span className="text-emerald-600">✓ Receipt Checked Ready</span> : "Click to select or drag image"}
-                  </div>
-                  <p className="text-[10px] text-slate-400">PNG, JPG up to 5MB</p>
-                </div>
-              </div>
+                {/* Withdraw Dialog */}
+                <Dialog open={withdrawOpen} onOpenChange={setWithdrawOpen}>
+                    <DialogContent className="sm:max-w-md rounded-[24px]">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900">
+                                Withdraw Money
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="withdraw-amount" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                                    Withdrawal Amount (₹)
+                                </Label>
+                                <Input
+                                    id="withdraw-amount"
+                                    type="number"
+                                    placeholder="0.00"
+                                    value={withdrawAmount}
+                                    onChange={(e) => setWithdrawAmount(e.target.value)}
+                                    className="h-12 rounded-xl border-zinc-200 focus-visible:ring-emerald-500 font-mono text-lg"
+                                />
+                            </div>
+                            <div className="rounded-xl bg-zinc-100 p-3.5 text-xs font-semibold text-zinc-600 flex justify-between items-center">
+                                <span>Available Balance:</span>
+                                <span className="font-mono text-zinc-900">₹{walletBalance.toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <DialogFooter className="gap-2 sm:gap-0">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setWithdrawOpen(false)}
+                                className="rounded-xl font-semibold text-zinc-500 hover:text-zinc-900"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleWithdraw}
+                                className="rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 font-semibold"
+                            >
+                                Confirm Withdrawal
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
 
-              <Button 
-                disabled={!receiptUrl || isUploading}
-                onClick={handleSubmitInvestment}
-                className="w-full h-14 rounded-2xl bg-[#1c3320] text-white font-black uppercase tracking-widest text-xs disabled:opacity-40"
-              >
-                Submit Investment Ledger
-              </Button>
-            </motion.div>
-          )}
+                {/* Invest Dialog */}
+                <Dialog open={investOpen} onOpenChange={setInvestOpen}>
+                    <DialogContent className="sm:max-w-md rounded-[24px]">
+                        <DialogHeader>
+                            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900">
+                                Invest Funds
+                            </DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 py-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="invest-amount" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                                    Investment Amount (₹)
+                                </Label>
+                                <Input
+                                    id="invest-amount"
+                                    type="number"
+                                    placeholder="0.00"
+                                    value={investAmount}
+                                    onChange={(e) => setInvestAmount(e.target.value)}
+                                    className="h-12 rounded-xl border-zinc-200 focus-visible:ring-emerald-500 font-mono text-lg"
+                                />
+                            </div>
+                            <div className="rounded-xl bg-emerald-50/60 border border-emerald-100 p-3.5 text-xs font-medium text-emerald-800 leading-relaxed">
+                                Funds loaded will be routed straight into your active <strong>Amaze Passive Plan</strong> pipeline to accrue yields.
+                            </div>
+                        </div>
+                        <DialogFooter className="gap-2 sm:gap-0">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setInvestOpen(false)}
+                                className="rounded-xl font-semibold text-zinc-500 hover:text-zinc-900"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleInvest}
+                                className="rounded-xl bg-emerald-500 text-zinc-950 font-bold hover:bg-emerald-400"
+                            >
+                                Confirm Investment
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
 
-          {/* STEP 6: SUCCESS */}
-          {step === "SUCCESS" && (
-            <motion.div key="step6" {...fadeConfig} className="text-center space-y-6 py-6">
-              <div className="mx-auto h-16 w-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shadow-inner">
-                <CheckCircle2 size={32} />
-              </div>
-              <div>
-                <h3 className="text-2xl font-[1000] tracking-tighter uppercase italic text-slate-900">Under Audit</h3>
-                <p className="text-slate-400 text-xs font-medium px-4 mt-2 leading-relaxed">
-                  Aapki receipt blockchain validation & admin dashboard verification ke liye queue me daal di gayi hai. Active status within 2 hours populate ho jayega.
-                </p>
-              </div>
-              <Button 
-                onClick={() => { setStep("ACTIVATE_REQUEST"); setAmount(""); setReceiptUrl(""); }}
-                className="w-full h-12 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs uppercase tracking-widest"
-              >
-                Back To Passive Hub
-              </Button>
-            </motion.div>
-          )}
-
-        </AnimatePresence>
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    )
 }
-
-const fadeConfig = {
-  initial: { opacity: 0, scale: 0.96 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.96 },
-  transition: { duration: 0.25 }
-};
-
-const stepsMap = {
-  "ACTIVATE_REQUEST": 1,
-  "AMOUNT_INPUT": 2,
-  "QR_PAYMENT": 3,
-  "CONFIRMATION": 4,
-  "RECEIPT_UPLOAD": 5,
-  "SUCCESS": 6
-};
