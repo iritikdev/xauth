@@ -267,7 +267,7 @@ export default function PassiveWalletPage() {
                             </div>
                             <div className="min-w-0">
                                 <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
-                                    Total Credits
+                                    Total Investment
                                 </p>
                                 <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
                                     ₹{totalCredits.toLocaleString("en-IN")}
@@ -299,7 +299,7 @@ export default function PassiveWalletPage() {
                             </div>
                             <div className="min-w-0">
                                 <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
-                                    Total Invested
+                                    Total Earning
                                 </p>
                                 <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
                                     ₹{totalInvested.toLocaleString("en-IN")}
@@ -440,128 +440,82 @@ export default function PassiveWalletPage() {
                             {/* STEP 2: AMOUNT INPUT */}
                             {step === "AMOUNT_INPUT" && (
                                 <motion.div
-                                    key="step-amount"
+                                    key="amount"
                                     {...fadeConfig}
-                                    className="relative overflow-hidden rounded-[2rem] border border-zinc-100 bg-gradient-to-b from-white to-zinc-50/60 p-6 shadow-sm"
+                                    className="space-y-4"
                                 >
-                                    {/* Background Glow */}
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.10),transparent_40%)]" />
+                                    {/* Header */}
+                                    <div>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
+                                            Passive Investment
+                                        </p>
 
-                                    <div className="relative z-10 space-y-6">
-                                        {/* Header */}
-                                        <div className="space-y-2 text-center">
-                                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 shadow-inner">
-                                                <TrendingUp className="h-7 w-7" />
-                                            </div>
-
-                                            <div>
-                                                <h3 className="text-3xl font-black tracking-tight text-zinc-900">
-                                                    Start Investing
-                                                </h3>
-
-                                                <p className="mt-1 text-sm font-medium text-zinc-500">
-                                                    Enter the amount you want to allocate
-                                                    into your passive income pool.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Amount Input */}
-                                        <div className="space-y-3">
-                                            <Label className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400">
-                                                Investment Amount
-                                            </Label>
-
-                                            <div className="relative">
-                                                {/* Currency */}
-                                                <div className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl bg-emerald-50 text-lg font-black text-emerald-600">
-                                                    ₹
-                                                </div>
-
-                                                <Input
-                                                    type="number"
-                                                    placeholder="Enter amount"
-                                                    value={amount}
-                                                    onChange={(e) => setAmount(e.target.value)}
-                                                    className="
-                            h-16 rounded-2xl border-zinc-200
-                            bg-white pl-16 pr-4
-                            text-2xl font-black tracking-tight
-                            shadow-sm
-                            focus-visible:ring-2
-                            focus-visible:ring-emerald-500/20
-                            focus-visible:border-emerald-400
-                        "
-                                                />
-                                            </div>
-
-                                            {/* Quick Amount Chips */}
-                                            <div className="flex flex-wrap gap-2 pt-1">
-                                                {[1000, 2500, 5000, 10000].map((value) => (
-                                                    <button
-                                                        key={value}
-                                                        onClick={() => setAmount(String(value))}
-                                                        className="
-                                rounded-xl border border-zinc-200
-                                bg-white px-4 py-2
-                                text-xs font-black
-                                tracking-wide text-zinc-700
-                                transition-all duration-200
-                                hover:border-emerald-400
-                                hover:bg-emerald-50
-                                hover:text-emerald-700
-                            "
-                                                    >
-                                                        ₹{value.toLocaleString("en-IN")}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Info Card */}
-                                        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
-                                            <div className="flex items-start gap-3">
-                                                <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-600 shadow-sm">
-                                                    <Wallet className="h-4 w-4" />
-                                                </div>
-
-                                                <div className="space-y-1">
-                                                    <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-700">
-                                                        Passive Earnings
-                                                    </p>
-
-                                                    <p className="text-xs leading-relaxed text-emerald-900/80">
-                                                        Your investment enters the passive growth pool
-                                                        and starts generating daily ROI after approval.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* CTA */}
-                                        <Button
-                                            disabled={!amount || parseFloat(amount) <= 0}
-                                            onClick={() => setStep("QR_PAYMENT")}
-                                            className="
-                    h-14 w-full rounded-2xl
-                    bg-emerald-500
-                    text-sm font-black uppercase
-                    tracking-[0.2em] text-white
-                    shadow-lg shadow-emerald-500/20
-                    transition-all duration-300
-                    hover:bg-emerald-400
-                    hover:shadow-emerald-400/30
-                    disabled:pointer-events-none
-                    disabled:opacity-40
-                "
-                                        >
-                                            Continue To Payment
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </Button>
+                                        <h3 className="mt-1 text-xl font-black text-zinc-900">
+                                            Enter Amount
+                                        </h3>
                                     </div>
+
+                                    {/* Amount Card */}
+                                    <div className="rounded-3xl border border-zinc-100 bg-zinc-50 p-4">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-3xl font-black text-emerald-600">₹</span>
+
+                                            <Input
+                                                type="number"
+                                                placeholder="5000"
+                                                value={amount}
+                                                onChange={(e) => setAmount(e.target.value)}
+                                                className="
+            border-0 bg-transparent
+            p-0 shadow-none
+            text-3xl font-black
+            focus-visible:ring-0
+          "
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Amounts */}
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {[5000, 10000, 50000, 100000].map((value) => (
+                                            <Button
+                                                key={value}
+                                                variant="outline"
+                                                onClick={() => setAmount(String(value))}
+                                                className="
+            h-10 rounded-xl
+            text-xs font-bold
+            border-zinc-200
+          "
+                                            >
+                                                ₹{value / 1000}K
+                                            </Button>
+                                        ))}
+                                    </div>
+
+                                    {/* Small Info */}
+                                    <div className="rounded-2xl bg-emerald-50 px-3 py-2">
+                                        <p className="text-[11px] text-emerald-700">
+                                            Daily ROI starts after verification.
+                                        </p>
+                                    </div>
+
+                                    {/* CTA */}
+                                    <Button
+                                        disabled={!amount || Number(amount) <= 0}
+                                        onClick={() => setStep("QR_PAYMENT")}
+                                        className="
+        h-12 w-full rounded-2xl
+        bg-emerald-500
+        text-xs font-black
+        uppercase tracking-[0.2em]
+      "
+                                    >
+                                        Continue
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
                                 </motion.div>
                             )}
-
                             {/* STEP 3: QR PAYMENT SCAN */}
                             {step === "QR_PAYMENT" && (
                                 <motion.div
@@ -954,7 +908,7 @@ export default function PassiveWalletPage() {
 
                         </AnimatePresence>
                     </DialogContent>
-                    
+
                 </Dialog>
 
             </div>
