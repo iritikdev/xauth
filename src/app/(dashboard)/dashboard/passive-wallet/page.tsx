@@ -10,13 +10,19 @@ import {
     TrendingDown,
     Clock3,
     ChevronDown,
-    ArrowRight, QrCode, UploadCloud,
-    CheckCircle2, AlertCircle, Copy, Loader2
+    ArrowRight,
+    QrCode,
+    UploadCloud,
+    CheckCircle2,
+    AlertCircle,
+    Copy,
+    Loader2,
+    Receipt
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion"
 
 import {
     Dialog,
@@ -29,41 +35,36 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import Link from "next/link"
+import { CldUploadWidget } from "next-cloudinary" // ✅ Imported Cloudinary direct inside
+import { createPassiveInvestmentRequest } from "@/lib/actions/passive-investment"
+import CloudinaryUpload from "./CloudinaryUpload"
+import TransactionHistory from "./TransactionHistory"
+import { useSession } from "next-auth/react"
+import PassiveWalletStats from "./PassiveWalletStats"
 
 type FlowStep = "AMOUNT_INPUT" | "QR_PAYMENT" | "RECEIPT_UPLOAD" | "SUCCESS";
 
 export default function PassiveWalletPage() {
-
-    // 
-
     const [step, setStep] = useState<FlowStep>("AMOUNT_INPUT");
     const [amount, setAmount] = useState<string>("");
+    const [transactionId, setTransactionId] = useState<string | null | undefined>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [receiptUrl, setReceiptUrl] = useState<string>("");
+    const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+    const { data: session, status } = useSession()
+
+    if (status === "loading") return <p>Loading...</p>
+    if (!session?.user?.id) {
+        return <div className="p-4 text-sm text-zinc-500">Please sign in to view activity.</div>
+    }
 
     // Placeholder UPI String for QR Generator or Gateway (Amaze Business UPI)
     const upiId = "amazeayurveda@naviaxis";
     const upiLink = `upi://pay?pa=${upiId}&pn=Amaze%20Ayurveda&am=${amount}&cu=INR`;
-    // Using dynamic QR API for immediate scanning matching user input amount
     const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiLink)}`;
 
     const handleCopyUPI = () => {
         navigator.clipboard.writeText(upiId);
         toast.success("UPI ID copied to clipboard");
-    };
-
-    // Mock Cloudinary Upload Action
-    const handleReceiptUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsUploading(true);
-        // Simulate Cloudinary upload logic here
-        setTimeout(() => {
-            setReceiptUrl("https://cloudinary.com/mock-receipt-url.jpg");
-            setIsUploading(false);
-            toast.success("Receipt uploaded successfully!");
-        }, 2000);
     };
 
     const handleSubmitInvestment = async () => {
@@ -72,17 +73,45 @@ export default function PassiveWalletPage() {
             return;
         }
 
-        try {
-            // Server Action to create investment ledger entry in DB
-            // await createPassiveInvestmentRequest({ amount: parseFloat(amount), receipt: receiptUrl });
+        setIsUploading(true);
 
-            setStep("SUCCESS");
-            toast.success("Investment request submitted for verification!");
-        } catch (err) {
-            toast.error("Database submission failed.");
+        try {
+            const response = await createPassiveInvestmentRequest({
+                amount: parseFloat(amount),
+                receiptUrl: receiptUrl
+            });
+
+            if (response.success) {
+                setStep("SUCCESS");
+                setTransactionId(response.data?.transactionId);
+                toast.success(`Request logged! TxID: ${response.data?.transactionId}`);
+            } else {
+                toast.error(response.error || "Submission failed");
+            }
+        } catch (error) {
+            toast.error("An unexpected database connection error occurred.");
+        } finally {
+            setIsUploading(false);
         }
     };
-    // 
+
+    // Cloudinary Helper Handlers
+    const handleOnSuccess = (result: any) => {
+        setIsUploading(false);
+        if (result?.info?.secure_url) {
+            setReceiptUrl(result.info.secure_url);
+            toast.success("Receipt uploaded successfully!");
+        } else {
+            toast.error("Failed to parse upload metadata.");
+        }
+    };
+
+    const handleOnError = (error: any) => {
+        setIsUploading(false);
+        console.error("Cloudinary Widget Error:", error);
+        toast.error("Upload process failed.");
+    };
+
     const [walletBalance, setWalletBalance] = useState(722.5)
     const [totalDebits, setTotalDebits] = useState(301)
     const [totalCredits, setTotalCredits] = useState(935)
@@ -90,10 +119,7 @@ export default function PassiveWalletPage() {
 
     const [withdrawOpen, setWithdrawOpen] = useState(false)
     const [withdrawAmount, setWithdrawAmount] = useState("")
-
     const [investOpen, setInvestOpen] = useState(false)
-    const [investAmount, setInvestAmount] = useState("")
-
     const [isDownloading, setIsDownloading] = useState(false)
 
     const [transactions, setTransactions] = useState([
@@ -108,35 +134,25 @@ export default function PassiveWalletPage() {
         },
     ])
 
-    // =========================
-    // Withdraw Function
-    // =========================
     const handleWithdraw = () => {
-        const amount = Number(withdrawAmount)
-
-        if (!amount || amount <= 0) {
-            toast.error("Invalid Amount", {
-                description: "Enter a valid withdrawal amount.",
-            })
-            return
+        const amt = Number(withdrawAmount)
+        if (!amt || amt <= 0) {
+            toast.error("Invalid Amount");
+            return;
+        }
+        if (amt > walletBalance) {
+            toast.error("Insufficient Balance");
+            return;
         }
 
-        if (amount > walletBalance) {
-            toast.error("Insufficient Balance", {
-                description: "You do not have enough balance in your wallet.",
-            })
-            return
-        }
-
-        // State Mutations
-        setWalletBalance((prev) => prev - amount)
-        setTotalDebits((prev) => prev + amount)
+        setWalletBalance((prev) => prev - amt)
+        setTotalDebits((prev) => prev + amt)
 
         const newTransaction = {
             id: Date.now(),
             title: "Withdrawal Requested",
             from: "Bank Account Transfer",
-            amount: `₹${amount}`,
+            amount: `₹${amt}`,
             status: "Processing",
             date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
             type: "debit",
@@ -145,58 +161,14 @@ export default function PassiveWalletPage() {
         setTransactions((prev) => [newTransaction, ...prev])
         setWithdrawOpen(false)
         setWithdrawAmount("")
-
-        toast.success("Withdrawal Requested", {
-            description: `₹${amount} withdrawal request submitted successfully.`,
-        })
+        toast.success("Withdrawal Requested");
     }
 
-    // =========================
-    // Invest Function
-    // =========================
-    const handleInvest = () => {
-        const amount = Number(investAmount)
-
-        if (!amount || amount <= 0) {
-            toast.error("Invalid Amount", {
-                description: "Enter a valid investment amount.",
-            })
-            return
-        }
-
-        // State Mutations
-        setTotalInvested((prev) => prev + amount)
-        setTotalCredits((prev) => prev + amount)
-
-        const newTransaction = {
-            id: Date.now(),
-            title: "Investment Added",
-            from: "Amaze Passive Plan",
-            amount: `₹${amount}`,
-            status: "Completed",
-            date: new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }),
-            type: "credit",
-        }
-
-        setTransactions((prev) => [newTransaction, ...prev])
-        setInvestOpen(false)
-        setInvestAmount("")
-
-        toast.success("Investment Successful", {
-            description: `₹${amount} invested successfully.`,
-        })
-    }
-
-    // =========================
-    // Mock Download Function
-    // =========================
     const handleDownloadStatement = () => {
         setIsDownloading(true)
         setTimeout(() => {
             setIsDownloading(false)
-            toast.success("Statement Downloaded", {
-                description: "Your wallet statement file has been saved.",
-            })
+            toast.success("Statement Downloaded")
         }, 1500)
     }
 
@@ -205,180 +177,19 @@ export default function PassiveWalletPage() {
             <div className="mx-auto max-w-5xl space-y-6">
 
                 {/* Wallet Card */}
-                <Card className="overflow-hidden rounded-[32px] border-0 bg-zinc-950 text-white shadow-xl relative">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.15),transparent_45%)] pointer-events-none" />
-                    <CardContent className="relative z-10 p-6 md:p-10">
-                        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
-                                    <Wallet className="h-4 w-4" />
-                                    Amaze Passive Wallet
-                                </div>
-                                <h1 className="text-5xl font-black tracking-tight md:text-6xl font-mono">
-                                    ₹{walletBalance.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                </h1>
-                                <p className="text-sm text-zinc-400 font-medium">
-                                    Available balance clean for immediate withdrawal
-                                </p>
-                            </div>
 
-                            {/* Actions Group */}
-                            <div className="flex flex-wrap gap-3">
-                                <Button
-                                    onClick={() => setWithdrawOpen(true)}
-                                    className="h-12 rounded-2xl bg-zinc-100 text-zinc-950 font-semibold hover:bg-zinc-200 transition-all shadow-sm"
-                                >
-                                    <ArrowUpRight className="mr-2 h-4 w-4 stroke-[2.5]" />
-                                    Withdraw
-                                </Button>
 
-                                <Button
-                                    onClick={() => setInvestOpen(true)}
-                                    className="h-12 rounded-2xl bg-emerald-500 text-zinc-950 font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 hover:shadow-emerald-400/20 transition-all"
-                                >
-                                    <TrendingUp className="mr-2 h-4 w-4 stroke-[2.5]" />
-                                    Invest Money
-                                </Button>
 
-                                <Button
-                                    variant="ghost"
-                                    disabled={isDownloading}
-                                    onClick={handleDownloadStatement}
-                                    className="h-12 rounded-2xl border border-zinc-800 bg-zinc-900/50 text-zinc-300 hover:bg-zinc-900 hover:text-white"
-                                >
-                                    {isDownloading ? (
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <Download className="mr-2 h-4 w-4" />
-                                    )}
-                                    Statement
-                                </Button>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Grid Metrics Breakdown */}
-                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="flex items-center gap-4 p-5">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                                <TrendingUp className="h-6 w-6" />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
-                                    Total Investment
-                                </p>
-                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
-                                    ₹{totalCredits.toLocaleString("en-IN")}
-                                </h2>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
-                        <CardContent className="flex items-center gap-4 p-5">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
-                                <TrendingDown className="h-6 w-6" />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
-                                    Total Debits
-                                </p>
-                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
-                                    ₹{totalDebits.toLocaleString("en-IN")}
-                                </h2>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
-                        <CardContent className="flex items-center gap-4 p-5">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-                                <Wallet className="h-6 w-6" />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 truncate">
-                                    Total Earning
-                                </p>
-                                <h2 className="mt-0.5 text-2xl font-black text-zinc-900 font-mono truncate">
-                                    ₹{totalInvested.toLocaleString("en-IN")}
-                                </h2>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-
-                {/* History Section */}
-                <Card className="rounded-[28px] border border-zinc-200/80 bg-white shadow-sm overflow-hidden">
-                    <div className="flex items-center justify-between border-b border-zinc-100 p-5 bg-zinc-50/50">
-                        <div className="flex items-center gap-3">
-                            <div className="rounded-xl bg-zinc-100 p-2 text-zinc-600">
-                                <Clock3 className="h-5 w-5" />
-                            </div>
-                            <h3 className="text-base font-bold text-zinc-900">
-                                Transaction History
-                            </h3>
-                        </div>
-                        <Button variant="outline" size="sm" className="rounded-xl border-zinc-200 shadow-none text-xs font-semibold">
-                            All Activity
-                            <ChevronDown className="ml-1.5 h-3.5 w-3.5 text-zinc-500" />
-                        </Button>
-                    </div>
-
-                    <div className="divide-y divide-zinc-100">
-                        {transactions.length === 0 ? (
-                            <div className="p-8 text-center text-sm text-zinc-400 font-medium">
-                                No recent activity found.
-                            </div>
-                        ) : (
-                            transactions.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 hover:bg-zinc-50/40 transition-colors"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${item.type === "credit" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
-                                            }`}>
-                                            {item.type === "credit" ? (
-                                                <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
-                                            ) : (
-                                                <ArrowDownLeft className="h-5 w-5 stroke-[2.5]" />
-                                            )}
-                                        </div>
-
-                                        <div className="space-y-0.5">
-                                            <h4 className="font-semibold text-sm text-zinc-900">
-                                                {item.title}
-                                            </h4>
-                                            <p className="text-xs text-zinc-500 font-medium">
-                                                Ref: {item.from}
-                                            </p>
-                                            <div className="flex items-center gap-2 pt-1">
-                                                <span className="text-[11px] font-medium text-zinc-400">
-                                                    {item.date}
-                                                </span>
-                                                <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${item.status === "Completed" ? "bg-emerald-50 text-emerald-700 border border-emerald-200/50" : "bg-amber-50 text-amber-700 border border-amber-200/50"
-                                                    }`}>
-                                                    {item.status}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className={`text-xl font-bold sm:text-right font-mono self-start sm:self-center ${item.type === "credit" ? "text-emerald-600" : "text-rose-600"
-                                        }`}>
-                                        {item.type === "credit" ? "+" : "-"}{item.amount}
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
-                </Card>
+                <PassiveWalletStats
+                    userId={session?.user!.id}
+                    onInvestClick={() => setInvestOpen(true)}
+                    onWithdrawClick={() => setWithdrawOpen(true)}
+                />
+                <TransactionHistory userId={session?.user!.id} />
 
                 {/* Withdraw Dialog */}
                 <Dialog open={withdrawOpen} onOpenChange={setWithdrawOpen}>
-                    <DialogContent className="sm:max-w-md rounded-[24px]">
+                    <DialogContent className="sm:max-w-md rounded-[24px] overflow-visible">
                         <DialogHeader>
                             <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900">
                                 Withdraw Money
@@ -422,493 +233,334 @@ export default function PassiveWalletPage() {
                 </Dialog>
 
                 {/* Invest Dialog */}
-                <Dialog open={investOpen} onOpenChange={setInvestOpen}>
-                    <DialogContent className="sm:max-w-md rounded-[24px]">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold tracking-tight text-zinc-900">
-                                Invest Funds
-                            </DialogTitle>
+                <Dialog
+                    open={investOpen}
+                    onOpenChange={setInvestOpen}
+                    modal={false}
+                >
+                    <DialogContent forceMount
+                        onInteractOutside={(e) => e.preventDefault()}
+                        onEscapeKeyDown={(e) => e.preventDefault()}
+                        className="sm:max-w-md rounded-[24px] overflow-visible">
+                        <DialogHeader className="space-y-4">
+                            <div>
+                                <DialogTitle className="text-xl font-black tracking-tight text-zinc-900">
+                                    Invest Funds
+                                </DialogTitle>
+
+                                <p className="text-sm text-zinc-500 mt-1">
+                                    Complete the investment process
+                                </p>
+                            </div>
+
+                            {/* Progress */}
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                                    <span>Step {stepsMap[step]} of 4</span>
+                                    <span>{Math.round((stepsMap[step] / 4) * 100)}%</span>
+                                </div>
+
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-100">
+                                    <div
+                                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500 ease-out"
+                                        style={{
+                                            width: `${(stepsMap[step] / 4) * 100}%`,
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </DialogHeader>
-                        <div className="absolute top-0 left-0 h-1 bg-emerald-500 transition-all duration-500"
-                            style={{
-                                width: `${(stepsMap[step] / 4) * 100}%`
-                            }} />
                         <AnimatePresence mode="wait">
 
-
-
-                            {/* STEP 2: AMOUNT INPUT */}
+                            {/* STEP 1: AMOUNT INPUT */}
                             {step === "AMOUNT_INPUT" && (
-                                <motion.div
-                                    key="amount"
-                                    {...fadeConfig}
-                                    className="space-y-4"
-                                >
-                                    {/* Header */}
+                                <motion.div key="amount" {...fadeConfig} className="space-y-4">
                                     <div>
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
                                             Passive Investment
                                         </p>
-
                                         <h3 className="mt-1 text-xl font-black text-zinc-900">
                                             Enter Amount
                                         </h3>
                                     </div>
 
-                                    {/* Amount Card */}
                                     <div className="rounded-3xl border border-zinc-100 bg-zinc-50 p-4">
                                         <div className="flex items-center gap-3">
                                             <span className="text-3xl font-black text-emerald-600">₹</span>
-
                                             <Input
                                                 type="number"
                                                 placeholder="5000"
                                                 value={amount}
                                                 onChange={(e) => setAmount(e.target.value)}
-                                                className="
-            border-0 bg-transparent
-            p-0 shadow-none
-            text-3xl font-black
-            focus-visible:ring-0
-          "
+                                                className="border-0 bg-transparent p-0 shadow-none text-3xl font-black focus-visible:ring-0"
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Quick Amounts */}
                                     <div className="grid grid-cols-4 gap-2">
                                         {[5000, 10000, 50000, 100000].map((value) => (
                                             <Button
                                                 key={value}
                                                 variant="outline"
                                                 onClick={() => setAmount(String(value))}
-                                                className="
-            h-10 rounded-xl
-            text-xs font-bold
-            border-zinc-200
-          "
+                                                className="h-10 rounded-xl text-xs font-bold border-zinc-200"
                                             >
                                                 ₹{value / 1000}K
                                             </Button>
                                         ))}
                                     </div>
 
-                                    {/* Small Info */}
                                     <div className="rounded-2xl bg-emerald-50 px-3 py-2">
                                         <p className="text-[11px] text-emerald-700">
                                             Daily ROI starts after verification.
                                         </p>
                                     </div>
 
-                                    {/* CTA */}
                                     <Button
                                         disabled={!amount || Number(amount) <= 0}
                                         onClick={() => setStep("QR_PAYMENT")}
-                                        className="
-        h-12 w-full rounded-2xl
-        bg-emerald-500
-        text-xs font-black
-        uppercase tracking-[0.2em]
-      "
+                                        className="h-12 w-full rounded-2xl bg-emerald-500 text-xs font-black uppercase tracking-[0.2em]"
                                     >
                                         Continue
                                         <ArrowRight className="ml-2 h-4 w-4" />
                                     </Button>
                                 </motion.div>
                             )}
-                            {/* STEP 3: QR PAYMENT SCAN */}
+
+                            {/* STEP 2: QR PAYMENT SCAN */}
                             {step === "QR_PAYMENT" && (
-                                <motion.div
-                                    key="step-payment"
-                                    {...fadeConfig}
-                                    className="
-            relative overflow-hidden
-            rounded-[28px]
-            border border-zinc-100
-            bg-white
-            p-4
-            shadow-sm
-        "
-                                >
-                                    {/* Soft Glow */}
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_40%)]" />
-
-                                    <div className="relative z-10 space-y-4">
-                                        {/* Top Row */}
-                                        <div className="flex items-center justify-between gap-3">
-                                            <div>
-                                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
-                                                    Secure Payment
-                                                </p>
-
-                                                <h3 className="mt-1 text-xl font-black tracking-tight text-zinc-900">
-                                                    Scan & Pay
-                                                </h3>
-                                            </div>
-
-                                            {/* Amount */}
-                                            <div className="rounded-2xl bg-emerald-50 px-3 py-2 text-right">
-                                                <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600">
-                                                    Amount
-                                                </p>
-
-                                                <p className="font-mono text-lg font-black text-emerald-700">
-                                                    ₹{amount}
-                                                </p>
-                                            </div>
+                                <motion.div key="step-payment" {...fadeConfig} className="relative overflow-hidden rounded-[28px] bg-white space-y-4">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
+                                                Secure Payment
+                                            </p>
+                                            <h3 className="mt-1 text-xl font-black tracking-tight text-zinc-900">
+                                                Scan & Pay
+                                            </h3>
                                         </div>
-
-                                        {/* Compact QR */}
-                                        <div className="relative mx-auto w-fit">
-                                            <div className="absolute inset-0 rounded-[2rem] bg-emerald-500/10 blur-2xl" />
-
-                                            <div className="relative rounded-[2rem] border border-zinc-100 bg-white p-3 shadow-lg">
-                                                <img
-                                                    src={qrCodeSrc}
-                                                    alt="Payment QR"
-                                                    className="h-44 w-44 rounded-xl"
-                                                />
-                                            </div>
+                                        <div className="rounded-2xl bg-emerald-50 px-3 py-2 text-right">
+                                            <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600">
+                                                Amount
+                                            </p>
+                                            <p className="font-mono text-lg font-black text-emerald-700">
+                                                ₹{amount}
+                                            </p>
                                         </div>
-
-                                        {/* Actions */}
-                                        <div className="space-y-2">
-                                            {/* Open UPI */}
-                                            <Link
-                                                href={upiLink}
-                                                target="_blank"
-                                                className="block"
-                                            >
-                                                <Button
-                                                    className="
-                            h-12 w-full rounded-2xl
-                            bg-emerald-500
-                            text-xs font-black uppercase
-                            tracking-[0.2em]
-                            text-white
-                            shadow-md shadow-emerald-500/20
-                            hover:bg-emerald-400
-                        "
-                                                >
-                                                    💳 Open UPI App
-                                                </Button>
-                                            </Link>
-
-                                            {/* UPI ID */}
-                                            <div className="flex items-center justify-between rounded-2xl border border-zinc-100 bg-zinc-50 px-3 py-3">
-                                                <div className="min-w-0">
-                                                    <p className="text-[9px] font-black uppercase tracking-[0.18em] text-zinc-400">
-                                                        UPI ID
-                                                    </p>
-
-                                                    <p className="truncate font-mono text-xs font-bold text-zinc-900">
-                                                        {upiId}
-                                                    </p>
-                                                </div>
-
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    onClick={handleCopyUPI}
-                                                    className="
-                            h-9 w-9 rounded-xl
-                            bg-white
-                            text-zinc-600
-                            hover:bg-emerald-50
-                            hover:text-emerald-600
-                        "
-                                                >
-                                                    <Copy className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        </div>
-
-                                        {/* Small Info */}
-                                        <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2">
-                                            <div className="flex items-start gap-2">
-                                                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-
-                                                <p className="text-[11px] leading-relaxed text-amber-900">
-                                                    Pay using any UPI app and upload receipt after payment.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* CTA */}
-                                        <Button
-                                            onClick={() => setStep("RECEIPT_UPLOAD")}
-                                            className="
-                    h-12 w-full rounded-2xl
-                    bg-zinc-900
-                    text-xs font-black uppercase
-                    tracking-[0.2em]
-                    text-white
-                    hover:bg-zinc-800
-                "
-                                        >
-                                            Payment Completed
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </Button>
                                     </div>
+
+                                    <div className="relative mx-auto w-fit">
+                                        <div className="absolute inset-0 rounded-[2rem] bg-emerald-500/10 blur-2xl" />
+                                        <div className="relative rounded-[2rem] border border-zinc-100 bg-white p-3 shadow-lg">
+                                            <img src={qrCodeSrc} alt="Payment QR" className="h-44 w-44 rounded-xl" />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Link href={upiLink} target="_blank" className="block">
+                                            <Button className="h-12 w-full rounded-2xl bg-emerald-500 text-xs font-black uppercase tracking-[0.2em] text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-400">
+                                                💳 Open UPI App
+                                            </Button>
+                                        </Link>
+
+                                        <div className="flex items-center justify-between rounded-2xl border border-zinc-100 bg-zinc-50 px-3 py-3">
+                                            <div className="min-w-0">
+                                                <p className="text-[9px] font-black uppercase tracking-[0.18em] text-zinc-400">
+                                                    UPI ID
+                                                </p>
+                                                <p className="truncate font-mono text-xs font-bold text-zinc-900">
+                                                    {upiId}
+                                                </p>
+                                            </div>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={handleCopyUPI}
+                                                className="h-9 w-9 rounded-xl bg-white text-zinc-600 hover:bg-emerald-50 hover:text-emerald-600"
+                                            >
+                                                <Copy className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div className="rounded-2xl border border-amber-100 bg-amber-50 px-3 py-2">
+                                        <div className="flex items-start gap-2">
+                                            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                                            <p className="text-[11px] leading-relaxed text-amber-900">
+                                                Pay using any UPI app and upload receipt after payment.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <Button
+                                        onClick={() => setStep("RECEIPT_UPLOAD")}
+                                        className="h-12 w-full rounded-2xl bg-zinc-900 text-xs font-black uppercase tracking-[0.2em] text-white hover:bg-zinc-800"
+                                    >
+                                        Payment Completed
+                                        <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Button>
                                 </motion.div>
                             )}
 
-
-
-                            {/* STEP 4: RECEIPT UPLOAD */}
+                            {/* STEP 3: RECEIPT UPLOAD (INTEGRATED CLOUDINARY WIDGET) */}
                             {step === "RECEIPT_UPLOAD" && (
                                 <motion.div
                                     key="step-upload"
                                     {...fadeConfig}
-                                    className="
-            relative overflow-hidden
-            rounded-[28px]
-            border border-zinc-100
-            bg-white
-            p-4
-            shadow-sm
-        "
+                                    className="space-y-4 text-zinc-900"
                                 >
-                                    {/* Background Glow */}
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_45%)]" />
-
-                                    <div className="relative z-10 space-y-4">
-                                        {/* Header */}
-                                        <div>
-                                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1">
-                                                <UploadCloud className="h-3.5 w-3.5 text-emerald-600" />
-
-                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-700">
-                                                    Verification Upload
-                                                </span>
-                                            </div>
-
-                                            <h3 className="mt-3 text-2xl font-black tracking-tight text-zinc-900">
-                                                Upload Receipt
-                                            </h3>
-
-                                            <p className="mt-1 text-sm font-medium text-zinc-500">
-                                                Upload your payment screenshot for verification.
-                                            </p>
+                                    {/* Compact Header */}
+                                    <div className="text-center">
+                                        <div className="mx-auto mb-2 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                                            <Receipt className="h-5 w-5" />
                                         </div>
+                                        <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600">
+                                            Verification
+                                        </p>
+                                        <h3 className="mt-1 text-xl font-black tracking-tight">
+                                            Upload Receipt
+                                        </h3>
+                                        <p className="mt-1 text-xs font-medium text-zinc-500 max-w-xs mx-auto leading-normal">
+                                            Upload the payment screenshot to verify your investment.
+                                        </p>
+                                    </div>
 
-                                        {/* Upload Area */}
-                                        <div className="space-y-3">
-                                            <label
-                                                className="
-                        relative block overflow-hidden
-                        rounded-[24px]
-                        border-2 border-dashed border-zinc-200
-                        bg-zinc-50/70
-                        transition-all duration-300
-                        hover:border-emerald-300
-                        hover:bg-emerald-50/30
-                        cursor-pointer
-                    "
-                                            >
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={handleReceiptUpload}
-                                                    className="absolute inset-0 opacity-0 cursor-pointer"
-                                                    disabled={isUploading}
+                                    {/* Streamlined Upload Area */}
+                                    <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 p-3">
+                                        {!receiptUrl ? (
+                                            <div className="space-y-2 text-center">
+                                                <CloudinaryUpload
+                                                    buttonText="Upload Screenshot"
+                                                    onUpload={(url) => setReceiptUrl(url)}
                                                 />
-
-                                                {/* Uploaded Preview */}
-                                                {receiptUrl ? (
-                                                    <div className="relative">
-                                                        <img
-                                                            src={receiptUrl}
-                                                            alt="Receipt Preview"
-                                                            className="
-                                    h-56 w-full object-cover
-                                "
-                                                        />
-
-                                                        {/* Overlay */}
-                                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg">
-                                                                    <CheckCircle2 className="h-4 w-4" />
-                                                                </div>
-
-                                                                <div>
-                                                                    <p className="text-xs font-black uppercase tracking-[0.18em] text-white">
-                                                                        Receipt Uploaded
-                                                                    </p>
-
-                                                                    <p className="text-[11px] text-zinc-200">
-                                                                        Ready for verification
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
-                                                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-emerald-600 shadow-sm">
-                                                            {isUploading ? (
-                                                                <Loader2 className="h-6 w-6 animate-spin" />
-                                                            ) : (
-                                                                <UploadCloud className="h-6 w-6" />
-                                                            )}
-                                                        </div>
-
-                                                        <div className="mt-4 space-y-1">
-                                                            <p className="text-sm font-bold text-zinc-800">
-                                                                {isUploading
-                                                                    ? "Uploading Receipt..."
-                                                                    : "Tap to upload receipt"}
-                                                            </p>
-
-                                                            <p className="text-xs text-zinc-500">
-                                                                PNG, JPG up to 5MB
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </label>
-
-                                            {/* Status Card */}
-                                            {receiptUrl && (
-                                                <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3">
-                                                    <div className="flex items-start gap-3">
-                                                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-600 shadow-sm">
-                                                            <CheckCircle2 className="h-4 w-4" />
-                                                        </div>
-
-                                                        <div>
-                                                            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-emerald-700">
-                                                                Upload Complete
-                                                            </p>
-
-                                                            <p className="mt-1 text-xs leading-relaxed text-emerald-900/80">
-                                                                Your payment receipt has been securely
-                                                                attached and is ready for verification.
-                                                            </p>
-                                                        </div>
+                                                <p className="text-[10px] text-zinc-400 font-medium">
+                                                    JPG, PNG formats supported
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                <div className="relative overflow-hidden rounded-xl border border-zinc-100 bg-white">
+                                                    <img
+                                                        src={receiptUrl}
+                                                        alt="Receipt"
+                                                        className="h-40 w-full object-cover"
+                                                    />
+                                                    <div className="absolute right-2 top-2 rounded-full bg-emerald-500 p-1.5 text-white shadow-md">
+                                                        <CheckCircle2 className="h-3.5 w-3.5 stroke-[2.5]" />
                                                     </div>
                                                 </div>
-                                            )}
-                                        </div>
 
-                                        {/* CTA */}
-                                        <Button
-                                            disabled={!receiptUrl || isUploading}
-                                            onClick={handleSubmitInvestment}
-                                            className="
-                    h-12 w-full rounded-2xl
-                    bg-zinc-900
-                    text-xs font-black uppercase
-                    tracking-[0.2em]
-                    text-white
-                    shadow-lg shadow-zinc-900/10
-                    transition-all duration-300
-                    hover:bg-zinc-800
-                    disabled:pointer-events-none
-                    disabled:opacity-40
-                "
-                                        >
-                                            {isUploading ? (
-                                                <>
-                                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                    Uploading...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    Submit Investment
-                                                    <ArrowRight className="ml-2 h-4 w-4" />
-                                                </>
-                                            )}
-                                        </Button>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="w-full h-9 rounded-xl border-zinc-200 text-xs font-semibold"
+                                                    onClick={() => setReceiptUrl(null)}
+                                                >
+                                                    Replace Receipt
+                                                </Button>
+                                            </div>
+                                        )}
                                     </div>
+
+                                    {/* Compact Info Banner */}
+                                    <div className="rounded-xl border border-amber-100 bg-amber-50/70 p-2.5">
+                                        <div className="flex items-center gap-2">
+                                            <AlertCircle className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                                            <p className="text-[11px] font-medium leading-normal text-amber-900">
+                                                Verification usually takes a 1-2 business days.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Optimized Submit Button */}
+                                    <Button
+                                        disabled={!receiptUrl || isUploading}
+                                        onClick={handleSubmitInvestment}
+                                        className="h-11 w-full rounded-xl bg-zinc-950 text-xs font-bold uppercase tracking-wider text-white disabled:opacity-40 transition-all"
+                                    >
+                                        {isUploading ? (
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                <span>Submitting...</span>
+                                            </div>
+                                        ) : (
+                                            "Submit Investment"
+                                        )}
+                                    </Button>
                                 </motion.div>
                             )}
-
-                            {/* STEP 6: SUCCESS */}
+                            {/* STEP 4: SUCCESS */}
                             {step === "SUCCESS" && (
                                 <motion.div
                                     key="step-success"
                                     {...fadeConfig}
-                                    className="relative overflow-hidden rounded-[2rem] border border-emerald-100 bg-gradient-to-b from-white to-emerald-50/40 p-6 text-center shadow-xl shadow-emerald-100/40"
+                                    className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-b from-white to-emerald-50/30 p-4 sm:p-6 text-center shadow-xl shadow-emerald-100/40"
                                 >
-                                    {/* Background Glow */}
-                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_45%)]" />
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.08),transparent_50%)] pointer-events-none" />
 
-                                    <div className="relative z-10 space-y-6">
-                                        {/* Animated Badge */}
-                                        <div className="mx-auto flex w-fit items-center gap-3 rounded-2xl border border-amber-200 bg-white px-4 py-3 shadow-sm">
-                                            <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
-                                                <span className="absolute h-full w-full animate-ping rounded-full bg-amber-300 opacity-30" />
-
-                                                <Loader2 className="relative z-10 h-5 w-5 animate-spin text-amber-600" />
+                                    <div className="relative z-10 space-y-4">
+                                        {/* Minimal Verification Pill */}
+                                        <div className="mx-auto flex w-fit items-center gap-2.5 rounded-xl border border-amber-200/70 bg-white p-2 pr-3 shadow-sm">
+                                            <div className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-50">
+                                                <span className="absolute h-full w-full animate-ping rounded-full bg-amber-200 opacity-40" />
+                                                <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-600" />
                                             </div>
-
-                                            <div className="text-left">
-                                                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-600">
-                                                    Verification Pending
-                                                </p>
-
-                                                <p className="mt-1 text-xs font-semibold text-zinc-500">
-                                                    Investment under admin review
-                                                </p>
+                                            <div className="text-left leading-tight">
+                                                <p className="text-[9px] font-black uppercase tracking-wider text-amber-600">Verification Pending</p>
+                                                <p className="text-[11px] font-medium text-zinc-500">Under admin review</p>
                                             </div>
                                         </div>
 
                                         {/* Success Icon */}
-                                        <div className="relative mx-auto flex h-24 w-24 items-center justify-center">
-                                            <div className="absolute inset-0 rounded-full bg-emerald-500/10 blur-2xl" />
-
-                                            <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-emerald-200 bg-white shadow-lg">
-                                                <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                                        <div className="relative mx-auto flex h-16 w-16 items-center justify-center">
+                                            <div className="absolute inset-0 rounded-full bg-emerald-500/10 blur-xl" />
+                                            <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-100 bg-white shadow-md text-emerald-500">
+                                                <CheckCircle2 className="h-7 w-7 stroke-[2.5]" />
                                             </div>
                                         </div>
 
-                                        {/* Content */}
-                                        <div className="space-y-3">
-                                            <div className="space-y-1">
-                                                <h3 className="text-3xl font-black tracking-tight text-zinc-900">
-                                                    Investment Submitted
-                                                </h3>
+                                        {/* Typography */}
+                                        <div className="space-y-1">
+                                            <h3 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-900">Investment Submitted</h3>
+                                            <p className="text-xs font-medium text-zinc-500 max-w-xs mx-auto leading-normal">
+                                                Your request is in the queue and will be active shortly.
+                                            </p>
+                                        </div>
 
-                                                <p className="text-sm font-medium leading-relaxed text-zinc-500 max-w-sm mx-auto">
-                                                    Your passive investment request has been securely added
-                                                    to the verification queue and will be activated shortly.
-                                                </p>
+                                        {/* Compact Details Card with Transaction ID */}
+                                        <div className="mx-auto max-w-xs rounded-xl border border-zinc-100 bg-white/90 p-3 text-xs shadow-sm space-y-2 font-medium">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-zinc-400 font-semibold uppercase tracking-wider text-[10px]">Txn ID</span>
+                                                <span className="font-mono text-zinc-700 tracking-tight selection:bg-emerald-200">
+                                                    {transactionId || "NA"}
+                                                </span>
                                             </div>
-
-                                            {/* Investment Summary */}
-                                            <div className="mx-auto max-w-xs rounded-2xl border border-zinc-100 bg-white/80 backdrop-blur p-4 shadow-sm">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                                                        Invested Amount
-                                                    </span>
-
-                                                    <span className="font-mono text-lg font-black text-emerald-600">
-                                                        ₹{amount}
-                                                    </span>
-                                                </div>
-
-                                                <div className="mt-3 flex items-center justify-between border-t border-zinc-100 pt-3">
-                                                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                                                        Status
-                                                    </span>
-
-                                                    <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-700 border border-amber-200">
-                                                        Pending
-                                                    </span>
-                                                </div>
+                                            <div className="flex items-center justify-between border-t border-zinc-100 pt-2">
+                                                <span className="text-zinc-400 font-semibold uppercase tracking-wider text-[10px]">Amount</span>
+                                                <span className="font-mono text-base font-bold text-emerald-600">₹{amount}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between border-t border-zinc-100 pt-2">
+                                                <span className="text-zinc-400 font-semibold uppercase tracking-wider text-[10px]">Status</span>
+                                                <span className="rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200/50">Pending</span>
                                             </div>
                                         </div>
 
-
+                                        {/* Primary Action */}
+                                        <Button
+                                            onClick={() => {
+                                                setInvestOpen(false);
+                                                window.location.reload();
+                                            }}
+                                            className="h-10 w-full bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
+                                        >
+                                            Close Panel
+                                        </Button>
                                     </div>
                                 </motion.div>
                             )}
 
                         </AnimatePresence>
                     </DialogContent>
-
                 </Dialog>
 
             </div>

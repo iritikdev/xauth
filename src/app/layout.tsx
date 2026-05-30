@@ -8,6 +8,7 @@ import QueryProvider from "@/components/providers/query-provider";
 import AppLoader from "@/components/ui/Loader";
 import SessionWatcher from "@/components/SessionWatcher";
 import ShutdownPage from "@/components/home/Shutdown";
+import Script from "next/script";
 
 // Inter for body, Manrope for premium headlines
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -111,6 +112,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </AppLoader>
           </SessionProvider>
         </QueryProvider>
+        <Script
+          src="https://upload-widget.cloudinary.com/global/all.js"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
