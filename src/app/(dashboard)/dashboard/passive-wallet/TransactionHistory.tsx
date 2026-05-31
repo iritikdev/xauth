@@ -32,8 +32,6 @@ export default function TransactionHistory({ userId }: TransactionHistoryProps) 
         }
     }, [userId])
 
-    console.log("Transaction history data:", transactions)
-
     return (
         <Card className="rounded-[28px] border border-zinc-200/80 bg-white shadow-sm overflow-hidden text-zinc-900">
             {/* Header section */}

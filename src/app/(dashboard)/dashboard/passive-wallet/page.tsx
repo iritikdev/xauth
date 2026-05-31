@@ -270,6 +270,7 @@ export default function PassiveWalletPage() {
                                 </div>
                             </div>
                         </DialogHeader>
+                        <div className = "no-scrollbar max-h-[70vh] overflow-y-auto">
                         <AnimatePresence mode="wait">
 
                             {/* STEP 1: AMOUNT INPUT */}
@@ -560,6 +561,7 @@ export default function PassiveWalletPage() {
                             )}
 
                         </AnimatePresence>
+                        </div>
                     </DialogContent>
                 </Dialog>
 
