@@ -175,6 +175,12 @@ export const ADMIN_SIDEBAR = {
       ],
     },
     {
+      title: "Passive Wallet",
+      url: "/admin/p-wallet",
+      icon: "Coins", // Suggestion: Use "Wallet" icon if available
+      
+    },
+    {
       title: "Finances & Payouts",
       url: "#",
       icon: "Wallet",

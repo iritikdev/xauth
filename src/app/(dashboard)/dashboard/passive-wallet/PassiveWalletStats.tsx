@@ -52,13 +52,15 @@ export default function PassiveWalletGrid({ userId, onWithdrawClick, onInvestCli
     const totalWithdrawn = metrics?.totalWithdrawn ?? 0
     const totalIncome = metrics?.totalIncome ?? 0
     // const availableBalance = metrics?.availableBalance ?? 0
-const availableBalance =
-  (metrics?.totalInvested ?? 0) +
-  (metrics?.totalIncome ?? 0) -
-  (metrics?.totalWithdrawn ?? 0);
+    const availableBalance =
+        (metrics?.totalInvested ?? 0) +
+        (metrics?.totalIncome ?? 0) -
+        (metrics?.totalWithdrawn ?? 0);
+
+    console.log(metrics) // Debug log to inspect the structure of metrics data
     return (
         <div className="space-y-6 text-zinc-900">
-            
+
             {/* Main Wallet Card (Available Balance) */}
             <Card className="overflow-hidden rounded-[32px] border-0 bg-zinc-950 text-white shadow-xl relative">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.15),transparent_45%)] pointer-events-none" />
@@ -70,7 +72,7 @@ const availableBalance =
                                 Amaze Passive Wallet
                             </div>
                             <h1 className="text-4xl font-black tracking-tight md:text-5xl font-mono">
-                                ₹{availableBalance.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                ₹{metrics?.availableBalance.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </h1>
                             <p className="text-xs text-zinc-400 font-medium">
                                 Available balance clear for immediate withdrawal
@@ -101,7 +103,7 @@ const availableBalance =
 
             {/* Sub-Metrics Breakdown Grid */}
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                
+
                 {/* Metric 1: Total Investment */}
                 <Card className="rounded-[24px] border border-zinc-200/80 bg-white shadow-sm hover:shadow-md transition-shadow">
                     <CardContent className="flex items-center gap-4 p-5">

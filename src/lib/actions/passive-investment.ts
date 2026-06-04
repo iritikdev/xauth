@@ -108,6 +108,7 @@ export interface TransactionUI {
     amount: string
     status: string
     date: string
+    maturesAt?: string
     type: "credit" | "debit"
 }
 
@@ -145,6 +146,7 @@ export async function getInvestmentTransactions(userId: string): Promise<Transac
                 amount: `₹${invest.amount.toLocaleString("en-IN")}`,
                 status: invest.status,
                 date: formattedDate,
+                maturesAt: new Date(invest.maturesAt?.getTime() || 0).toISOString(), // Assuming a fixed 30-day maturity period for demo purposes
                 // Adjust type to 'debit' if you track this as a deduction from main wallet balance
                 type: "credit", 
             }

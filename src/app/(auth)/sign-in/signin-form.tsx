@@ -83,34 +83,63 @@ const SignInForm = () => {
       <AnimatePresence>
         {isPending && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center p-8 text-center"
-          >
-            <div className="relative mb-10">
-              <div className="absolute inset-0 bg-emerald-100 rounded-full blur-3xl animate-pulse" />
-              <img src="/logo.png" className="w-20 h-20 relative z-10" alt="Logo" />
-              <div className="absolute -inset-4 border-2 border-dashed border-emerald-500/20 rounded-full animate-[spin_15s_linear_infinite]" />
-            </div>
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-50/90 px-6 backdrop-blur-xl selection:bg-emerald-500/10"
+    >
+      {/* Subtle Ambient Background Radial Light */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.04),transparent_65%)] pointer-events-none" />
 
+      <div className="relative z-10 w-full max-w-sm text-center">
+        {/* Premium Brand Container */}
+        <div className="mb-6 flex justify-center">
+          <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-200/60 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <img
+              src="/logo.png"
+              alt="Amaze Logo"
+              className="h-9 w-9 object-contain"
+            />
+          </div>
+        </div>
+
+        {/* Text Messaging Pipeline */}
+        <div className="space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600">
+            Amaze Ayurveda Pvt. Ltd.
+          </p>
+          <h2 className="text-xl font-black tracking-tight text-zinc-900 sm:text-2xl">
+            Preparing your dashboard
+          </h2>
+          <div className="mx-auto max-w-xs min-h-[40px] flex items-center justify-center">
+            <p className="text-xs font-medium leading-relaxed text-zinc-400">
+              {randomTip || "Securing your connection..."}
+            </p>
+          </div>
+        </div>
+
+        {/* Minimal High-End Loader Indicator */}
+        <div className="mt-8 max-w-[240px] mx-auto">
+          <div className="relative h-1 w-full overflow-hidden rounded-full bg-zinc-200/80">
             <motion.div
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="max-w-xs space-y-4"
-            >
-              <div className="flex items-center justify-center gap-2 mb-2">
-                 <Sparkles size={14} className="text-emerald-500 animate-pulse" />
-                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600/60">Amaze Intelligence</span>
-              </div>
-              <p className="text-xl font-serif italic text-slate-900 leading-tight">"{randomTip}"</p>
-              
-              <div className="pt-6 flex flex-col items-center gap-2">
-                <Loader2 className="w-5 h-5 animate-spin text-emerald-600" />
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Encrypting Session...</span>
-              </div>
-            </motion.div>
-          </motion.div>
+              initial={{ left: "-100%", width: "50%" }}
+              animate={{ left: "100%", width: "30%" }}
+              transition={{
+                repeat: Infinity,
+                duration: 1.4,
+                ease: "easeInOut",
+              }}
+              className="absolute h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
+            />
+          </div>
+
+          <p className="mt-3 text-[11px] font-bold uppercase tracking-widest text-zinc-400/80 font-mono">
+            Loading
+          </p>
+        </div>
+      </div>
+    </motion.div>
         )}
       </AnimatePresence>
 
@@ -156,7 +185,7 @@ const SignInForm = () => {
                 <FormItem className="space-y-1.5">
                   <div className="flex justify-between items-center px-1">
                     <FormLabel className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
-                      Security Key
+                      Password
                     </FormLabel>
                     <Link href="/forgot-password"  className="text-[9px] font-black uppercase text-emerald-600 tracking-tighter hover:underline">
                       Reset?
@@ -207,7 +236,7 @@ const SignInForm = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <span>Login To Dashboard</span>
+                  <span>Login</span>
                   <ChevronRight size={14} strokeWidth={3} />
                 </div>
               )}

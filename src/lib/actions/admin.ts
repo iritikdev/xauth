@@ -175,3 +175,114 @@ export async function updateUserPassword(userId: string, newPassword: string) {
   }
 }
 
+
+
+export interface AdminInvestmentData {
+  id: string
+  userName: string
+  userEmail: string
+  amount: number
+  transactionId: string
+  receiptUrl: string | null
+  status: "PENDING" | "COMPLETED" | "REJECTED"
+  createdAt: string
+  maturesAt: string | null
+}
+
+export async function getAdminInvestmentList(): Promise<AdminInvestmentData[]> {
+  try {
+    // यहाँ आप अपनी ऑथेंटिकेशन चेक लगा सकते हैं (e.g., check if user.role === 'ADMIN')
+
+    const investments = await prisma.passiveInvestment.findMany({
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+
+    return investments.map((inv) => ({
+      id: inv.id,
+      userName: inv.user?.name || "Unknown User",
+      userEmail: inv.user?.email || "No Email",
+      amount: inv.amount,
+      transactionId: inv.transactionId || "N/A",
+      receiptUrl: inv.receiptUrl,
+      status: inv.status as "PENDING" | "COMPLETED" | "REJECTED",
+      createdAt: new Date(inv.createdAt).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+      maturesAt: inv.maturesAt
+        ? new Date(inv.maturesAt).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })
+        : null,
+    }))
+  } catch (error) {
+    console.error("Admin fetch error:", error)
+    return []
+  }
+}
+
+export async function activateInvestmentAndSetLockIn(investmentId: string) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      
+      // 1. आज की तारीख और आज से 30 दिन बाद की तारीख निकालें
+      const activatedAt = new Date()
+      const maturesAt = new Date()
+      maturesAt.setDate(activatedAt.getDate() + 30) // 💡 30 दिन का लॉक-इन पीरियड
+
+      // 2. Investment अपडेट करें
+      const updatedInvestment = await tx.passiveInvestment.update({
+        where: { id: investmentId },
+        data: {
+          status: "VERIFIED", // या ACTIVATED जो भी आपके पास Enum हो
+          activatedAt,
+          maturesAt,
+        },
+      })
+
+      // 3. वॉलेट के 'totalInvested' को बढ़ाएं (availableBalance को अभी नहीं छुएंगे)
+      await tx.passiveWallet.update({
+        where: { id: updatedInvestment.passiveWalletId },
+        data: {
+          totalInvested: {
+            increment: updatedInvestment.amount,
+          },
+        },
+      })
+
+      return { success: true, maturesAt }
+    })
+  } catch (error) {
+    console.error("Activation failed:", error)
+    return { success: false, error: "Failed to activate investment" }
+  }
+}
+
+export async function rejectInvestment(investmentId: string, remarks?: string) {
+  console.log("Rejecting Investment ID:", investmentId)
+  try {
+    const updatedInvestment = await prisma.passiveInvestment.update({
+      where: { id: investmentId },
+      data: {
+        status: "REJECTED", // सुनिश्चित करें कि आपके Prisma Enum में REJECTED मौजूद है
+        remarks: remarks || "Declined by administrator during verification.",
+      },
+    })
+
+    return { success: true, status: updatedInvestment.status }
+  } catch (error) {
+    console.error("Rejection failed:", error)
+    return { success: false, error: "Failed to reject investment request" }
+  }
+}

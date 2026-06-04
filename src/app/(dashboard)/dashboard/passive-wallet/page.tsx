@@ -179,7 +179,6 @@ export default function PassiveWalletPage() {
                 {/* Wallet Card */}
 
 
-
                 <PassiveWalletStats
                     userId={session?.user!.id}
                     onInvestClick={() => setInvestOpen(true)}

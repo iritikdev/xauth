@@ -307,6 +307,7 @@ model PassiveInvestment {
 
   verifiedAt DateTime?
   activatedAt DateTime?
+  maturesAt DateTime?
 
   remarks String?
 
