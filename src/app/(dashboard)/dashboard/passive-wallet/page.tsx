@@ -41,6 +41,7 @@ import CloudinaryUpload from "./CloudinaryUpload"
 import TransactionHistory from "./TransactionHistory"
 import { useSession } from "next-auth/react"
 import PassiveWalletStats from "./PassiveWalletStats"
+import InvestmentDisclaimerModal from "./InvestmentDisclaimerModal"
 
 type FlowStep = "AMOUNT_INPUT" | "QR_PAYMENT" | "RECEIPT_UPLOAD" | "SUCCESS";
 
@@ -173,6 +174,9 @@ export default function PassiveWalletPage() {
     }
 
     return (
+        <>
+            <InvestmentDisclaimerModal />
+        
         <div className="min-h-screen text-zinc-900 selection:bg-emerald-500/30">
             <div className="mx-auto max-w-5xl space-y-6">
 
@@ -566,6 +570,8 @@ export default function PassiveWalletPage() {
 
             </div>
         </div>
+
+        </>
     )
 }
 
