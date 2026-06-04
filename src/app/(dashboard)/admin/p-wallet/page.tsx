@@ -127,7 +127,12 @@ export default function AdminInvestmentList() {
                     <span>Created:</span>
                     <span>{item.createdAt}</span>
                   </div>
-                  {item.status === "COMPLETED" && item.maturesAt && (
+                
+                </div>
+
+                <div className="bg-zinc-50 rounded-xl p-2.5 text-[11px] space-y-1 font-medium text-zinc-500">
+                  
+                  {item.maturesAt && (
                     <div className="flex justify-between text-emerald-700 font-semibold">
                       <span className="flex items-center gap-1">🔒 Lock-in Until:</span>
                       <span>{item.maturesAt}</span>
