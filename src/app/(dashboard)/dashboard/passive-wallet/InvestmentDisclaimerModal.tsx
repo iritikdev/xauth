@@ -72,10 +72,10 @@ export default function InvestmentDisclaimerModal({ isOpen = true, onAccept }: D
                 Your invested principal amount is intended to remain secure; however, the profit amount depends on the company's business performance and profitability.
               </p>
               <p className="bg-white border border-zinc-200/60 rounded-lg p-2 text-[11px] font-semibold text-zinc-700">
-                ⚠️ The expected return range of <strong className="text-emerald-600 font-mono font-bold">2% to 10% per month</strong> is indicative only and is <span className="underline decoration-rose-400">not guaranteed</span>.
+                ⚠️ The expected return <strong className="text-emerald-600 font-mono font-bold">upto 10% per month</strong> is indicative only.
               </p>
               <p>
-                Investments are subject to business and market risks. The company shall not be liable for any losses arising from unforeseen market, operational, or regulatory circumstances.
+                Investments are subject to business and market risks. The company shall not be liable for any losses on profits arising from unforeseen market, operational, or regulatory circumstances.
               </p>
             </TabsContent>
 
@@ -84,10 +84,10 @@ export default function InvestmentDisclaimerModal({ isOpen = true, onAccept }: D
                  आपकी निवेश की गई मूल राशि (Principal Amount) सुरक्षित रखने का पूरा प्रयास किया जाता है, किन्तु लाभ की राशि कंपनी के व्यावसायिक प्रदर्शन एवं लाभ पर निर्भर करेगी।
               </p>
               <p className="bg-white border border-zinc-200/60 rounded-lg p-2 text-[11px] font-semibold text-zinc-700">
-                ⚠️ प्रतिमाह <strong className="text-emerald-600 font-mono font-bold">2% से 10% तक लाभ</strong> केवल संभावित है, इसकी <span className="underline decoration-rose-400">कोई गारंटी नहीं है</span>।
+                ⚠️ प्रतिमाह <strong className="text-emerald-600 font-mono font-bold">10% तक लाभ</strong> संभावित है।
               </p>
               <p>
-                निवेश व्यावसायिक एवं बाज़ार जोखिमों के अधीन है। अप्रत्याशित व्यावसायिक, बाज़ार अथवा नियामकीय परिस्थितियों से होने वाली किसी भी हानि के लिए कंपनी उत्तरदायी नहीं होगी।
+                निवेश व्यावसायिक एवं बाज़ार जोखिमों के अधीन है। अप्रत्याशित व्यावसायिक, बाज़ार अथवा नियामकीय परिस्थितियों से होने वाली किसी भी लाभ पर हानि के लिए कंपनी उत्तरदायी नहीं होगी।
               </p>
             </TabsContent>
           </div>
