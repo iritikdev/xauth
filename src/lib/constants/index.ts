@@ -24,6 +24,7 @@ import {
   Lock,
 } from "lucide-react";
 
+ const baseDashboardUrl = "/distributor/dashboard"
 
 export const DASHBOARD_SIDEBAR = {
   
@@ -32,19 +33,19 @@ export const DASHBOARD_SIDEBAR = {
     {
       title: "Overview",
       icon: "LayoutDashboard",
-      url: "/dashboard",
+      url: baseDashboardUrl,
       isActive: true, // Default active page
     },
   
     /* --- Financial Hub (High Priority) --- */
     {
       title: "My E-Wallet",
-      url: "/dashboard/wallet",
+      url: baseDashboardUrl + "/wallet",
       icon: "Wallet", // Suggestion: Use "Wallet" icon if available
     },
     {
       title: "Passive Wallet",
-      url: "/dashboard/passive-wallet",
+      url: baseDashboardUrl + "/passive-wallet",
       icon: "Coins", // Suggestion: Use "Wallet" icon if available
     },
   
@@ -56,12 +57,12 @@ export const DASHBOARD_SIDEBAR = {
       items: [
         {
           title: "Genealogy Tree",
-          url: "/dashboard/generology",
+          url: baseDashboardUrl + "/generology",
           icon: "Network",
         },
         {
           title: "Plan Calculator",
-          url: "/dashboard/businessPlanCalculator",
+          url: baseDashboardUrl + "/businessPlanCalculator",
           icon: "Calculator",
         },
       ],
@@ -75,12 +76,12 @@ export const DASHBOARD_SIDEBAR = {
       items: [
         {
           title: "Browse Products",
-          url: "/dashboard/store",
+          url: baseDashboardUrl + "/store",
           icon: "Store",
         },
         {
           title: "My Orders",
-          url: "/dashboard/orders",
+          url: baseDashboardUrl + "/orders",
           icon: "BaggageClaim",
         },
       ],
@@ -94,22 +95,22 @@ export const DASHBOARD_SIDEBAR = {
       items: [
         {
           title: "Account Profile",
-          url: "/dashboard/profile",
+          url: baseDashboardUrl + "/profile",
           icon: "User",
         },
         {
           title: "KYC Verification",
-          url: "/dashboard/kyc",
+          url: baseDashboardUrl + "/kyc",
           icon: "BadgeCheck",
         },
         {
           title: "Digital ID Card",
-          url: "/dashboard/id-card",
+          url: baseDashboardUrl + "/id-card",
           icon: "Contact2",
         },
         {
           title: "Welcome Letter",
-          url: "/dashboard/welcome-letter",
+          url: baseDashboardUrl + "/welcome-letter",
           icon: "FileText",
         },
       ],
@@ -123,7 +124,7 @@ export const DASHBOARD_SIDEBAR = {
       items: [
         {
           title: "Change Password",
-          url: "/dashboard/updatePassword",
+          url: baseDashboardUrl + "/updatePassword",
           icon: "KeyRound",
         },
       ],
@@ -133,7 +134,7 @@ export const DASHBOARD_SIDEBAR = {
     { title: "Help Center", url: "#", icon: "LifeBuoy" },
     { title: "Send Feedback", url: "#", icon: "Send" },
   ],
-  marketing: [{ name: "Marketing Kit", url: "/dashboard/kit", icon: "Coins" }],
+  marketing: [{ name: "Marketing Kit", url: baseDashboardUrl + "/kit", icon: "Coins" }],
 };
 
 export const ADMIN_SIDEBAR = {

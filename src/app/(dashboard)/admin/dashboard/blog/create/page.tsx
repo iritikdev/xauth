@@ -25,7 +25,7 @@ import { createBlogPost } from "@/lib/actions/blog";
 
 
 // 1. Dynamic Import Fix: Ensure the path points to your MDX Editor component
-const MdxEditor = dynamic(() => import("@/app/(dashboard)/admin/blog/create/RichEditor"), { 
+const MdxEditor = dynamic(() => import("@/app/(dashboard)/admin/dashboard/blog/create/RichEditor"), { 
     ssr: false,
     loading: () => <div className="h-[400px] w-full bg-slate-50 animate-pulse rounded-[2rem] border border-dashed border-slate-200" />
 });

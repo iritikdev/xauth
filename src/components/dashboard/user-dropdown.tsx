@@ -31,6 +31,8 @@ export default function UserDropdown({ user }: UserDropdownProps) {
   const initials =
     user?.name?.substring(0, 2).toUpperCase() || "AU"
 
+  const baseDashboardUrl = "/distributor/dashboard"
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -79,7 +81,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         <DropdownMenuSeparator className="mx-2" />
 
         <DropdownMenuGroup className="p-1">
-          <Link href="/dashboard">
+          <Link href={baseDashboardUrl}>
             <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
               <LayoutDashboard className="mr-3 h-4 w-4 text-slate-400" />
               <span className="text-xs font-bold text-slate-700">
@@ -88,7 +90,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             </DropdownMenuItem>
           </Link>
 
-          <Link href="/dashboard/kycVerification">
+          <Link href={baseDashboardUrl + "/kycVerification"}>
             <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
               <ShieldCheck className="mr-3 h-4 w-4 text-emerald-500" />
               <span className="text-xs font-bold text-slate-700">
@@ -97,7 +99,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             </DropdownMenuItem>
           </Link>
 
-          <Link href="/dashboard/wallet">
+          <Link href={baseDashboardUrl + "/wallet"}>
             <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
               <Wallet className="mr-3 h-4 w-4 text-orange-500" />
               <span className="text-xs font-bold text-slate-700">
@@ -106,7 +108,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             </DropdownMenuItem>
           </Link>
 
-          <Link href="/dashboard/updatePassword">
+          <Link href={baseDashboardUrl + "/updatePassword"}>
             <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5">
               <Key className="mr-3 h-4 w-4 text-orange-500" />
               <span className="text-xs font-bold text-slate-700">

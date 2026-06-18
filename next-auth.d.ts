@@ -10,7 +10,7 @@ declare module "next-auth" {
       mobile: string
       photoUrl: string | null; // Allow null to match Prisma
       expiresAt?: number;
-      // role: Role; // Use the actual Enum type from Prisma
+      role: Role; // Use the actual Enum type from Prisma
     } & DefaultSession["user"]
   }
 
@@ -20,7 +20,7 @@ declare module "next-auth" {
     mobile: string
     photoUrl: string | null;
     expiresAt?: number;
-    // role: Role;
+    role: Role;
   }
 }
 
@@ -31,6 +31,6 @@ declare module "next-auth/jwt" {
     mobile: string
     photoUrl: string | null;
     expiresAt?: number;
-    // role: Role;
+    role: Role;
   }
 }

@@ -23,6 +23,8 @@ enum Rank {
 enum Role {
   USER
   ADMIN
+  DISTRIBUTOR
+  FRANCHISE
 }
 
 model User {
@@ -35,7 +37,7 @@ model User {
   photoUrl   String?
   rank      Rank     @default(USER)
 
-  role Role @default(USER)
+  role Role @default(DISTRIBUTOR)
 
   kycDocument KycDocument?
   Wallet      Wallet?

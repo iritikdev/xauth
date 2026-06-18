@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Plus } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 import { DataTable } from "@/components/data-table";
 import { blogColumns } from "./columns";
 import { PageHeader } from "@/components/admin/page-header";
