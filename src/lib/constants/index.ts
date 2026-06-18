@@ -176,8 +176,25 @@ export const ADMIN_SIDEBAR = {
     },
     {
       title: "Passive Wallet",
-      url: "/admin/p-wallet",
-      icon: "Coins", // Suggestion: Use "Wallet" icon if available
+      url: "#",
+      icon: "Wallet", 
+      items: [
+        {
+          title: "Investor Wallets",
+          url: "/admin/investorsWallets",
+          icon: "PiggyBank",
+        },
+        {
+          title: "Investment Approvals",
+          url: "/admin/investmentApprovals",
+          icon: "BadgeCheck",
+        },
+        {
+          title: "Withdrawal Requests",
+          url: "/admin/investorWithdrawalRequests",
+          icon: "BadgeCheck",
+        },
+      ]
       
     },
     {
