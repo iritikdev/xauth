@@ -137,12 +137,14 @@ export const DASHBOARD_SIDEBAR = {
   marketing: [{ name: "Marketing Kit", url: baseDashboardUrl + "/kit", icon: "Coins" }],
 };
 
+const baseAdminUrl = "/admin/dashboard"
+
 export const ADMIN_SIDEBAR = {
   navMain: [
     {
       title: "Overview",
       icon: "LayoutDashboard",
-      url: "/admin",
+      url: baseAdminUrl,
       isActive: true,
     },
     {
@@ -150,12 +152,12 @@ export const ADMIN_SIDEBAR = {
       url: "#",
       icon: "Package",
       items: [
-        { title: "All Products", url: "/admin/products", icon: "Boxes" },
-        { title: "Add Product", url: "/admin/products/new", icon: "Boxes" },
-        { title: "Categories", url: "/admin/categories", icon: "Tags" },
+        { title: "All Products", url: baseAdminUrl + "/products", icon: "Boxes" },
+        { title: "Add Product", url: baseAdminUrl + "/products/new", icon: "Boxes" },
+        { title: "Categories", url: baseAdminUrl + "/categories", icon: "Tags" },
         {
           title: "Manage Orders",
-          url: "/admin/orders",
+          url: baseAdminUrl + "/orders",
           icon: "ReceiptIndianRupee",
         },
         
@@ -166,13 +168,13 @@ export const ADMIN_SIDEBAR = {
       url: "#",
       icon: "Users2",
       items: [
-        { title: "Partner Registry", url: "/admin/users", icon: "Users2" },
+        { title: "Distributors", url: baseAdminUrl + "/users", icon: "Users2" },
         {
           title: "KYC Approvals",
-          url: "/admin/kyc",
+          url: baseAdminUrl + "/kyc",
           icon: "ShieldCheck",
         },
-        // { title: "Genealogy Master", url: "/admin/genealogy", icon: "History" },
+        // { title: "Genealogy Master", url: baseAdminUrl + "/genealogy", icon: "History" },
       ],
     },
     {
@@ -182,17 +184,17 @@ export const ADMIN_SIDEBAR = {
       items: [
         {
           title: "Investor Wallets",
-          url: "/admin/investorsWallets",
+          url: baseAdminUrl + "/investorsWallets",
           icon: "PiggyBank",
         },
         {
           title: "Investment Approvals",
-          url: "/admin/investmentApprovals",
+          url: baseAdminUrl + "/investmentApprovals",
           icon: "BadgeCheck",
         },
         {
           title: "Withdrawal Requests",
-          url: "/admin/investorWithdrawalRequests",
+          url: baseAdminUrl + "/investorWithdrawalRequests",
           icon: "BadgeCheck",
         },
       ]
@@ -205,16 +207,16 @@ export const ADMIN_SIDEBAR = {
       items: [
         {
           title: "Payout Requests",
-          url: "/admin/payouts",
+          url: baseAdminUrl + "/payouts",
           icon: "ReceiptIndianRupee",
         },
         {
           title: "Commission Logs",
-          url: "/admin/commissions",
+          url: baseAdminUrl + "/commissions",
           icon: "History",
         },
-        // { title: "Company Revenue", url: "/admin/revenue", icon: "TrendingUp" },
-        // { title: "Payouts", url: "/admin/payments", icon: "TrendingUp" },
+        // { title: "Company Revenue", url: baseAdminUrl + "/revenue", icon: "TrendingUp" },
+        // { title: "Payouts", url: baseAdminUrl + "/payments", icon: "TrendingUp" },
       ],
     },
     {
@@ -224,33 +226,33 @@ export const ADMIN_SIDEBAR = {
       items: [
         {
           title: "All Blog Posts",
-          url: "/admin/blog",
+          url: baseAdminUrl + "/blog",
           icon: "Library",
         },
         {
           title: "Create New Post",
-          url: "/admin/blog/create",
+          url: baseAdminUrl + "/blog/create",
           icon: "PlusCircle",
         },
         {
           title: "Categories",
-          url: "/admin/blog/categories",
+          url: baseAdminUrl + "/blog/categories",
           icon: "Tags",
         },
         {
           title: "Comments",
-          url: "/admin/blog/comments",
+          url: baseAdminUrl + "/blog/comments",
           icon: "MessageSquare",
         },
       ],
     },
   ],
   navSecondary: [
-    { title: "System Settings", url: "/admin/settings", icon: "Settings2" },
-    { title: "Support Tickets", url: "/admin/support", icon: "LifeBuoy" },
+    { title: "System Settings", url: baseAdminUrl + "/settings", icon: "Settings2" },
+    { title: "Support Tickets", url: baseAdminUrl + "/support", icon: "LifeBuoy" },
   ],
   marketing: [
-    { name: "Promotional Kits", url: "/admin/marketing", icon: "Send" },
+    { name: "Promotional Kits", url: baseAdminUrl + "/marketing", icon: "Send" },
   ],
 };
 
