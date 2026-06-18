@@ -184,7 +184,7 @@ export interface AdminInvestmentData {
   amount: number
   transactionId: string
   receiptUrl: string | null
-  status: "PENDING" | "COMPLETED" | "REJECTED"
+  status: "PENDING" | "COMPLETED" | "REJECTED" | "VERIFIED"
   createdAt: string
   maturesAt: string | null
 }
@@ -232,26 +232,69 @@ export async function getAdminInvestmentList(): Promise<AdminInvestmentData[]> {
   }
 }
 
-export async function activateInvestmentAndSetLockIn(investmentId: string) {
+// export async function activateInvestmentAndSetLockIn(investmentId: string, customMaturityDate: Date) {
+//   try {
+//     return await prisma.$transaction(async (tx) => {
+      
+//       // 1. आज की तारीख और आज से 30 दिन बाद की तारीख निकालें
+//       const activatedAt = new Date()
+//       const maturesAt = new Date()
+//       maturesAt.setDate(activatedAt.getDate() + 30) // 💡 30 दिन का लॉक-इन पीरियड
+
+//       // 2. Investment अपडेट करें
+//       const updatedInvestment = await tx.passiveInvestment.update({
+//         where: { id: investmentId },
+//         data: {
+//           status: "VERIFIED", // या ACTIVATED जो भी आपके पास Enum हो
+//           activatedAt,
+//           maturesAt,
+//         },
+//       })
+
+//       // 3. वॉलेट के 'totalInvested' को बढ़ाएं (availableBalance को अभी नहीं छुएंगे)
+//       await tx.passiveWallet.update({
+//         where: { id: updatedInvestment.passiveWalletId },
+//         data: {
+//           totalInvested: {
+//             increment: updatedInvestment.amount,
+//           },
+//         },
+//       })
+
+//       return { success: true, maturesAt }
+//     })
+//   } catch (error) {
+//     console.error("Activation failed:", error)
+//     return { success: false, error: "Failed to activate investment" }
+//   }
+// }
+
+export async function activateInvestmentAndSetLockIn(
+  investmentId: string, 
+  customMaturityDate: Date // 💡 एडमिन पैनल से चुनी गई तारीख यहाँ आएगी
+) {
+  console.log("Activating Investment ID:", investmentId, "with Maturity Date:", customMaturityDate)
+  
   try {
     return await prisma.$transaction(async (tx) => {
       
-      // 1. आज की तारीख और आज से 30 दिन बाद की तारीख निकालें
+      // 1. निवेश एक्टिवेशन का समय (Current Time)
       const activatedAt = new Date()
-      const maturesAt = new Date()
-      maturesAt.setDate(activatedAt.getDate() + 30) // 💡 30 दिन का लॉक-इन पीरियड
 
-      // 2. Investment अपडेट करें
+      // 2. सुरक्षा जांच: सुनिश्चित करें कि जो तारीख आ रही है वह एक वैध Date ऑब्जेक्ट है
+      const maturesAt = new Date(customMaturityDate)
+
+      // 3. PassiveInvestment रिकॉर्ड को अपडेट करें
       const updatedInvestment = await tx.passiveInvestment.update({
         where: { id: investmentId },
         data: {
-          status: "VERIFIED", // या ACTIVATED जो भी आपके पास Enum हो
+          status: "VERIFIED", // आपके Enum के अनुसार (VERIFIED / COMPLETED)
           activatedAt,
-          maturesAt,
+          maturesAt, // 💡 यहाँ एडमिन द्वारा चुनी गई (या डिफ़ॉल्ट +30 दिन वाली) तारीख सेव होगी
         },
       })
 
-      // 3. वॉलेट के 'totalInvested' को बढ़ाएं (availableBalance को अभी नहीं छुएंगे)
+      // 4. वॉलेट के 'totalInvested' काउंटर को सेफली बढ़ाएं (Race Conditions से बचने के लिए increment का उपयोग)
       await tx.passiveWallet.update({
         where: { id: updatedInvestment.passiveWalletId },
         data: {
@@ -261,11 +304,27 @@ export async function activateInvestmentAndSetLockIn(investmentId: string) {
         },
       })
 
-      return { success: true, maturesAt }
+      return { success: true, maturesAt: updatedInvestment.maturesAt }
     })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Activation failed:", error)
-    return { success: false, error: "Failed to activate investment" }
+    return { success: false, error: error?.message || "Failed to activate investment" }
+  }
+}
+
+export async function updateMaturityDate(investmentId: string, newMaturityDate: Date) {
+  console.log("Overriding Maturity Date for ID:", investmentId, "New Date:", newMaturityDate)
+  try {
+    const updated = await prisma.passiveInvestment.update({
+      where: { id: investmentId },
+      data: {
+        maturesAt: new Date(newMaturityDate),
+      },
+    })
+    return { success: true, maturesAt: updated.maturesAt }
+  } catch (error: any) {
+    console.error("Failed to update maturity date:", error)
+    return { success: false, error: error?.message || "Failed to update maturity date" }
   }
 }
 
