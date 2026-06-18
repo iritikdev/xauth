@@ -7,12 +7,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import UserInspectionSheet from "./UserInspectionSheet"
 
 export default function AdminWalletLedgerPage() {
     const [wallets, setWallets] = useState<AdminWalletListData[]>()
     const [filteredWallets, setFilteredWallets] = useState<AdminWalletListData[]>()
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
+    const [activeInspectWalletId, setActiveInspectWalletId] = useState<string | null>(null)
 
     const loadWalletLedger = async () => {
         setLoading(true)
@@ -52,6 +54,15 @@ export default function AdminWalletLedgerPage() {
             <div className="flex min-h-[400px] items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
             </div>
+        )
+    }
+
+    if (activeInspectWalletId) {
+        return (
+            <UserInspectionSheet
+                walletId={activeInspectWalletId}
+                onBack={() => setActiveInspectWalletId(null)}
+            />
         )
     }
 
@@ -136,8 +147,8 @@ export default function AdminWalletLedgerPage() {
                                 {/* Footer Details Sync Row */}
                                 <div className="flex items-center justify-between text-[11px] font-medium text-zinc-400">
                                     <span>Synced: {wallet.updatedAt}</span>
-                                    <Button variant="ghost" size="sm" className="h-7 rounded-lg text-xs font-bold text-zinc-600 px-2 hover:bg-zinc-100">
-                                        <Eye className="mr-1 h-3.5 w-3.5" /> Inspect
+                                    <Button onClick={() => setActiveInspectWalletId(wallet.id)} variant="ghost" size="sm" className="h-7 rounded-lg text-xs font-bold text-zinc-600 px-2 hover:bg-zinc-100">
+                                        <Eye className="mr-1 h-3.5 w-3.5" /> View
                                     </Button>
                                 </div>
 
@@ -189,7 +200,7 @@ export default function AdminWalletLedgerPage() {
                                         {wallet.updatedAt}
                                     </td>
                                     <td className="p-4 text-right">
-                                        <Button variant="ghost" size="sm" className="h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 text-xs font-semibold px-2.5">
+                                        <Button onClick={() => setActiveInspectWalletId(wallet.id)} variant="ghost" size="sm" className="h-8 rounded-lg border border-zinc-200 hover:bg-zinc-50 text-zinc-600 text-xs font-semibold px-2.5">
                                             <Eye className="h-3.5 w-3.5 text-zinc-400 mr-1" /> View User
                                         </Button>
                                     </td>
