@@ -285,15 +285,6 @@ const SignInForm = () => {
               )}
             </Button>
           </div>
-
-          {/* Trusted Badges */}
-          <div className="flex flex-col items-center gap-4 pt-4 border-t border-slate-100">
-             <div className="flex items-center gap-5 opacity-40 grayscale group-hover:grayscale-0 transition-all">
-                <ShieldCheck size={16} />
-                <div className="h-4 w-px bg-slate-300" />
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-500">End-to-End Encrypted</span>
-             </div>
-          </div>
         </form>
       </Form>
     </>
