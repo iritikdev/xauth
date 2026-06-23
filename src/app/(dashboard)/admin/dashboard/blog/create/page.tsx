@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { createBlogPost } from "@/lib/actions/blog";
+import { baseAdminUrl } from "@/lib/constants";
 
 
 
@@ -71,7 +72,7 @@ export default function CreateBlogPage() {
         toast.error(res.error);
       } else {
         toast.success("Article created successfully!");
-        router.push("/admin/blog");
+        router.push(`${baseAdminUrl}/blog`);
       }
     } catch (error) {
       toast.error("An unexpected error occurred");

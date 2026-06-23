@@ -17,6 +17,7 @@ import { ChangeSponsorModal } from "@/components/admin/ChangeSponsorModal";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { baseAdminUrl } from "@/lib/constants";
 
 export default async function UserProfilePage({ params }: { params: { username: string } }) {
   const { username } = await params;
@@ -242,7 +243,7 @@ export default async function UserProfilePage({ params }: { params: { username: 
           </Card>
         </div>
 
-        <Link href={`/admin/users/${user.username}/edit`}>
+        <Link href={`${baseAdminUrl}/users/${user.username}/edit`}>
         <Button
           variant="outline"
           className="rounded-xl border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 font-bold text-[10px] uppercase tracking-widest h-10 gap-2"

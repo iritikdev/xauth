@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { deletePost } from "@/lib/actions/blog";
+import { baseAdminUrl } from "@/lib/constants";
 
 export const CellAction = ({ data }: { data: any }) => {
   const router = useRouter();
@@ -38,7 +39,7 @@ export const CellAction = ({ data }: { data: any }) => {
         <DropdownMenuItem onClick={() => window.open(`/blog/${data.slug}`, "_blank")}>
           <ExternalLink className="mr-2 h-4 w-4 text-emerald-600" /> View Live
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push(`/admin/blog/edit/${data.id}`)}>
+        <DropdownMenuItem onClick={() => router.push(`${baseAdminUrl}/blog/edit/${data.id}`)}>
           <Edit className="mr-2 h-4 w-4 text-blue-600" /> Edit Details
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onDelete} className="text-red-600">

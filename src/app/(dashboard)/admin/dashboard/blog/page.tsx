@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { DataTable } from "@/components/data-table";
 import { blogColumns } from "./columns";
 import { PageHeader } from "@/components/admin/page-header";
+import { baseAdminUrl } from "@/lib/constants";
 export default async function AdminBlogPage() {
   // Database se fresh posts fetch karna
   const posts = await prisma.post.findMany();
@@ -14,7 +15,7 @@ export default async function AdminBlogPage() {
 
       <PageHeader
         title="Blog"
-        buttonLink="/admin/blog/create"
+        buttonLink={`${baseAdminUrl}/blog/create`}
         buttonText="Write New Post"
         description="Manage your Ayurveda training and business success stories."
         highlight="Articles"

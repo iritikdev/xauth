@@ -137,7 +137,7 @@ export const DASHBOARD_SIDEBAR = {
   marketing: [{ name: "Marketing Kit", url: baseDashboardUrl + "/kit", icon: "Coins" }],
 };
 
-const baseAdminUrl = "/admin/dashboard"
+export const baseAdminUrl = "/admin/dashboard"
 
 export const ADMIN_SIDEBAR = {
   navMain: [
