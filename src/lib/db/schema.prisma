@@ -35,7 +35,7 @@ model User {
   fatherName String?
   motherName String?
   photoUrl   String?
-  rank      Rank     @default(USER)
+  rank       Rank    @default(USER)
 
   role Role @default(DISTRIBUTOR)
 
@@ -43,7 +43,9 @@ model User {
   Wallet      Wallet?
 
   personalBv Float @default(0)
-  groupBv Float @default(0)
+  groupBv    Float @default(0)
+
+  addresses Address[]
 
   address  String?
   district String?
@@ -79,12 +81,49 @@ model User {
   orders       Order[]
   transactions Transaction[]
 
-
   // Passive Wallet
   passiveWallet      PassiveWallet?
   passiveInvestments PassiveInvestment[]
   passiveIncomes     PassiveIncome[]
   passiveWithdrawals PassiveWithdrawal[]
+}
+
+enum AddressType {
+  HOME
+  WORK
+  OTHER
+}
+
+model Address {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  receiverName   String
+  receiverMobile String
+
+  addressLine String
+
+  landmark String?
+
+  district String
+  state    String
+  pinCode  String
+
+  addressType AddressType @default(HOME)
+
+  isDefault Boolean @default(false)
+
+  latitude  Float?
+  longitude Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([pinCode])
+  @@index([district])
 }
 
 model Counter {
@@ -197,7 +236,7 @@ model Order {
   status        OrderStatus @default(PENDING)
   paymentStatus String      @default("UNPAID")
 
-  address String
+  address               String
   isCommissionProcessed Boolean @default(false)
 
   createdAt DateTime @default(now())
@@ -252,7 +291,6 @@ model Post {
   updatedAt  DateTime @updatedAt
 }
 
-
 // PASSIVE wALLET
 enum PassiveInvestmentStatus {
   PENDING
@@ -275,8 +313,8 @@ model PassiveWallet {
   userId String @unique @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
-  totalInvested Float @default(0)
-  totalIncome   Float @default(0)
+  totalInvested  Float @default(0)
+  totalIncome    Float @default(0)
   totalWithdrawn Float @default(0)
 
   availableBalance Float @default(0)
@@ -294,7 +332,7 @@ model PassiveInvestment {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
-  passiveWalletId String @db.ObjectId
+  passiveWalletId String        @db.ObjectId
   passiveWallet   PassiveWallet @relation(fields: [passiveWalletId], references: [id])
 
   amount Float
@@ -307,9 +345,9 @@ model PassiveInvestment {
 
   status PassiveInvestmentStatus @default(PENDING)
 
-  verifiedAt DateTime?
+  verifiedAt  DateTime?
   activatedAt DateTime?
-  maturesAt DateTime?
+  maturesAt   DateTime?
 
   remarks String?
 
@@ -325,7 +363,7 @@ model PassiveIncome {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
-  investmentId String @db.ObjectId
+  investmentId String            @db.ObjectId
   investment   PassiveInvestment @relation(fields: [investmentId], references: [id])
 
   amount Float
@@ -341,7 +379,7 @@ model PassiveWithdrawal {
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
-  passiveWalletId String @db.ObjectId
+  passiveWalletId String        @db.ObjectId
   passiveWallet   PassiveWallet @relation(fields: [passiveWalletId], references: [id])
 
   amount Float

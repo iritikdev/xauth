@@ -24,7 +24,7 @@ import {
   Lock,
 } from "lucide-react";
 
- const baseDashboardUrl = "/distributor/dashboard"
+ export const baseDashboardUrl = "/distributor/dashboard"
 
 export const DASHBOARD_SIDEBAR = {
   
@@ -83,6 +83,11 @@ export const DASHBOARD_SIDEBAR = {
           title: "My Orders",
           url: baseDashboardUrl + "/orders",
           icon: "BaggageClaim",
+        },
+        {
+          title: "Manage Addresses",
+          url: baseDashboardUrl + "/manage-address",
+          icon: "MapPin",
         },
       ],
     },

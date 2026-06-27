@@ -76,7 +76,7 @@ export function UserDashboardHeader() {
                     Amaze <span className="text-emerald-500">Ayurveda</span>
                   </span>
                   <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-[0.3em] mt-0.5">
-                    Associate Portal
+                    Distributor Portal
                   </span>
                 </div>
               </div>
