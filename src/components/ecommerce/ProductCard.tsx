@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Zap, Percent, Check, Plus } from "lucide-react";
+import { ShoppingCart, Zap, Percent, Check, Plus, Lock } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
+import { useSession } from "next-auth/react"
 import { cn } from "@/lib/utils";
 
 interface ProductProps {
@@ -24,6 +25,9 @@ interface ProductProps {
 export default function ProductCard({ product }: { product: ProductProps }) {
   const [addedFlash, setAddedFlash] = useState(false);
   const cart = useCart();
+
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   const catName = product.category?.name ?? product.categoryName ?? "Wellness";
   const netPrice = product.price - product.price * (product.discount / 100);
@@ -102,25 +106,45 @@ export default function ProductCard({ product }: { product: ProductProps }) {
           </Link>
         </div>
 
-        {/* Pricing & Add Button Row */}
         <div className="flex items-end justify-between gap-1 pt-1 border-t border-zinc-50">
-          <div>
-            {product.discount > 0 && (
-              <span className="text-[9px] font-medium text-zinc-400 line-through block leading-none">
-                ₹{product.price}
-              </span>
+          
+          {/* ✅ PRICE DISPLAY / BLUR ZONE */}
+          <div className="relative">
+            {isLoggedIn ? (
+              // 🟢 LOGGED IN: Display Actual Price
+              <>
+                {product.discount > 0 && (
+                  <span className="text-[9px] font-medium text-zinc-400 line-through block leading-none">
+                    ₹{product.price}
+                  </span>
+                )}
+                <span className="text-sm font-black text-zinc-900 tracking-tight leading-tight block">
+                  ₹{netPrice.toLocaleString()}
+                </span>
+              </>
+            ) : (
+              // 🔴 NOT LOGGED IN: Blurred Price with Lock
+              <Link href="/login" className="block group/blur cursor-pointer">
+                <div className="flex items-center gap-1">
+                  <span className="text-xs font-black text-zinc-400 blur-[4px] select-none">
+                    ₹9,999
+                  </span>
+                  <Lock size={10} className="text-emerald-600 shrink-0" />
+                </div>
+                <span className="text-[7px] font-bold uppercase text-emerald-600 tracking-wider block">
+                  Login to view
+                </span>
+              </Link>
             )}
-            <span className="text-sm font-black text-zinc-900 tracking-tight leading-tight block">
-              ₹{netPrice.toLocaleString()}
-            </span>
           </div>
 
           {/* Quick Add Button */}
-          <button
-            disabled={outOfStock}
-            onClick={handleAddToCart}
-            className={cn(
-              "h-7 px-2.5 rounded-lg font-bold text-[9px] uppercase tracking-wider",
+          {isLoggedIn && (
+            <button
+              disabled={outOfStock}
+              onClick={handleAddToCart}
+              className={cn(
+                "h-7 px-2.5 rounded-lg font-bold text-[9px] uppercase tracking-wider",
               "flex items-center justify-center gap-1 shrink-0",
               "transition-all duration-200 active:scale-95",
               addedFlash
@@ -132,28 +156,32 @@ export default function ProductCard({ product }: { product: ProductProps }) {
           >
             <AnimatePresence mode="wait">
               {addedFlash ? (
-                <motion.span
-                  key="check"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                <motion.span 
+                  key="check" 
+                  initial={{ scale: 0 }} 
+                  animate={{ scale: 1 }} 
                   className="flex items-center gap-0.5"
                 >
                   <Check size={10} strokeWidth={3} />
                 </motion.span>
               ) : (
-                <motion.span
-                  key="cart"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                <motion.span 
+                  key="cart" 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
                   className="flex items-center gap-1"
                 >
                   <ShoppingCart size={10} strokeWidth={2.5} />
-                  <span>Add</span>
+                  <span>{isLoggedIn ? "Add" : "Login"}</span>
                 </motion.span>
               )}
             </AnimatePresence>
           </button>
+        )}
         </div>
+        
+        {/* Pricing & Add Button Row */}
+       
       </div>
     </motion.div>
   );

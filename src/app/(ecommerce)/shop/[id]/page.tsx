@@ -171,7 +171,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 </Badge>
               </div>
 
-              <h1 className="text-xl lg:text-5xl font-black italic tracking-tighter text-slate-900 leading-tight uppercase">
+              <h1 className="text-xl lg:text-5xl font-bold  tracking-tighter text-slate-900 leading-tight">
                 {product.name}
               </h1>
 
@@ -194,7 +194,7 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 <div className="space-y-1">
                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-600">Associate Price</p>
                   <div className="flex items-baseline gap-3">
-                    <span className="text-4xl lg:text-6xl font-black italic tracking-tighter">₹{associatePrice}</span>
+                    <span className="text-4xl lg:text-6xl font-bold  tracking-tighter">₹{associatePrice}</span>
                     <span className="text-lg text-slate-400 line-through font-bold">₹{product.price}</span>
                   </div>
                 </div>

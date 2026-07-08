@@ -9,14 +9,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Sheet,
   SheetContent,
@@ -294,11 +287,11 @@ export default function ProductListPage() {
 
         {/* FILTER BUTTON (Sheet) */}
         <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
-          <SheetTrigger asChild>
-            <Button className="flex-1 flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
+          <SheetTrigger asChild className="">
+            <button className="flex-1 bg-transparent flex items-center justify-center gap-3 text-sm font-black uppercase italic tracking-tight text-slate-800 active:bg-slate-50">
               <SlidersHorizontal size={16} className="text-emerald-700" />
               Filter
-            </Button>
+            </button>
           </SheetTrigger>
           <SheetContent side="bottom" className="rounded-t-[2.5rem] h-[70vh] bg-white border-none p-0 overflow-hidden">
             <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-2" />
