@@ -63,8 +63,8 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2.5 bg-[#1c3320]/6 border border-[#1c3320]/10 px-4 py-2 rounded-full">
               <Leaf className="w-3.5 h-3.5 text-[#e8a020] fill-[#e8a020]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#1c3320]/55">
-                Swadeshi Best Sellers
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#1c3320]/55">
+                🌿Best Selling Products
               </span>
             </div>
 
@@ -74,7 +74,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               Amaze{" "}
-              <span className="text-[#e8a020] italic">Signature</span>
+              <span className="text-[#e8a020] italic">Wellness</span>
             </h2>
 
             {/* Underline rule */}
@@ -87,7 +87,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
           {/* CTA link */}
           <Link href="/shop">
             <button className="group inline-flex items-center gap-2.5 h-12 px-7 rounded-xl border-2 border-[#1c3320]/12 bg-transparent hover:bg-[#1c3320] text-[#1c3320]/60 hover:text-white font-bold text-[10px] uppercase tracking-[0.2em] transition-all duration-200">
-              Explore Store
+              Shop Now
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-200" />
             </button>
           </Link>
@@ -146,7 +146,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
           <div className="flex items-center gap-2">
             <div className="h-px w-5 bg-[#1c3320]/15" />
             <span className="text-[9px] font-bold uppercase tracking-[0.28em] text-[#1c3320]/30">
-              Drag to Explore
+              Swipe to Browse
             </span>
           </div>
         </motion.div>

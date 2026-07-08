@@ -22,7 +22,7 @@ const Home = async () => {
       <FeaturedProducts initialProducts={productsWithCategory} />
       <AboutUs />
       <BusinessOpportunity />
-      <Testimonial />
+      {/* <Testimonial /> */}
       <FaqSection />
       <BackToTop />
       <Footer />

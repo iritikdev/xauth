@@ -60,8 +60,11 @@ const steps = [
   },
 ];
 
-const perks = ["Instant Payout", "No Registration Fee", "Vocal for Local"];
-
+const perks = [
+  "Instant Payout",
+  "No Joining Fee",
+  "Work From Anywhere",
+];
 /* ── Component ── */
 const BusinessOpportunity = () => (
   <section
@@ -230,17 +233,19 @@ const BusinessOpportunity = () => (
 
           {/* Left copy */}
           <div className="relative z-10 text-center md:text-left space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#e8a020]/70">
-              Ready to begin?
-            </p>
-            <h3
-              className="text-3xl md:text-4xl font-black text-white leading-tight"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-            >
-              Join the Swadeshi<br />
-              <span className="text-[#e8a020] italic">Movement</span>
-            </h3>
-          </div>
+  <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#e8a020]/70">
+    Build Your Future
+  </p>
+
+  <h3
+    className="text-3xl md:text-4xl font-black text-white leading-tight"
+    style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+  >
+    Become an
+    <br />
+    <span className="text-[#e8a020] italic">Independent Distributor</span>
+  </h3>
+</div>
 
           {/* Right — perks + button */}
           <div className="relative z-10 flex flex-col items-center md:items-end gap-5">

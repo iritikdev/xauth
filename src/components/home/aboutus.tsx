@@ -32,10 +32,10 @@ const fadeUp = (delay = 0) => ({
 
 /* ─────────────────────── Data ─────────────────────── */
 const stats = [
-  { label: "Community Members", value: "1M+",  icon: Users  },
-  { label: "States Reached",    value: "28+",  icon: Globe  },
-  { label: "Ayush Products",    value: "150+", icon: Leaf   },
-  { label: "Years of Trust",    value: "5+",   icon: Award  },
+  { label: "Happy Customers", value: "1K+", icon: Users },
+  { label: "Products", value: "50+", icon: Leaf },
+  { label: "Distributors", value: "0.5k+", icon: Globe },
+  { label: "Years of Trust", value: "3+", icon: Award },
 ];
 
 const pillars = ["Financial Freedom", "Confidence", "Personal Growth", "Wellness First"];
