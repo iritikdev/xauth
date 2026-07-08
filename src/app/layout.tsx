@@ -20,53 +20,105 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://amazeayurveda.in"),
+
   title: {
-    default: "Amaze Ayurveda | Authentic Swadeshi Wellness",
-    template: "%s | Amaze Ayurveda"
+    default: "Amaze Ayurveda | Premium Ayurvedic Products & Natural Wellness",
+    template: "%s | Amaze Ayurveda",
   },
-  description: "Amaze Ayurveda offers authentic Ayurvedic formulations. Join our Swadeshi movement for natural wellness and financial growth. Based in Bihar, serving Bharat.",
-  keywords: ["Ayurveda", "Swadeshi Products", "Herbal Wellness", "Amaze Ayurveda", "Organic Health Bihar", "MLM Business India"],
-  authors: [{ name: "Amaze Ayurveda Pvt. Ltd." }],
-  creator: "Amaze Ayurveda Team",
+
+  description:
+    "Discover premium Ayurvedic medicines, herbal juices, health supplements, personal care, and wellness products from Amaze Ayurveda. Experience authentic Ayurveda for a healthier lifestyle.",
+
+  keywords: [
+    "Amaze Ayurveda",
+    "Ayurvedic Products",
+    "Ayurvedic Medicine",
+    "Herbal Products",
+    "Natural Wellness",
+    "Health Supplements",
+    "Herbal Juice",
+    "Organic Healthcare",
+    "Ayurveda India",
+    "Made in India",
+  ],
+
+  authors: [
+    {
+      name: "Amaze Ayurveda Pvt. Ltd.",
+      url: "https://amazeayurveda.in",
+    },
+  ],
+
+  creator: "Amaze Ayurveda Pvt. Ltd.",
+  publisher: "Amaze Ayurveda Pvt. Ltd.",
+
+  category: "Health & Wellness",
+
+  alternates: {
+    canonical: "/",
+  },
+
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: "https://amazeayurveda.in",
-    title: "Amaze Ayurveda | Rooted in Bharat",
-    description: "Pure Ayurvedic products crafted for your wellness and prosperity.",
     siteName: "Amaze Ayurveda",
+
+    title: "Amaze Ayurveda | Premium Ayurvedic Products",
+
+    description:
+      "Experience authentic Ayurvedic wellness with premium herbal products, health supplements, herbal juices, and personal care solutions.",
+
     images: [
       {
-        url: "/og-image.jpg", // Make sure to add this in your public folder
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Amaze Ayurveda Branding",
+        alt: "Amaze Ayurveda - Premium Ayurvedic Wellness",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Amaze Ayurveda",
-    description: "Embrace Wellness Naturally with Swadeshi Power.",
+
+    title: "Amaze Ayurveda | Premium Ayurvedic Wellness",
+
+    description:
+      "Discover authentic Ayurvedic products for natural health and wellness.",
+
     images: ["/og-image.jpg"],
   },
+
   robots: {
     index: true,
     follow: true,
+    nocache: false,
+
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
+  },
+
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+
+  verification: {
+    google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION",
   },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  // Structured Data for Google (Schema.org)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -75,7 +127,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     "logo": "https://amazeayurveda.in/amaze-logo.png",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+91-XXXXXXXXXX", // Update with actual number
+      "telephone": "+91-9204260719", // Update with actual number
       "contactType": "customer service"
     },
     "sameAs": [

@@ -4,7 +4,7 @@ import React, { use, useState, useEffect } from "react";
 import { notFound, useRouter } from "next/navigation";
 import {
   ShoppingCart, Leaf, ChevronLeft, ShieldCheck, Truck,
-  Minus, Plus, Zap, Loader2, Heart, Share2, Info
+  Minus, Plus, Zap, Loader2, Heart, Share2, Info, Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { getProductById } from "@/lib/actions/product";
 import { useCart } from "@/hooks/use-cart";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface PageProps {
@@ -26,6 +28,10 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const cart = useCart();
+
+  // ✅ Auth Session Check
+  const { status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   useEffect(() => {
     async function loadProduct() {
@@ -60,6 +66,11 @@ export default function ProductDetailsPage({ params }: PageProps) {
   const stockLeft = product.stock ?? 0;
 
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      router.push("/sign-in");
+      return;
+    }
+
     cart.addItem(product, quantity);
     toast.success("Added to Business Cart", {
       description: `${product.name} (Qty: ${quantity}) - ${totalBV} BV Earned.`,
@@ -70,16 +81,14 @@ export default function ProductDetailsPage({ params }: PageProps) {
     const shareData = {
       title: product.name,
       text: `Check out ${product.name} on Amaze Ayurveda. Earn ${product.bvAmount} BV on this purchase!`,
-      url: window.location.href, // Current page link
+      url: window.location.href,
     };
 
     try {
-      // Check if native sharing is available
       if (navigator.share) {
         await navigator.share(shareData);
         toast.success("Shared successfully");
       } else {
-        // Fallback: Copy link to clipboard
         await navigator.clipboard.writeText(window.location.href);
         toast.success("Link copied to clipboard!", {
           description: "You can now paste and share it anywhere."
@@ -115,9 +124,9 @@ export default function ProductDetailsPage({ params }: PageProps) {
       </div>
 
       <div className="max-w-7xl mx-auto lg:px-8 lg:py-10">
-        <div className="flex flex-col lg:flex-row gap-0 lg:gap-12">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
 
-          {/* --- LEFT: IMAGE GALLERY (MYNTRA STYLE) --- */}
+          {/* --- LEFT: IMAGE GALLERY --- */}
           <div className="w-full lg:w-[55%] relative">
             <div className="aspect-[1/1] sm:aspect-[4/3] lg:rounded-[3rem] bg-[#f8fafc] overflow-hidden group relative">
               <motion.img
@@ -126,12 +135,18 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 src={product.image}
                 className="w-full h-full object-contain p-8 group-hover:scale-110 transition-transform duration-700"
               />
+              
+              {/* Discount Tag: Visible to All or Blurred if Guest */}
               {product.discount > 0 && (
-                <div className="absolute bottom-6 left-6 bg-red-600 text-white font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-full shadow-xl">
+                <div className={cn(
+                  "absolute bottom-6 left-6 bg-red-600 text-white font-black text-[10px] uppercase tracking-widest px-4 py-2 rounded-full shadow-xl transition-all",
+                  !isLoggedIn && "blur-[3px] select-none opacity-80"
+                )}>
                   {product.discount}% Exclusive Discount
                 </div>
               )}
             </div>
+
             {/* Trust Icons row on mobile */}
             <div className="flex justify-center gap-6 py-6 lg:hidden">
               <div className="flex flex-col items-center gap-1">
@@ -150,20 +165,8 @@ export default function ProductDetailsPage({ params }: PageProps) {
           </div>
 
           {/* --- RIGHT: PRODUCT INFO --- */}
-          <div className="flex-1 px-5 lg:px-0 space-y-6 lg:space-y-8">
-            {/* <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-emerald-200 text-emerald-700 rounded-md bg-emerald-50/30 px-2 py-0.5">
-                  {product.category?.name || "Premium Formulation"}
-                </Badge>
-              </div>
-              <h1 className="text-3xl lg:text-5xl font-black italic tracking-tighter text-slate-900 leading-tight uppercase">
-                {product.name}
-              </h1>
-              <p className="text-slate-500 text-sm lg:text-lg leading-relaxed font-medium">
-                {product.description}
-              </p>
-            </div> */}
+          <div className="flex-1 px-5 lg:px-0 space-y-8 lg:space-y-8">
+
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-emerald-200 text-emerald-700 rounded-md bg-emerald-50/30 px-2 py-0.5">
@@ -171,50 +174,103 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 </Badge>
               </div>
 
-              <h1 className="text-xl lg:text-5xl font-bold  tracking-tighter text-slate-900 leading-tight">
+              <h1 className="text-xl lg:text-5xl font-bold tracking-tighter text-slate-900 leading-tight">
                 {product.name}
               </h1>
+
+              {/* --- PRICING BENTO CARD --- */}
+              <div className="mt-2 space-y-4">
+                
+                {/* Price Display Logic */}
+                <div className="flex justify-between items-start">
+                  {isLoggedIn ? (
+                    // 🟢 LOGGED IN: Show Associate Discount Price + Savings
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600">
+                        Associate Price
+                      </p>
+                      <div className="flex items-baseline gap-3">
+                        <span className="text-4xl lg:text-6xl font-bold tracking-tight text-slate-900">
+                          ₹{associatePrice}
+                        </span>
+                        <span className="text-lg text-slate-400 line-through font-semibold">
+                          ₹{product.price}
+                        </span>
+                      </div>
+                      <p className="text-xs text-emerald-600 font-medium">
+                        You save ₹{product.price - associatePrice}
+                      </p>
+                    </div>
+                  ) : (
+                    // 🔴 NOT LOGGED IN: Show MRP Only + Login Banner to Unlock Discount
+                    <div className="space-y-2 w-full">
+                      <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
+                        Maximum Retail Price (MRP)
+                      </p>
+                      <div className="flex items-baseline gap-3">
+                        <span className="text-4xl lg:text-6xl font-bold tracking-tight text-slate-900">
+                          ₹{product.price}
+                        </span>
+                      </div>
+                      <Link 
+                        href="/sign-in" 
+                        className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-3 py-1.5 rounded-xl hover:bg-emerald-100 transition-colors"
+                      >
+                        <Lock size={12} />
+                        <span>Login to view Associate Member Price</span>
+                      </Link>
+                    </div>
+                  )}
+
+                  <div className="h-14 w-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/20 shrink-0">
+                    <Zap size={24} fill="white" />
+                  </div>
+                </div>
+
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {/* BV Points (Blurred if Guest) */}
+                  <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">
+                      Earning BV
+                    </p>
+                    <p className={cn(
+                      "text-lg font-bold text-emerald-700 transition-all",
+                      !isLoggedIn && "blur-[4px] select-none opacity-80"
+                    )}>
+                      {isLoggedIn ? `+${totalBV} Points` : "+99 Points"}
+                    </p>
+                  </div>
+
+                  {/* Availability */}
+                  <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-1">
+                      Availability
+                    </p>
+                    <p
+                      className={cn(
+                        "text-sm font-bold",
+                        stockLeft > 0 ? "text-slate-900" : "text-red-600"
+                      )}
+                    >
+                      {stockLeft > 0 ? `${stockLeft} Units Left` : "Out of Stock"}
+                    </p>
+                  </div>
+                </div>
+
+              </div>
 
               {/* ── RICH TEXT RENDERER ── */}
               <div
                 className={cn(
-                  "text-slate-500 text-sm lg:text-lg leading-relaxed font-medium",
-                  "prose prose-slate max-w-none", // Tailwind Typography (Optional but recommended)
-                  "[&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5", // Manual styling for lists
-                  "[&_strong]:font-black [&_strong]:text-slate-900", // Bold styling
-                  "[&_p]:mb-4" // Paragraph spacing
+                  "text-slate-500 text-sm lg:text-lg leading-relaxed font-medium pt-4",
+                  "prose prose-slate max-w-none",
+                  "[&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5",
+                  "[&_strong]:font-black [&_strong]:text-slate-900",
+                  "[&_p]:mb-4"
                 )}
                 dangerouslySetInnerHTML={{ __html: product.description }}
               />
-            </div>
-
-            {/* --- PRICING BENTO CARD --- */}
-            <div className="bg-slate-50 rounded-[2.5rem] p-6 lg:p-8 border border-slate-100 space-y-6">
-              <div className="flex justify-between items-end">
-                <div className="space-y-1">
-                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-600">Associate Price</p>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-4xl lg:text-6xl font-bold  tracking-tighter">₹{associatePrice}</span>
-                    <span className="text-lg text-slate-400 line-through font-bold">₹{product.price}</span>
-                  </div>
-                </div>
-                <div className="h-14 w-14 bg-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/20">
-                  <Zap size={24} fill="white" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-white rounded-2xl border border-slate-100">
-                  <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-1">Earning BV</p>
-                  <p className="text-xl font-black italic text-emerald-700">+{totalBV} Points</p>
-                </div>
-                <div className="p-4 bg-white rounded-2xl border border-slate-100">
-                  <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest mb-1">Availability</p>
-                  <p className={cn("text-sm font-black italic", stockLeft > 0 ? "text-slate-900" : "text-red-500")}>
-                    {stockLeft > 0 ? `${stockLeft} Units Left` : "Out of Stock"}
-                  </p>
-                </div>
-              </div>
             </div>
 
             {/* --- DESKTOP PURCHASE PANEL --- */}
@@ -225,14 +281,22 @@ export default function ProductDetailsPage({ params }: PageProps) {
                 <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)} className="h-10 w-10 rounded-xl bg-white shadow-sm"><Plus size={14} /></Button>
               </div>
               <Button onClick={handleAddToCart} className="h-16 rounded-2xl bg-slate-900 hover:bg-black text-white font-black uppercase tracking-widest text-xs gap-3">
-                <ShoppingCart size={20} /> Add to Business Cart
+                {isLoggedIn ? (
+                  <>
+                    <ShoppingCart size={20} /> Add to Business Cart
+                  </>
+                ) : (
+                  <>
+                    <Lock size={18} /> Login to Order
+                  </>
+                )}
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* --- MOBILE STICKY BOTTOM BAR (MYNTRA VIBE) --- */}
+      {/* --- MOBILE STICKY BOTTOM BAR --- */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-100 p-4 lg:hidden animate-in slide-in-from-bottom duration-500">
         <div className="max-w-md mx-auto flex items-center gap-4">
           <div className="flex items-center bg-slate-100 rounded-xl p-1 shrink-0">
@@ -241,12 +305,21 @@ export default function ProductDetailsPage({ params }: PageProps) {
             <Button variant="ghost" size="icon" onClick={() => setQuantity(quantity + 1)} className="h-9 w-9 rounded-lg"><Plus size={12} /></Button>
           </div>
           <Button
-            disabled={stockLeft === 0}
+            disabled={stockLeft === 0 && isLoggedIn}
             onClick={handleAddToCart}
             className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-600/20 gap-2"
           >
-            <ShoppingCart size={16} />
-            {stockLeft === 0 ? "Sold Out" : "Add to Cart"}
+            {isLoggedIn ? (
+              <>
+                <ShoppingCart size={16} />
+                {stockLeft === 0 ? "Sold Out" : "Add to Cart"}
+              </>
+            ) : (
+              <>
+                <Lock size={14} />
+                Login to Purchase
+              </>
+            )}
           </Button>
         </div>
       </div>
