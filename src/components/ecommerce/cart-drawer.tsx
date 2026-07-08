@@ -103,7 +103,7 @@ export function CartDrawer({
       <SheetContent
       showCloseButton={false}
         side="bottom"
-        className="h-[92vh] sm:h-screen w-full sm:max-w-[480px] sm:side-right flex flex-col bg-[#F8F9FA] border-none rounded-t-[2.5rem] sm:rounded-t-none sm:rounded-l-[2.5rem] p-0 z-[101] shadow-2xl"
+        className="h-[80vh] sm:h-screen w-full sm:max-w-[480px] sm:side-right flex flex-col bg-[#F8F9FA] border-none rounded-t-[2.5rem] sm:rounded-t-none sm:rounded-l-[2.5rem] p-0 z-[101] shadow-2xl"
       >
         {/* Mobile Drag Handle */}
         <div className="w-12 h-1.5 bg-zinc-300 rounded-full mx-auto mt-3 mb-1 sm:hidden opacity-40" />
