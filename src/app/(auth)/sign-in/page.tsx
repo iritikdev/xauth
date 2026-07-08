@@ -50,14 +50,7 @@ const Page = async () => {
       {/* ─── HERO BACKGROUND MATRIX (Top 50vh) ─── */}
       <div className="relative h-[50vh] min-h-[380px] w-full overflow-hidden select-none flex flex-col items-center justify-center text-center px-4">
         
-        {/* Unsplash Atmospheric Overlay */}
-        <Image
-          src="https://images.unsplash.com/photo-1615485290382-441e4d0c9cb5?q=80&w=1800"
-          alt="Amaze Environment"
-          fill
-          priority
-          className="object-cover object-center opacity-[0.12] grayscale pointer-events-none"
-        />
+        
 
         {/* Dynamic Soft Core Lighting */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1c3320]/40 via-[#1c3320]/80 to-[#1c3320] z-0" />

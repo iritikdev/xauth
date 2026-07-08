@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -41,6 +41,9 @@ const SignInForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [randomTip, setRandomTip] = useState("");
   const [isPending, setIsPending] = useState(false);
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/shop";
   
   // 💡 Selected Role State (Default to Distributor)
   const [selectedRole, setSelectedRole] = useState<UserRole>("DISTRIBUTOR");
