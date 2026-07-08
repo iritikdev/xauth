@@ -91,9 +91,7 @@ export default function AppLoader({ children }: { children: React.ReactNode }) {
                                         className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 text-white shadow-xl"
                                     >
                                         <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                                            Vocal for Local
-                                        </span>
+                                        
                                     </motion.div>
                                 </div>
                             </div>

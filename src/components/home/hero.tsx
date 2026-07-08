@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ShoppingBag, ArrowRight, Leaf, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Button } from "../ui/button";
 
 /* ── Shared botanical leaf SVG ── */
 const LeafDecor = ({ className }: { className?: string }) => (
@@ -19,33 +20,33 @@ const LeafDecor = ({ className }: { className?: string }) => (
 
 /* ── Stagger helpers ── */
 const fadeUp = (delay = 0) => ({
-  initial:    { opacity: 0, y: 24 },
-  animate:    { opacity: 1, y: 0  },
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
   transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const, delay },
 });
 
 const fadeRight = (delay = 0) => ({
-  initial:    { opacity: 0, x: -28 },
-  animate:    { opacity: 1, x: 0   },
+  initial: { opacity: 0, x: -28 },
+  animate: { opacity: 1, x: 0 },
   transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const, delay },
 });
 
 const fadeLeft = (delay = 0) => ({
-  initial:    { opacity: 0, x: 28 },
-  animate:    { opacity: 1, x: 0  },
-  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const,  delay },
+  initial: { opacity: 0, x: 28 },
+  animate: { opacity: 1, x: 0 },
+  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const, delay },
 });
-
 const trust = [
-  { value: "100%",   label: "Organic"   },
-  { value: "AYUSH",  label: "Certified" },
-  { value: "1M+",    label: "Artisans"  },
+  { value: "100%", label: "Natural" },
+  { value: "Premium", label: "Quality" },
+  { value: "Made in", label: "India" },
 ];
 
 const pillars = [
-  "Authentic Ayurvedic Formulations",
-  "15-Level Income Opportunity",
-  "Proudly Made in Bharat",
+  "Premium Herbal Ingredients",
+  "Traditional Ayurvedic Formulas",
+  "Quality Tested",
+  "Trusted Across India"
 ];
 
 const Hero = () => {
@@ -90,8 +91,8 @@ const Hero = () => {
             {/* Badge */}
             <motion.div {...fadeUp(0.05)} className="inline-flex items-center gap-2.5 bg-[#1c3320]/6 border border-[#1c3320]/10 px-4 py-2 rounded-full">
               <Leaf className="w-3.5 h-3.5 text-[#e8a020] fill-[#e8a020]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-[#1c3320]/60">
-                Swadeshi Movement 2026
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1c3320]/60">
+                🌿100% Natural • Made in India
               </span>
             </motion.div>
 
@@ -101,10 +102,10 @@ const Hero = () => {
               className="text-[3.5rem] sm:text-[5rem] md:text-[6.5rem] font-black leading-[0.92] tracking-[-0.03em] text-[#1c3320]"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
-              BE{" "}
-              <span className="text-[#e8a020] italic">INDIAN</span>
+              ANCIENT{" "}
+              <span className="text-[#e8a020] italic">WISDOM</span>
               <br />
-              BUY{" "}
+              MODERN{" "}
               <span
                 className="relative inline-block"
                 style={{
@@ -112,7 +113,7 @@ const Hero = () => {
                   color: "transparent",
                 }}
               >
-                INDIAN
+                WELLNESS
               </span>
             </motion.h1>
 
@@ -121,9 +122,9 @@ const Hero = () => {
               {...fadeUp(0.2)}
               className="text-base md:text-lg text-[#1c3320]/55 leading-relaxed max-w-md mx-auto lg:mx-0 font-medium"
             >
-              Empowering{" "}
-              <span className="text-[#1c3320] font-bold">1 Million+ Artisans</span>.
-              Amaze Ayurveda brings the purity of ancient wisdom to your modern lifestyle.
+              Experience authentic Ayurvedic wellness crafted with {" "}
+              <span className="text-[#1c3320] font-bold">premium herbs, traditional formulations {" "}</span>
+              and modern quality standards to support your healthier lifestyle.
             </motion.p>
 
             {/* Pillar checklist */}
@@ -144,16 +145,16 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start pt-2"
             >
               <Link href="/shop" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 h-14 px-8 rounded-xl bg-[#1c3320] hover:bg-[#1c6634] text-white font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_8px_32px_rgba(28,50,32,0.25)] hover:shadow-[0_12px_40px_rgba(28,50,32,0.35)] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200">
+                <Button className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 h-14 px-8 rounded-xl bg-[#1c3320] hover:bg-[#1c6634] text-white font-black text-[11px] uppercase tracking-[0.1em] shadow-[0_8px_32px_rgba(28,50,32,0.25)] hover:shadow-[0_12px_40px_rgba(28,50,32,0.35)] hover:-translate-y-0.5 active:scale-[0.97] transition-all duration-200">
                   <ShoppingBag className="w-4 h-4" />
-                  Shop Now
-                </button>
+                  Shop Products
+                </Button>
               </Link>
               <Link href="/about-us" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-14 px-8 rounded-xl border-2 border-[#1c3320]/15 bg-transparent hover:bg-[#1c3320]/5 hover:border-[#1c3320]/25 text-[#1c3320]/65 hover:text-[#1c3320] font-bold text-[11px] uppercase tracking-[0.2em] transition-all duration-200">
-                  Our Story
+                <Button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-14 px-8 rounded-xl border-2 border-[#1c3320]/15 bg-transparent hover:bg-[#1c3320]/5 hover:border-[#1c3320]/25 text-[#1c3320]/65 hover:text-[#1c3320] font-bold text-[11px] uppercase tracking-[0.1em] transition-all duration-200">
+                  Explore Ayurveda
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Button>
               </Link>
             </motion.div>
 
@@ -210,7 +211,7 @@ const Hero = () => {
                   >
                     <Leaf className="w-5 h-5 text-[#1c3320] fill-[#1c3320]" />
                     <span className="text-[8px] font-black uppercase tracking-tight text-[#1c3320] leading-tight text-center">
-                      Trusted<br />Bharat
+                      Natural
                     </span>
                   </motion.div>
 
@@ -227,12 +228,11 @@ const Hero = () => {
                         ))}
                       </div>
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#e8a020]">
-                        Join 50k+ Indians
+                        Trusted by Thousands
                       </span>
                     </div>
                     <p className="text-sm font-bold text-white leading-snug">
-                      Reviving our roots, one product at a time.
-                    </p>
+                      Discover authentic Ayurvedic wellness crafted with nature's finest herbs.                    </p>
                   </div>
                 </div>
               </div>
@@ -249,7 +249,7 @@ const Hero = () => {
                   </span>
                 </div>
                 <div className="text-[9px] font-bold text-white/30 uppercase tracking-[0.25em]">
-                  🌿 Vocal for Local
+                  🌿100% Natural Wellness
                 </div>
               </div>
             </div>

@@ -29,9 +29,9 @@ const LeafDecor = ({ className }: { className?: string }) => (
 );
 
 const NAV_LINKS = [
-  { label: "Shop Swadeshi", href: "/shop", icon: Leaf },
-  { label: "Our Story", href: "/about-us", icon: Info },
-  { label: "Business Plan", href: "/business-plan", icon: LayoutDashboard },
+  { label: "Products", href: "/shop", icon: Leaf },
+  { label: "About Amaze", href: "/about-us", icon: Info },
+  { label: "Become a Distributor", href: "/business-plan", icon: LayoutDashboard },
 ];
 
 export const AppHeader = () => {
@@ -58,7 +58,7 @@ export const AppHeader = () => {
           "fixed top-0 z-[60] w-full transition-all duration-500",
           isScrolled
             ? "bg-[#1c3320]/90 backdrop-blur-xl border-b border-white/10 py-2.5 shadow-2xl"
-            : "bg-[#1c3320] py-4"
+            : "bg-[#1c3320] py-2"
         )}
       >
         {/* Botanical Background Elements */}
@@ -79,7 +79,7 @@ export const AppHeader = () => {
               <span className="font-black text-white text-xl tracking-tighter uppercase italic leading-none">
                 Amaze <span className="text-[#e8a020] not-italic">Ayurveda</span>
               </span>
-              <span className="text-[7px] font-black text-emerald-400/50 uppercase tracking-[0.4em] mt-1">Swadeshi Sanctuary</span>
+              <span className="text-[7px] font-black text-emerald-400/50 uppercase tracking-widest mt-1">Ancient Wisdom. Modern Wellness.</span>
             </div>
           </Link>
 
@@ -87,7 +87,7 @@ export const AppHeader = () => {
           <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 p-1.5 rounded-[2rem]">
             {NAV_LINKS.map((link) => (
               <Link key={link.href} href={link.href}>
-                <button className="flex items-center gap-2 h-10 px-5 rounded-[1.5rem] text-[11px] font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300">
+                <button className="flex items-center gap-2 h-8 px-4 rounded-[1.5rem] text-[11px] font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300">
                   <link.icon className="w-3.5 h-3.5" />
                   {link.label}
                 </button>
@@ -153,7 +153,6 @@ export const AppHeader = () => {
                       <SheetTitle className="text-white text-2xl font-black italic tracking-tighter uppercase leading-none">
                         Amaze <span className="text-[#e8a020]">Ayurveda</span>
                       </SheetTitle>
-                      <p className="text-[9px] font-bold text-emerald-400/40 uppercase tracking-[0.3em] mt-2">Associate Network</p>
                     </div>
                   </div>
                 </div>
