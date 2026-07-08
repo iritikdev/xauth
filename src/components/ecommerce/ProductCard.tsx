@@ -43,7 +43,7 @@ export default function ProductCard({ product }: { product: ProductProps }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="group relative w-full h-full flex flex-col bg-white rounded-2xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-md hover:border-zinc-200 transition-all duration-300"
+      className="group relative w-52 h-auto flex flex-col bg-white rounded-2xl overflow-hidden border border-zinc-100 shadow-sm hover:shadow-md hover:border-zinc-200 transition-all duration-300"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       {/* ══════════════ IMAGE ZONE ══════════════ */}

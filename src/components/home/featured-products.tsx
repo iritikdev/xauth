@@ -106,7 +106,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
             drag="x"
             dragConstraints={{ right: 0, left: -width }}
             dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
-            className="flex gap-6"
+            className="flex gap-4"
           >
             {initialProducts.map((product, i) => (
               <motion.div
@@ -119,7 +119,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
                   delay: 0.05 * i,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="min-w-[300px] md:min-w-[340px]"
+                className="min-w-[210px] md:min-w-[210px]"
               >
                 <ProductCard product={product} />
               </motion.div>
