@@ -64,7 +64,7 @@ export const FeaturedProducts = ({ initialProducts }: { initialProducts: any[] }
             <div className="inline-flex items-center gap-2.5 bg-[#1c3320]/6 border border-[#1c3320]/10 px-4 py-2 rounded-full">
               <Leaf className="w-3.5 h-3.5 text-[#e8a020] fill-[#e8a020]" />
               <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#1c3320]/55">
-                🌿Best Selling Products
+                Best Selling Products
               </span>
             </div>
 
