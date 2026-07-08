@@ -195,7 +195,7 @@ export const columns: ColumnDef<ProductColumn>[] = [
               className="rounded-xl text-[11px] font-bold uppercase tracking-widest px-3 py-2.5 cursor-pointer gap-2 text-zinc-700 focus:bg-zinc-50 focus:text-zinc-900"
             >
               <Link
-                href={`/admin/products/${product.id}/edit`}
+                href={`/admin/dashboard/products/${product.id}/edit`}
                 className="flex items-center gap-2"
               >
                 <Edit size={13} strokeWidth={2} />

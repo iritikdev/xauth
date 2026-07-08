@@ -24,6 +24,7 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/admin/page-header";
+import { baseAdminUrl } from "@/lib/constants";
 
 /* ─── types ───────────────────────────────────────────────────── */
 interface Stats {
@@ -278,9 +279,9 @@ export default function AdminDashboardClient({
       {/* ── Bottom quick links ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: "Manage Products", sub: "Catalog & inventory", icon: <Package size={16} />, href: "/admin/products" },
-          { label: "Review KYC", sub: `${stats.pending} pending`, icon: <ShieldAlert size={16} />, href: "/admin/kyc", emerald: true },
-          { label: "All Orders", sub: "Track & manage", icon: <ShoppingBag size={16} />, href: "/admin/orders" },
+          { label: "Manage Products", sub: "Catalog & inventory", icon: <Package size={16} />, href: `${baseAdminUrl}/products` },
+          { label: "Review KYC", sub: `${stats.pending} pending`, icon: <ShieldAlert size={16} />, href: `${baseAdminUrl}/kyc`, emerald: true },
+          { label: "All Orders", sub: "Track & manage", icon: <ShoppingBag size={16} />, href: `${baseAdminUrl}/orders` },
         ].map((link) => (
           <a
             key={link.label}

@@ -4,6 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { baseAdminUrl } from "../constants";
 
 // Configure Cloudinary (Move these to .env)
 cloudinary.config({
@@ -55,8 +56,8 @@ export async function createProduct(prevState: any, formData: FormData) {
     };
   }
 
-  revalidatePath("/admin/products");
-  redirect("/admin/products");
+  revalidatePath(`${baseAdminUrl}/products`);
+  redirect(`${baseAdminUrl}/products`);
 }
 
 export async function deleteProduct(id: string) {
@@ -85,7 +86,7 @@ export async function deleteProduct(id: string) {
       where: { id },
     });
 
-    revalidatePath("/admin/products");
+    revalidatePath(`${baseAdminUrl}/products`);
     return { success: "Product purged from inventory." };
   } catch (error) {
     console.error("Delete Error:", error);
@@ -188,8 +189,8 @@ export async function updateProduct(
       },
     });
 
-    revalidatePath("/admin/products");
-    revalidatePath(`/admin/products/${id}/edit`);
+    revalidatePath(`${baseAdminUrl}/products`);
+    revalidatePath(`${baseAdminUrl}/products/${id}/edit`);
 
     return { success: true, product, error: null };
   } catch (error: any) {

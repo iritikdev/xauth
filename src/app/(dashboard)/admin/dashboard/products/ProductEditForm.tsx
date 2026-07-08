@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
+import { baseAdminUrl } from "@/lib/constants";
 
 export interface IProduct {
   id: string;
@@ -73,7 +74,7 @@ export default function ProductEditForm({
   useEffect(() => {
     if (state?.success) {
       toast.success("Product updated successfully!");
-      router.push("/admin/products");
+      router.push(`${baseAdminUrl}/products`);
       router.refresh();
     } else if (state?.error) {
       toast.error(state.error);

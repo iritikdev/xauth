@@ -1,28 +1,4 @@
-import {
-  Package,
-  Users2,
-  ReceiptIndianRupee,
-  Settings2,
-  Boxes,
-  ShieldCheck,
-  Wallet,
-  History,
-  TrendingUp,
-  Tags,
-  ArrowRightLeft,
-  BadgeCheck,
-  CoinsIcon,
-  Contact2,
-  CreditCard,
-  FileText,
-  LayoutDashboard,
-  LifeBuoy,
-  Network,
-  PiggyBank,
-  Send,
-  UserCircle2,
-  Lock,
-} from "lucide-react";
+
 
  export const baseDashboardUrl = "/distributor/dashboard"
 
