@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
 import { cache } from "react";
 import { auth } from "../auth";
+import { baseAdminUrl } from "../constants";
 
 // Using cache() ensures that if multiple components 
 // ask for the same post, Prisma only queries once.
@@ -23,7 +24,7 @@ export async function deletePost(id: string) {
     await prisma.post.delete({
       where: { id },
     });
-    revalidatePath("/admin/blog"); // UI refresh karne ke liye
+    revalidatePath(`${baseAdminUrl}/blog`); // UI refresh karne ke liye
     return { success: true };
   } catch (error) {
     return { error: "Failed to delete post" };
@@ -71,7 +72,7 @@ export async function createBlogPost(values: any) {
 
     // 3. Cache Purge (Important: Taki blog page par naya post turant dikhe)
     revalidatePath("/blog");
-    revalidatePath("/admin/blog");
+    revalidatePath(`${baseAdminUrl}/blog`);
 
     return { success: true, post };
   } catch (error: any) {
@@ -102,7 +103,7 @@ export async function updateBlogPost(id: string, values: any) {
 
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
-    revalidatePath("/admin/blog");
+    revalidatePath(`${baseAdminUrl}/blog`);
 
     return { success: true, post };
   } catch (error: any) {

@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "../auth";
 import bcrypt from "bcryptjs";
+import { baseAdminUrl } from "../constants";
 
 export async function markOrderAsDelivered(orderId: string) {
   try {
@@ -25,7 +26,7 @@ export async function markOrderAsDelivered(orderId: string) {
       // })
     ]);
 
-    revalidatePath("/admin/orders");
+    revalidatePath(`${baseAdminUrl}/orders`);
     return { success: true };
   } catch (err) {
     return { success: false, error: "Update failed" };
@@ -79,7 +80,7 @@ export async function updatePayoutStatus(transactionId: string, status: "COMPLET
       return updatedTx;
     });
 
-    revalidatePath("/admin/payouts");
+    revalidatePath(`${baseAdminUrl}/payouts`);
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -110,7 +111,7 @@ export async function changeUserSponsor(userId: string, newSponsorUsername: stri
       }
     });
 
-    revalidatePath("/admin/users");
+    revalidatePath(`${baseAdminUrl}/users`);
     return { success: true, message: "Sponsorship updated successfully!" };
 
   } catch (error: any) {
@@ -147,7 +148,7 @@ export async function updateUserDetails(userId: string, formData: any) {
       }),
     ]);
 
-    revalidatePath(`/admin/users/${userData.username}`);
+    revalidatePath(`${baseAdminUrl}/users/${userData.username}`);
     return { success: true, message: "Profile updated successfully!" };
   } catch (error: any) {
     return { success: false, message: error.message };

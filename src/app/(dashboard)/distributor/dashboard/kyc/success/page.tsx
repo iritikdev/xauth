@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check, Clock, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { baseDashboardUrl } from "@/lib/constants";
 
 export default function KycSuccessPage() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function KycSuccessPage() {
           className="space-y-4"
         >
           <Button 
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(`${baseDashboardUrl}`)}
             className="w-full h-16 rounded-2xl bg-black hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-xs shadow-xl transition-all active:scale-95"
           >
             Go to Dashboard

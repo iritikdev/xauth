@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { baseAdminUrl } from "../constants";
 
 export async function createCategory(formData: FormData) {
   const name = formData.get("name") as string;
@@ -21,7 +22,7 @@ export async function createCategory(formData: FormData) {
       },
     });
 
-    revalidatePath("/admin/categories");
+    revalidatePath(`${baseAdminUrl}/categories`);
     return { success: true };
   } catch (error) {
     return { error: "Failed to create category. Slug might already exist." };
@@ -41,7 +42,7 @@ export async function deleteCategory(id: string) {
     }
 
     await prisma.category.delete({ where: { id } });
-    revalidatePath("/admin/categories");
+    revalidatePath(`${baseAdminUrl}/categories`);
     return { success: true };
   } catch (error) {
     return { error: "Failed to delete category." };
@@ -57,7 +58,7 @@ export async function updateCategory(id: string, formData: FormData) {
       where: { id },
       data: { name, description },
     });
-    revalidatePath("/admin/categories");
+    revalidatePath(`${baseAdminUrl}/categories`);
     return { success: true };
   } catch (error) {
     return { error: "Update failed." };

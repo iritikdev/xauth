@@ -96,7 +96,6 @@ const SignInForm = () => {
         router.push("/franchise/dashboard");
       } else {
         router.push("/distributor/dashboard");
-        // router.push("/dashboard");
       }
       
       router.refresh();

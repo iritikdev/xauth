@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { KycStatus } from "@prisma/client"; 
+import { baseAdminUrl } from "../constants";
 
 export async function updateKycStatus(userId: string, status: KycStatus) {
   try {
@@ -18,7 +19,7 @@ export async function updateKycStatus(userId: string, status: KycStatus) {
       },
     });
 
-    revalidatePath("/admin/kyc");
+    revalidatePath(`${baseAdminUrl}/kyc`); // Admin panel ko refresh karne ke liye
     return { success: true };
   } catch (error) {
     console.error(error);
@@ -69,8 +70,8 @@ export async function submitKycAction(formData: any) {
     });
 
     // Admin panel aur Dashboard ko refresh karne ke liye
-    revalidatePath("/dashboard/kyc");
-    revalidatePath("/admin/kyc-approvals");
+    revalidatePath(`${baseAdminUrl}/kyc`);
+    revalidatePath(`${baseAdminUrl}/kyc-approvals`);
 
     return { success: true, data: kyc };
   } catch (error) {
@@ -90,7 +91,7 @@ export async function updateKycStatus2(userId: string, status: KycStatus) {
       data: { status: status },
     });
 
-    revalidatePath("/admin/kyc-approvals");
+    revalidatePath(`${baseAdminUrl}/kyc-approvals`);
     return { success: true };
   } catch (error) {
     return { success: false, error: "Failed to update status" };

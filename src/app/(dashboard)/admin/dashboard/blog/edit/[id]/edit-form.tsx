@@ -10,6 +10,7 @@ import { updateBlogPost } from "@/lib/actions/blog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { baseAdminUrl } from "@/lib/constants";
 
 const formSchema = z.object({
   title: z.string().min(10),
@@ -46,7 +47,7 @@ export default function EditBlogForm({ initialData }: { initialData: any }) {
     
     if (res.success) {
       toast.success("Blog updated!");
-      router.push("/admin/blog");
+      router.push(`${baseAdminUrl}/blog`);
       router.refresh();
     } else {
       toast.error(res.error);

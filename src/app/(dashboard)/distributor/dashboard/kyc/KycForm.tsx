@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { submitKycAction } from "@/lib/actions/kyc";
 import { kycSchema } from "@/lib/validations/kyc";
+import { baseDashboardUrl } from "@/lib/constants";
 
 // Steps definition with keys matching our database/state
 const STEPS = [
@@ -137,7 +138,7 @@ export default function KycForm({ initialKyc }: { initialKyc: any }) {
               : "Aapke documents successfully upload ho chuke hain. Hamari team filhaal inhe review kar rahi hai."}
           </p>
           <Button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push(`${baseDashboardUrl}`)}
             className="mt-10 w-full h-16 rounded-2xl bg-black hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg"
           >
             Go to Dashboard
@@ -219,7 +220,7 @@ export default function KycForm({ initialKyc }: { initialKyc: any }) {
 
       if (res.success) {
         toast.success("KYC submitted successfully!");
-        router.push("/dashboard/kyc");
+        router.push(`${baseDashboardUrl}/kyc`);
       } else {
         toast.error(res.error || "Submission failed");
       }

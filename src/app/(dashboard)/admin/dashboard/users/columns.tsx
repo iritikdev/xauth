@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { console } from "inspector";
 import { cn } from "@/lib/utils";
+import { baseAdminUrl } from "@/lib/constants";
 
 // Define the type based on your Prisma Model
 export type UserRegistry = {
@@ -237,13 +238,13 @@ export const columns: ColumnDef<UserRegistry>[] = [
                 className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer"
                 asChild
               >
-                <Link href={`/admin/users/${user.username}`}>View Full Profile</Link>
+                <Link href={`${baseAdminUrl}/users/${user.username}`}>View Full Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer"
                 asChild
               >
-                <Link href={`/admin/users/${user.username}/edit`}>Edit Profile</Link>
+                <Link href={`${baseAdminUrl}/users/${user.username}/edit`}>Edit Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="rounded-xl font-bold text-xs uppercase tracking-widest px-3 py-2.5 cursor-pointer">
                 Network Genealogy
