@@ -12,6 +12,7 @@ const RANK_CONFIG = [
   { rank: "DIAMOND", target: 250000, reward: 25000 },
   { rank: "SUPER_STAR", target: 150000, reward: 15000 },
   { rank: "STAR", target: 50000, reward: 5000 },
+  { rank: "ASSOCIATE", target: 0, reward: 0 },
 ];
 
 export async function checkAndUpdateRank(userId: string) {

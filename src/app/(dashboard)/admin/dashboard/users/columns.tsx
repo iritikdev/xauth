@@ -25,7 +25,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Image from "next/image";
-import { console } from "inspector";
 import { cn } from "@/lib/utils";
 import { baseAdminUrl } from "@/lib/constants";
 

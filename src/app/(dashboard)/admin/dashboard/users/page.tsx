@@ -25,6 +25,7 @@ export default async function AdminUsersPage({
     orderBy: { createdAt: "desc" },
   });
 
+  console.log("Fetched users from Prisma:", users); // Debugging line
   // ✅ Transform data to match your UserRegistry type perfectly
   const transformedUsers: UserRegistry[] = users.map((user) => ({
     id: user.id,
