@@ -23,10 +23,13 @@ interface UserDropdownProps {
     name?: string | null
     email?: string | null
     photoUrl?: string | null
+    role?: string | null
   }
 }
 
 export default function UserDropdown({ user }: UserDropdownProps) {
+
+  console.log("UserDropdown user:", user) // Debugging line
 
   const initials =
     user?.name?.substring(0, 2).toUpperCase() || "AU"
@@ -52,11 +55,11 @@ export default function UserDropdown({ user }: UserDropdownProps) {
 
           <div className="hidden sm:flex flex-col items-start text-left">
             <span className="text-xs font-black text-slate-900 leading-none">
-              {user?.name || "Member"}
+              {user?.name || "John Doe"}
             </span>
 
             <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter mt-1">
-              Star Partner
+              {user?.role || "john.doe@example.com"}
             </span>
           </div>
         </Button>
@@ -69,11 +72,11 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         <DropdownMenuLabel className="font-normal p-4">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-black text-slate-900">
-              {user?.name}
+              {user?.name || "John Doe"}
             </p>
 
             <p className="text-[10px] font-medium text-slate-500">
-              {user?.email}
+              {user?.email || "john.doe@example.com"}
             </p>
           </div>
         </DropdownMenuLabel>

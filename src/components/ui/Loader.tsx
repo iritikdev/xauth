@@ -83,16 +83,7 @@ export default function AppLoader({ children }: { children: React.ReactNode }) {
                                         />
                                     </div>
                                     
-                                    {/* Swadeshi Tag */}
-                                    <motion.div 
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: 0.5 }}
-                                        className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 text-white shadow-xl"
-                                    >
-                                        <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                                        
-                                    </motion.div>
+                                    
                                 </div>
                             </div>
                         </div>

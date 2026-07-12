@@ -124,7 +124,7 @@ export const AppHeader = () => {
               ) : (
                 <div className="hidden md:flex items-center gap-2">
                   <Link href="/sign-in">
-                    <Button variant="ghost" className="text-white/50 hover:text-white text-[11px] uppercase tracking-widest font-bold">Login</Button>
+                    <Button variant="ghost" className="text-white/50 hover:text-white hover:bg-transparent text-[11px] uppercase tracking-widest font-bold">Login</Button>
                   </Link>
                   <Link href="/sign-up">
                     <Button className="bg-[#e8a020] hover:bg-[#c8860a] text-[#1c3320] rounded-2xl px-6 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-amber-900/20">Join</Button>

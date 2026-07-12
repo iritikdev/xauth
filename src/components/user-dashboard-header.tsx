@@ -12,6 +12,7 @@ import UserDropdown from "./dashboard/user-dropdown"
 import { NotificationDrawer } from "./dashboard/notification-drawer"
 import { SettingsDrawer } from "./dashboard/settings-drawer"
 import Link from "next/link"
+import { Button } from "./ui/button"
 
 export function UserDashboardHeader() {
   const { toggleSidebar, state } = useSidebar()
@@ -96,24 +97,24 @@ export function UserDashboardHeader() {
               </button>
 
               {/* Notifications */}
-              <button
+              {/* <Button
                 onClick={() => setIsNotifOpen(true)}
                 className={cn(iconBtn, "relative")}
                 title="Notifications"
-              >
-                <Bell className="h-3.5 w-3.5" />
+              > */}
+                {/* <Bell className="h-3.5 w-3.5" /> */}
                 {/* unread dot */}
-                <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 border border-white" />
-              </button>
+                {/* <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-emerald-500 border border-white" /> */}
+              {/* </Button> */}
 
               {/* Settings */}
-              <button
+              {/* <button
                 onClick={() => setIsSettingsOpen(true)}
                 className={cn(iconBtn, "hidden sm:flex")}
                 title="Settings"
               >
                 <Settings className="h-3.5 w-3.5" />
-              </button>
+              </button> */}
 
               <div className="h-5 w-px bg-zinc-100 mx-1 hidden sm:block" />
               <UserDropdown user={session?.user} />
