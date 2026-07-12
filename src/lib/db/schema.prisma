@@ -8,9 +8,9 @@ datasource db {
 }
 
 enum Rank {
-  USER
+  ASSOCIATE
   STAR
-  SUPER_STAR
+  SUPERSTAR
   DIAMOND
   STAR_DIAMOND
   DIPLOMAT
@@ -35,7 +35,7 @@ model User {
   fatherName String?
   motherName String?
   photoUrl   String?
-  rank       Rank    @default(USER)
+  rank       Rank    @default(ASSOCIATE)
 
   role Role @default(DISTRIBUTOR)
 

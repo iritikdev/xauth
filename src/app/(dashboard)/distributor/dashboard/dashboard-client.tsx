@@ -116,7 +116,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
             </div>
 
             {/* Rank card */}
-            <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 w-full lg:w-72 shrink-0">
+            {/* <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 w-full lg:w-72 shrink-0">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Current Rank</span>
                 <Trophy size={14} className="text-emerald-400" />
@@ -132,7 +132,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
                 <span className="text-[10px] font-medium text-zinc-600">45% complete</span>
                 <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Next: Crown</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </motion.section>
 
@@ -179,7 +179,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { label: "Sponsor", value: userData.sponsor?.name || "Direct Company", icon: Users, sub: userData.sponsor?.username },
-                { label: "Self Business", value: `${userData.personalBv || 0} BV`, icon: TrendingUp, sub: "Monthly Points" },
+                { label: "Self Business", value: `${userData.personalBv || 0} BV`, icon: TrendingUp, sub: "Monthly BV" },
                 { label: "Wallet Balance", value: `₹${userData.Wallet?.balance || "0.00"}`, icon: Wallet, sub: "Available to Withdraw" },
                 { label: "Account ID", value: userData.username, icon: ShieldCheck, sub: "Verified Associate" },
               ].map((item) => (
@@ -421,7 +421,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
               ].map((item) => (
                 <div key={item.label} className="rounded-2xl bg-emerald-400/10 border border-emerald-400/20 px-5 py-4 text-center">
                   <p className="text-[9px] font-black uppercase tracking-[0.18em] text-emerald-600 mb-1">{item.label}</p>
-                  <p className="text-xl font-black text-emerald-100">{item.value}</p>
+                  <p className="text-sm md:text-xl font-black text-emerald-100">{item.value}</p>
                 </div>
               ))}
             </div>
