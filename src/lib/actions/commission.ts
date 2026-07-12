@@ -79,7 +79,7 @@ export async function distributeLevelIncome(
 
       // 🛡️ CONDITION B: Rank Unlock Check (L7-L15 requires STAR or above)
       // Assuming 'USER' is the default rank. Rank must be anything else for L7+
-      const isRankEligible = level <= 6 || (level > 6 && sponsor.rank !== "USER");
+      const isRankEligible = level <= 6 || (level > 6 && sponsor.rank !== "ASSOCIATE");
 
       const percentage = commissionMap[level] || 0;
       const commissionEarned = orderBv * percentage;
