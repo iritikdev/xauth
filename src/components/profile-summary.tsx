@@ -115,27 +115,18 @@ export default function UserProfileSummary({
             pointerEvents: "none",
           }} />
 
-          <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
+          <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection:"column-reverse", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
             {/* left */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "flex", alignItems:"center", justifyContent:"center", flexDirection: "column", gap: 14 }}>
               {/* auth badge */}
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 7,
-                background: "rgba(52,211,153,0.10)", border: "1px solid rgba(52,211,153,0.20)",
-                borderRadius: 99, padding: "5px 14px", width: "fit-content",
-              }}>
-                <span style={{ fontSize: 9, fontWeight: 900, letterSpacing: "0.2em", textTransform: "uppercase", color: "#34d399" }}>
-                  ✦ Authenticated Swadeshi Associate
-                </span>
-              </div>
-
+             
               {/* name */}
-              <div style={{ fontSize: 34, fontWeight: 900, color: "#ffffff", lineHeight: 1.1, fontFamily: "'Manrope', system-ui, sans-serif" }} className="manrope">
+              <div style={{ fontSize: 28, fontWeight: 900, color: "#ffffff", lineHeight: 1.1, fontFamily: "'Manrope', system-ui, sans-serif" }} className="manrope text-center">
                 {userData?.name}
               </div>
 
               {/* meta pills */}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignContent:"center", justifyContent:"center", gap: 8, flexWrap: "wrap" }}>
                 {[`ID: ${userData?.username}`, `Sponsor: ${userData?.sponsorName || "Direct"}`].map((t) => (
                   <span key={t} style={{
                     background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.10)",
@@ -148,7 +139,7 @@ export default function UserProfileSummary({
               </div>
 
               {/* BV */}
-              {userData?.personalBv && (
+              {/* {userData?.personalBv && (
                 <div style={{
                   display: "inline-flex", alignItems: "center", gap: 10,
                   background: "rgba(5,46,22,0.60)", border: "1px solid rgba(52,211,153,0.20)",
@@ -164,7 +155,7 @@ export default function UserProfileSummary({
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             {/* avatar */}
@@ -194,7 +185,7 @@ export default function UserProfileSummary({
         </div>
 
         {/* ── data grid ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <PdfSection
             title="Personal & Identity"
             icon="☞"
@@ -273,7 +264,7 @@ export default function UserProfileSummary({
           )}
         >
           {isPrinting
-            ? <><Loader2 size={14} className="animate-spin" /> Securing PDF…</>
+            ? <><Loader2 size={14} className="animate-spin" /> Downloading PDF…</>
             : <><Download size={14} strokeWidth={2} /> Download Profile PDF</>}
         </button>
       </div>
