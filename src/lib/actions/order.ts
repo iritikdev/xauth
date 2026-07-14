@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/dist/server/web/spec-extension/revalidate";
+import { baseDashboardUrl } from "../constants";
 
 export async function createOrder(cartItems: any[]) {
   try {
@@ -85,7 +86,7 @@ export async function createOrder(cartItems: any[]) {
 
     console.log("ORDER_CREATED:", order);
 
-    revalidatePath("/dashboard/orders");
+    revalidatePath(`${baseDashboardUrl}/orders`);
 
     return {
       success: true,

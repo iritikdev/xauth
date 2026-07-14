@@ -21,6 +21,7 @@ import { usePincodeAutoFill } from "@/hooks/use-pincode-autofill";
 import { updateExistingAddress } from "../add/address-action"; // 💡 सर्वर एक्शन इम्पोर्ट
 import { baseDashboardUrl } from "@/lib/constants";
 import { useRouter } from "next/navigation";
+import { BackButton } from "@/components/dashboard/BackButton";
 
 interface EditAddressProps {
     addressId: string;
@@ -82,19 +83,10 @@ export default function EditAddressForm({ addressId, initialData }: EditAddressP
 
 
     return (
-        <div className="w-full  bg-white  border border-zinc-200/60 p-5 sm:p-6 shadow-xl text-zinc-900 font-sans relative overflow-hidden select-none">
-            <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#e8a020] to-transparent pointer-events-none" />
+        <div className="w-full space-y-4 text-zinc-900 font-sans relative overflow-hidden select-none">
 
             {/* Header */}
-            <div className="flex items-center gap-3 border-b border-zinc-100 pb-4 mb-5">
-                <Button variant="ghost" size="sm" onClick={() => router.push(`${baseDashboardUrl}/manage-address`)} className="h-8 w-8 p-0 rounded-xl border border-zinc-100 bg-white">
-                    <ArrowLeft className="h-4 w-4" />
-                </Button>
-                <div>
-                    <h1 className="text-lg font-black tracking-tight">Edit Address Details</h1>
-                    <p className="text-[11px] font-medium text-zinc-400">Modify your selected delivery destination node</p>
-                </div>
-            </div>
+            <BackButton label="Update Address"/>
 
             <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -113,14 +105,14 @@ export default function EditAddressForm({ addressId, initialData }: EditAddressP
                         )} />
 
                         <FormField control={control} name="state" render={({ field }) => (
-                            <FormItem className="space-y-1 col-span-1">
+                            <FormItem className="space-y-1 col-span-2 sm:col-span-1">
                                 <FormLabel className="text-[10px] font-black uppercase tracking-wider text-zinc-400">State</FormLabel>
                                 <Input {...field} readOnly placeholder="State" className="h-12 rounded-xl bg-zinc-100/60 text-xs font-bold text-zinc-400 cursor-not-allowed border-zinc-100 select-none" />
                             </FormItem>
                         )} />
 
                         <FormField control={control} name="district" render={({ field }) => (
-                            <FormItem className="space-y-1 col-span-1">
+                            <FormItem className="space-y-1 col-span-3 sm:col-span-1">
                                 <FormLabel className="text-[10px] font-black uppercase tracking-wider text-zinc-400">District</FormLabel>
                                 <Input {...field} readOnly placeholder="District" className="h-12 rounded-xl bg-zinc-100/60 text-xs font-bold text-zinc-400 cursor-not-allowed border-zinc-100 select-none" />
                             </FormItem>
@@ -228,12 +220,12 @@ export default function EditAddressForm({ addressId, initialData }: EditAddressP
                             {isSubmitting ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin mr-1.5" />
-                                    Updating Ledger...
+                                    Updating...
                                 </>
                             ) : (
                                 <>
                                     <ShieldCheck className="h-4 w-4 stroke-[2.5] mr-1.5" />
-                                    Update Address Vector
+                                    Update Address
                                 </>
                             )}
                         </Button>

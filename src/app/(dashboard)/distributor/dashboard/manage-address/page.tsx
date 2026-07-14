@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Plus, MapPin, Edit3, Trash2, Home, Briefcase, ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
+import { Plus, MapPin, Edit3, Trash2, Home, Briefcase, ArrowLeft, Loader2, CheckCircle2, ChevronLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -9,11 +9,14 @@ import Link from "next/link";
 import { baseDashboardUrl } from "@/lib/constants";
 import { getUserAddresses, UserAddressData } from "./fetchAddresses";
 import { deleteUserAddress } from "./add/address-action";
+import { useRouter } from "next/navigation";
+import { BackButton } from "@/components/dashboard/BackButton";
 
 export default function ManageAddressesDashboard() {
     const [addresses, setAddresses] = useState<UserAddressData[]>([]);
     const [loading, setLoading] = useState(true);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const router = useRouter();
 
     // 💡 डेटाबेस से लाइव एड्रेस फ़ेच करने का फंक्शन
     const fetchLiveAddresses = async () => {
@@ -88,19 +91,13 @@ export default function ManageAddressesDashboard() {
     }
 
     return (
-        <div className="w-full  min-h-screen text-zinc-900 font-sans select-none pb-12">
+        <div className="w-full space-y-4  min-h-screen text-zinc-900 font-sans select-none pb-12">
 
             {/* ─── PREMIUM STICKY HEADER ─── */}
-            <div className="sticky top-0 border-zinc-100 z-30 px-4 h-14 flex items-center gap-3">
-                <Link href={`${baseDashboardUrl}/profile`}>
-                    <Button variant="ghost" size="sm" className="h-9 w-9 p-0 rounded-xl hover:bg-zinc-100">
-                        <ArrowLeft className="h-4 w-4 stroke-[2.5]" />
-                    </Button>
-                </Link>
-                <h1 className="text-base font-black tracking-tight text-zinc-900">Manage addresses</h1>
-            </div>
+            <BackButton label="Manage Address"/>
 
-            <div className="p-4 space-y-5">
+
+            <div className="space-y-5">
 
                 {/* ─── ADD NEW ADDRESS TRIGGER BUTTON ─── */}
                 <Link href={`${baseDashboardUrl}/manage-address/add`} className="block">
@@ -128,7 +125,7 @@ export default function ManageAddressesDashboard() {
                     ) : (
                         addresses.map((item) => (
                             <Card key={item.id} className="rounded-2xl border border-zinc-200/80 bg-white shadow-sm hover:shadow-md/5 transition-all overflow-hidden">
-                                <CardContent className="p-4 sm:p-5 space-y-4">
+                                <CardContent className=" space-y-4">
 
                                     {/* Card Title Header Block */}
                                     <div className="flex items-start justify-between">

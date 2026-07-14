@@ -7,20 +7,23 @@ import {
   ShieldCheck,
   MapPin,
   Package,
-  CreditCard,
   ArrowLeft,
   Info,
+  QrCode,
+  Smartphone,
+  Banknote,
+  Copy,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { confirmCodOrder } from "@/lib/actions/order";
 import { ConfirmOrderButton } from "@/components/ecommerce/confirm-order-button";
+import CheckoutPaymentSection from "./checkout-payment-section";
 
 export default async function CheckoutSummaryPage({
   params,
 }: {
-  params: { orderId: string };
+  params: Promise<{ orderId: string }>;
 }) {
   const { orderId } = await params;
 
@@ -37,6 +40,13 @@ export default async function CheckoutSummaryPage({
   });
 
   if (!order) notFound();
+
+  // Amaze Business UPI Credentials
+  const upiId = "amazeayurveda@naviaxis";
+  const upiLink = `upi://pay?pa=${upiId}&pn=Amaze%20Ayurveda&am=${order.totalAmount}&cu=INR`;
+  const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+    upiLink
+  )}`;
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-24">
@@ -125,7 +135,7 @@ export default async function CheckoutSummaryPage({
             </div>
           </div>
 
-          {/* Shipping Card */}
+          {/* Shipping Address Card */}
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-5">
               <div className="h-14 w-14 bg-emerald-50 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -203,23 +213,25 @@ export default async function CheckoutSummaryPage({
                   </span>
                 </div>
               </div>
-
-              {/* <Button className="w-full h-16 mt-8 rounded-2xl bg-emerald-600 hover:bg-emerald-700 font-black uppercase tracking-widest text-xs gap-3 shadow-xl shadow-emerald-600/20 transition-all active:scale-95 group">
-                <CreditCard className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                Pay via Razorpay
-              </Button> */}
             </div>
 
             {/* Background Decor */}
             <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
           </div>
 
+          {/* ══════════════ PAYMENT OPTIONS SELECTION WIDGET ══════════════ */}
+          <CheckoutPaymentSection
+            orderId={order.id}
+            cartTotal={order.totalAmount}
+            upiId="amazeayurveda@naviaxis"
+          />
+
           {/* Security & Info */}
           <div className="bg-white rounded-[2rem] p-6 border border-slate-200/60 space-y-4">
             <div className="flex items-center gap-3 text-slate-500">
               <ShieldCheck className="w-5 h-5 text-emerald-500" />
               <p className="text-[10px] font-black uppercase tracking-widest">
-                Secured Payment Gateway
+                Secured Business Checkout
               </p>
             </div>
             <div className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
@@ -229,18 +241,16 @@ export default async function CheckoutSummaryPage({
                 <span className="text-slate-900 font-bold">
                   Business Wallet
                 </span>{" "}
-                instantly after a successful delivery.
+                instantly after order confirmation/delivery.
               </p>
             </div>
           </div>
         </div>
-        <ConfirmOrderButton orderId={order.id} />
       </div>
     </div>
   );
 }
 
-// Simple Helper Component
 function Separator({ className }: { className?: string }) {
   return <div className={cn("h-[1px] w-full", className)} />;
 }

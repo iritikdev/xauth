@@ -20,6 +20,7 @@ import { saveUserAddress } from "./address-action";
 import { Checkbox } from "@/components/ui/checkbox";
 import { baseDashboardUrl } from "@/lib/constants";
 import { useRouter } from "next/navigation";
+import { BackButton } from "@/components/dashboard/BackButton";
 
 interface AddAddressProps {
     onBack?: () => void;
@@ -109,22 +110,12 @@ export default function AddAddressForm({ onBack, onSuccess }: AddAddressProps) {
 };
 
     return (
-        <div className="w-full relative overflow-hidden select-none">
+        <div className="w-full relative overflow-hidden select-none space-y-4">
 
 
-            {/* Top Controller Header */}
-            <div className="flex items-center gap-3 border-b border-zinc-100 pb-4 mb-5">
-                {onBack && (
-                    <Button variant="ghost" size="sm" onClick={onBack} className="h-8 w-8 p-0 rounded-xl border border-zinc-100 bg-white">
-                        <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                )}
-                <div>
-                    <h1 className="text-lg font-black tracking-tight">Add Address Details</h1>
-                </div>
-            </div>
+            <BackButton label="Add New Address"/>
 
-            <Form {...form}>
+            <Form {...form} >
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                     {/* Quick GPS Location Autofill CTA */}
@@ -294,7 +285,7 @@ export default function AddAddressForm({ onBack, onSuccess }: AddAddressProps) {
 />
 
                     {/* Submit Action Gate */}
-                    <div className="pt-2">
+                    <div className="pt-2 pb-20">
                         <Button
                             type="submit"
                             disabled={isSubmitting}

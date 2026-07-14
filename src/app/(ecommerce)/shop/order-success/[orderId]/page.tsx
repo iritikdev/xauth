@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { baseDashboardUrl } from "@/lib/constants";
 
 export default async function OrderSuccessPage({
   params,
@@ -42,7 +43,7 @@ export default async function OrderSuccessPage({
         {/* ── Back button ── */}
         <div className="flex items-center gap-3">
           <Link
-            href="/dashboard/orders"
+            href={`${baseDashboardUrl}/orders`}
             className="flex items-center gap-2 h-9 rounded-2xl border border-zinc-200 bg-white px-3 text-[11px] font-bold text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800 transition-all shadow-sm"
           >
             <ChevronLeft size={14} strokeWidth={2.5} /> My Orders
@@ -300,14 +301,14 @@ export default async function OrderSuccessPage({
         {/* ── Actions ── */}
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
-            href="/dashboard/orders"
+            href={`${baseDashboardUrl}/orders`}
             className="flex items-center justify-center gap-2 h-12 rounded-2xl border border-zinc-200 bg-white text-[11px] font-bold uppercase tracking-[0.16em] text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 hover:border-zinc-300 transition-all shadow-sm flex-1"
             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
           >
             <FileText size={13} strokeWidth={2} /> View All Orders
           </Link>
           <Link
-            href="/dashboard/store"
+            href={`${baseDashboardUrl}/store`}
             className="flex items-center justify-center gap-2 h-12 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] font-black uppercase tracking-[0.18em] transition-all active:scale-[0.98] flex-1 shadow-sm"
             style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
           >

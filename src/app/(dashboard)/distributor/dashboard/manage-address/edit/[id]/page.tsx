@@ -36,7 +36,7 @@ export default async function EditAddressPage({ params }: EditPageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-50/40 py-10 px-4">
+        <div className="min-h-screen bg-zinc-50/40 mb-20">
             <EditAddressForm
                 addressId={addressId}
                 initialData={initialDataPayload}
