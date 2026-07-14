@@ -139,7 +139,7 @@ export const AppHeader = () => {
             </button> */}
 
             {/* Auth/User Dropdown */}
-            {/* <div className="items-center gap-2 ml-2">
+            <div className="items-center gap-2 ml-2">
               {session ? (
                 <UserDropdown user={session?.user} />
               ) : (
@@ -152,7 +152,7 @@ export const AppHeader = () => {
                   </Link>
                 </div>
               )}
-            </div> */}
+            </div>
 
             {/* Mobile Menu Trigger */}
             <Sheet>

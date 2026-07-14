@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { startTransition, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2, Loader2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteProduct } from "@/lib/actions/product";
+import { deactivateProduct, deleteProduct } from "@/lib/actions/product";
 import { toast } from "sonner";
 
 interface DeleteProductModalProps {
@@ -25,28 +25,24 @@ interface DeleteProductModalProps {
 export function DeleteProductModal({ productId, productName }: DeleteProductModalProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      const result = await deleteProduct(productId);
-      
-      if (result.success) {
-        toast.success(result.success);
+  const handleDeactivate = () => {
+    
+    startTransition(async () => {
+      const res = await deactivateProduct(productId);
+
+      if (res.success) {
+        toast.success(res.message);
       } else {
-        toast.error(result.error);
+        toast.error(res.error);
       }
-    } catch (error) {
-      toast.error("An unexpected error occurred.");
-    } finally {
-      setIsDeleting(false);
-    }
+    });
   };
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-xs font-bold uppercase tracking-widest text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer">
-          <Trash2 size={14} /> Remove Product
+          <Trash2 size={14} /> Deactived Product
         </button>
       </AlertDialogTrigger>
       
@@ -56,11 +52,11 @@ export function DeleteProductModal({ productId, productName }: DeleteProductModa
             <AlertTriangle size={32} />
           </div>
           <AlertDialogTitle className="text-2xl font-black italic tracking-tighter uppercase text-slate-900">
-            Confirm <span className="text-red-600">Deletion</span>
+            Confirm <span className="text-red-600">Deactivation</span>
           </AlertDialogTitle>
           <AlertDialogDescription className="text-slate-500 font-medium leading-relaxed">
             You are about to remove <span className="font-black text-slate-900">"{productName}"</span>. 
-            This will permanently delete the entry from the inventory and purge the image from Cloudinary.
+            This will deactivate the entry from the inventory and purge the image from Cloudinary.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -71,7 +67,7 @@ export function DeleteProductModal({ productId, productName }: DeleteProductModa
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault(); // Prevent default close to handle async logic
-              handleDelete();
+              handleDeactivate();
             }}
             disabled={isDeleting}
             className="h-14 rounded-2xl bg-red-600 font-black uppercase text-[10px] tracking-widest text-white hover:bg-red-700 shadow-xl shadow-red-200 flex-1"
@@ -79,7 +75,7 @@ export function DeleteProductModal({ productId, productName }: DeleteProductModa
             {isDeleting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "Delete Product"
+              "Deactivate Product"
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

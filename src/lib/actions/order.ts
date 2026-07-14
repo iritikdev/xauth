@@ -27,6 +27,7 @@ export async function createOrder(cartItems: any[]) {
     // 2. Fetch products from DB (To get real price and BV)
     const dbProducts = await prisma.product.findMany({
       where: {
+        isActive: true,
         id: { in: productIds },
       },
     });

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react"
-import { PanelLeft, Bell, Settings, ShoppingCart } from "lucide-react"
+import { PanelLeft, Bell, Settings, ShoppingCart, MenuIcon } from "lucide-react"
 import { useSidebar } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import { cn } from "@/lib/utils"
@@ -52,7 +52,7 @@ export function UserDashboardHeader() {
                 title="Toggle sidebar"
                 className={iconBtn}
               >
-                <PanelLeft className={cn(
+                <MenuIcon className={cn(
                   "h-3.5 w-3.5 transition-transform duration-300",
                   state === "collapsed" ? "rotate-180" : "rotate-0"
                 )} />

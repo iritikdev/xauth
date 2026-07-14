@@ -7,6 +7,7 @@ export default async function BrowseStorePage() {
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
       where: {
+        isActive: true,
         stock: { gt: 0 },
         category: {
           is: {

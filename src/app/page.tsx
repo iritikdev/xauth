@@ -11,6 +11,9 @@ import BackToTop from "@/components/ui/back-top";
 
 const Home = async () => {
   const products = await prisma.product.findMany({
+    where: {
+    isActive: true,
+  },
     take: 6,
     orderBy: { createdAt: "desc" },
   });

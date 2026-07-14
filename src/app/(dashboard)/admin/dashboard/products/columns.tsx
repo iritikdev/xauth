@@ -23,6 +23,7 @@ import Image from "next/image";
 import { DeleteProductModal } from "./DeleteProductModal";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ToggleProductStatusModal } from "./ToggleProductStatusModal";
 
 export type ProductColumn = {
   id: string;
@@ -32,6 +33,8 @@ export type ProductColumn = {
   bvAmount: number;
   image: string;
   stock: number;
+  categoryId: string;
+  isActive: boolean;
   category?: { name: string };
 };
 
@@ -205,10 +208,11 @@ export const columns: ColumnDef<ProductColumn>[] = [
 
             <DropdownMenuSeparator className="my-1 bg-zinc-50" />
 
-            <DeleteProductModal
-              productId={product.id}
-              productName={product.name}
-            />
+            <ToggleProductStatusModal
+  productId={product.id}
+  productName={product.name}
+  isActive={product.isActive} // Pass true/false status from db
+/>
           </DropdownMenuContent>
         </DropdownMenu>
       );

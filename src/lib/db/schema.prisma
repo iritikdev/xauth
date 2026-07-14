@@ -207,6 +207,11 @@ model Product {
   categoryId  String      @db.ObjectId
   category    Category    @relation(fields: [categoryId], references: [id])
   orderItems  OrderItem[]
+
+  // 
+  isActive  Boolean  @default(true)
+  deletedAt DateTime?
+  // 
   createdAt   DateTime    @default(now())
 }
 

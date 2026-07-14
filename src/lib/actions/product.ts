@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { baseAdminUrl } from "../constants";
+import { auth } from "../auth";
 
 // Configure Cloudinary (Move these to .env)
 cloudinary.config({
@@ -64,7 +65,7 @@ export async function deleteProduct(id: string) {
   try {
     // 1. Fetch the product to get the Cloudinary image URL
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id , isActive: true },
       select: { image: true },
     });
 
@@ -98,6 +99,7 @@ export async function getRecommendedProducts(currentProductId?: string) {
   try {
     const products = await prisma.product.findMany({
       where: {
+        isActive: true,
         // Exclude the current product if we are on a detail page
         NOT: currentProductId ? { id: currentProductId } : undefined,
         stock: { gt: 0 }, // Only show items available for purchase
@@ -121,6 +123,7 @@ export async function getAllProducts() {
   try {
     const products = await prisma.product.findMany({
       where: {
+        isActive: true,
         category: {
           is: {
             id: { not: undefined },
@@ -141,7 +144,7 @@ export async function getAllProducts() {
 
 export async function getProductById(id: string) {
   return await prisma.product.findUnique({
-    where: { id },
+    where: { id , isActive: true },
     include: { category: true },
   });
 }
@@ -196,5 +199,81 @@ export async function updateProduct(
   } catch (error: any) {
     console.error("Update Error:", error);
     return { success: false, product: null, error: error.message };
+  }
+}
+
+
+export async function deactivateProduct(productId: string) {
+  try {
+    // 1. Authorization Guard (Ensure only Admin can deactivate)
+    const session = await auth();
+    const role = (session?.user as any)?.role;
+
+    if (!session?.user || role !== "ADMIN") {
+      return {
+        success: false,
+        error: "Unauthorized access. Admin privileges required.",
+      };
+    }
+
+    if (!productId) {
+      return { success: false, error: "Invalid Product ID provided." };
+    }
+
+    // 2. Perform Soft Delete (Deactivation)
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      },
+    });
+
+    // 3. Revalidate cache for shop page and admin tables
+    revalidatePath("/shop");
+    revalidatePath("/admin/products");
+
+    return {
+      success: true,
+      message: `${updatedProduct.name} has been deactivated successfully.`,
+      data: updatedProduct,
+    };
+  } catch (error: any) {
+    console.error("DEACTIVATE_PRODUCT_ERROR:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to deactivate the product.",
+    };
+  }
+}
+
+export async function toggleProductStatus(productId: string, targetStatus: boolean) {
+  try {
+    const session = await auth();
+    const role = (session?.user as any)?.role;
+
+    if (!session?.user || role !== "ADMIN") {
+      return { success: false, error: "Unauthorized access." };
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        isActive: targetStatus,
+        deletedAt: targetStatus ? null : new Date(),
+      },
+    });
+
+    revalidatePath("/shop");
+    revalidatePath("/admin/products");
+
+    return {
+      success: true,
+      message: `Product ${targetStatus ? "activated" : "deactivated"} successfully.`,
+      data: updatedProduct,
+    };
+  } catch (error: any) {
+    console.error("TOGGLE_STATUS_ERROR:", error);
+    return { success: false, error: "Failed to update product status." };
   }
 }

@@ -16,7 +16,7 @@ export default async function EditProductPage({ params }: Props) {
   // 1. Fetch Product and Categories in Parallel
   const [product, categories] = await Promise.all([
     prisma.product.findFirst({
-      where: { id },
+      where: { id, isActive: true }, // Ensure the product is active
     }),
     prisma.category.findMany({
       orderBy: { name: "asc" },
