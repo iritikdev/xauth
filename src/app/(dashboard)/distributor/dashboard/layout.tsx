@@ -1,3 +1,4 @@
+'use client'
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import AppBreadcrumb from "@/components/ui/app-breadcrumb";
 import { NewsTicker } from "@/components/new-ticker";
@@ -5,6 +6,8 @@ import { UserDashboardHeader } from "@/components/user-dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import React, { ReactNode } from "react";
 import { DASHBOARD_SIDEBAR } from "@/lib/constants";
+import { BottomNav } from "@/components/layout/bottom-nav";
+import { CartDrawer } from "@/components/ecommerce/cart-drawer";
 export const iframeHeight = "800px";
 
 export const description = "A sidebar with a header and a search form.";
@@ -13,6 +16,7 @@ type LayoutProps = {
 };
 
 function Layout({ children }: LayoutProps) {
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
   return (
     <div className="[--header-height:--spacing(14)]">
       <SidebarProvider className="flex flex-col min-h-screen bg-background">
@@ -26,6 +30,8 @@ function Layout({ children }: LayoutProps) {
             {children}
           </SidebarInset>
         </div>
+        <CartDrawer open={isCartOpen} setOpen={setIsCartOpen} />
+        <BottomNav onCartClick={() => setIsCartOpen(true)} />
       </SidebarProvider>
     </div>
   );
