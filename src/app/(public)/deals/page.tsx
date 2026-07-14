@@ -175,7 +175,7 @@ export default function DealsPage() {
               <div className="flex justify-end">
                 <Link href="/shop">
                   <Button className="h-12 px-6 rounded-2xl bg-zinc-900 hover:bg-emerald-700 text-white font-black uppercase text-xs tracking-widest gap-2 transition-all">
-                    <span>Shop Consistency Products</span>
+                    <span>Shop Now</span>
                     <ArrowRight size={14} />
                   </Button>
                 </Link>
