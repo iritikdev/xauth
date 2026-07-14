@@ -147,7 +147,7 @@ export function DashboardClient({ userData, stats, firstName }: DashboardClientP
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl bg-zinc-50 border border-zinc-100 transition-all duration-300 group-hover:scale-110 group-hover:border-emerald-200 group-hover:bg-emerald-50">
                     <Icon size={18} strokeWidth={2} style={{ color: s.accent }} />
                   </div>
-                  <p className="text-3xl font-black text-zinc-900 leading-none tracking-tight" style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}>
+                  <p className="text-xl md:text-3xl font-black text-zinc-900 leading-none tracking-tight" style={{ fontFamily: "'Manrope', system-ui, sans-serif" }}>
                     {s.value}
                   </p>
                   <p className="mt-2 text-[10px] font-black uppercase tracking-[0.15em] text-zinc-400">{s.label}</p>

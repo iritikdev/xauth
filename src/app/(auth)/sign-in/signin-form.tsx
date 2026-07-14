@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { LOADING_TIPS } from "@/lib/constants";
+import AppLoader from "@/components/app-loader";
 
 // Available roles constraint definition
 type UserRole = "ADMIN" | "DISTRIBUTOR" | "FRANCHISE";
@@ -107,55 +108,8 @@ const SignInForm = () => {
 
   return (
     <>
-      <AnimatePresence>
-        {isPending && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-50/90 px-6 backdrop-blur-xl"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.04),transparent_65%)] pointer-events-none" />
 
-            <div className="relative z-10 w-full max-w-sm text-center">
-              <div className="mb-6 flex justify-center">
-                <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-200/60 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                  <img src="/logo.png" alt="Amaze Logo" className="h-9 w-9 object-contain" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600">
-                  Amaze Ayurveda Pvt. Ltd.
-                </p>
-                <h2 className="text-xl font-black tracking-tight text-zinc-900 sm:text-2xl">
-                  Preparing your dashboard
-                </h2>
-                <div className="mx-auto max-w-xs min-h-[40px] flex items-center justify-center">
-                  <p className="text-xs font-medium leading-relaxed text-zinc-400">
-                    {randomTip || "Securing your connection..."}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-8 max-w-[240px] mx-auto">
-                <div className="relative h-1 w-full overflow-hidden rounded-full bg-zinc-200/80">
-                  <motion.div
-                    initial={{ left: "-100%", width: "50%" }}
-                    animate={{ left: "100%", width: "30%" }}
-                    transition={{ repeat: Infinity, duration: 1.4, ease: "easeInOut" }}
-                    className="absolute h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
-                  />
-                </div>
-                <p className="mt-3 text-[11px] font-bold uppercase tracking-widest text-zinc-400/80 font-mono">
-                  Loading
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <AppLoader isPending={!isPending}/>
 
       {/* 💡 Role Selection Tabs Grid layout control matrix */}
       <div className="mb-6 space-y-2 select-none">

@@ -135,23 +135,20 @@ export default function PasswordSection() {
     <section className="space-y-4">
       {/* Header */}
       <div className="flex flex-col gap-2 px-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <Lock className="w-4 h-4 text-emerald-600" />
-          <div>
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              Security & Access
-            </h2>
-            <p className="text-[11px] text-slate-500">
-              Change your password. You’ll be signed out right after the update.
-            </p>
-          </div>
-        </div>
-        <Badge variant="outline" className="text-[9px] font-black border-slate-200 text-slate-500 gap-1 uppercase">
-          <ShieldAlert className="w-3 h-3 text-orange-500" />
-          High Security Area
-        </Badge>
-      </div>
+  <div className="flex items-center gap-2">
+    <Lock className="h-4 w-4 text-emerald-600" />
+    <div>
+      <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+        Security & Access
+      </h2>
+      <p className="text-[11px] text-slate-500">
+        Update your password to keep your account secure. You'll be signed out after the password is changed.
+      </p>
+    </div>
+  </div>
 
+  
+</div>
       {/* Card */}
       <Card className="border-none overflow-hidden">
 
