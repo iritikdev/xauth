@@ -124,7 +124,7 @@ export const AppHeader = () => {
           {/* ── Right Actions ── */}
           <div className="flex items-center gap-2">
 
-            <div className="hidden sm:block">
+            <div className="hidden sm:flex items-center gap-2">
               {/* Cart Button (Desktop & Tablet) */}
               <button
                 onClick={() => setIsCartOpen(true)}
