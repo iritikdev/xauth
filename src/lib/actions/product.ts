@@ -121,6 +121,8 @@ export async function getRecommendedProducts(currentProductId?: string) {
 
 export async function getAllProducts() {
   try {
+    console.time("products");
+
     const products = await prisma.product.findMany({
       where: {
         isActive: true,
@@ -134,6 +136,7 @@ export async function getAllProducts() {
         category: true,
       },
     });
+    console.timeEnd("products");
 
     return JSON.parse(JSON.stringify(products));
   } catch (error) {

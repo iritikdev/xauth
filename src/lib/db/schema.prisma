@@ -213,6 +213,10 @@ model Product {
   deletedAt DateTime?
   // 
   createdAt   DateTime    @default(now())
+
+  @@index([isActive, deletedAt])
+  @@index([categoryId])
+  @@index([createdAt])
 }
 
 model Category {
