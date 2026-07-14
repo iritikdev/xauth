@@ -46,33 +46,33 @@ const Page = async () => {
 
   return (
     <div className="min-h-screen w-full bg-[#1c3320] text-zinc-100 flex flex-col justify-between relative antialiased selection:bg-emerald-500/20">
-      
+      <div className="absolute top-6 left-6 z-30">
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-[#e8a020] transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5 duration-150 stroke-[2.5]" />
+          Back
+        </Link>
+      </div>
       {/* ─── HERO BACKGROUND MATRIX (Top 50vh) ─── */}
-      <div className="relative h-[50vh] min-h-[380px] w-full overflow-hidden select-none flex flex-col items-center justify-center text-center px-4">
-        
-        
+      <div className="hidden sm:flex relative h-[50vh] min-h-[380px] w-full overflow-hidden select-none flex-col items-center justify-center px-4 text-center">
+
+
 
         {/* Dynamic Soft Core Lighting */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1c3320]/40 via-[#1c3320]/80 to-[#1c3320] z-0" />
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-[#e8a020]/8 blur-[120px] pointer-events-none" />
 
         {/* Fine Micro Graphics */}
-        <BotanicalVector className="absolute top-8 right-[10%] w-32 text-emerald-400 opacity-20 pointer-events-none" />
-        <MandalaGeometry className="absolute -top-12 -left-12 w-64 text-[#e8a020] opacity-15 pointer-events-none" />
+        <BotanicalVector className="hidden sm:block absolute top-8 right-[10%] w-32 text-emerald-400 opacity-20 pointer-events-none" />
+        <MandalaGeometry className="hidden sm:block absolute -top-12 -left-12 w-64 text-[#e8a020] opacity-15 pointer-events-none" />
 
         {/* Floating Safe Back Navigation */}
-        <div className="absolute top-6 left-6 z-30">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-[#e8a020] transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5 duration-150 stroke-[2.5]" />
-            Back
-          </Link>
-        </div>
+
 
         {/* Hero Branding & Content */}
-        <div className="relative z-10 space-y-3.5 max-w-xl">
+        <div className=" relative z-10 space-y-3.5 max-w-xl">
           <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1 rounded-full backdrop-blur-md">
             <Leaf className="w-3 h-3 text-[#e8a020] fill-[#e8a020]" />
             <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[#e8a020]/90">
@@ -101,26 +101,34 @@ const Page = async () => {
       </div>
 
       {/* ─── FLOATING WHITE CARD INTERFACE (Overlaps Hero) ─── */}
-      <div className="relative z-20 flex justify-center px-4 -mt-12 pb-14">
+      <div className="relative z-20 flex justify-center px-4 mt-16 pb-14">
         <div className="w-full max-w-[430px]">
           <div className="relative bg-[#f5f0e8] rounded-[2rem] border border-zinc-200/20 shadow-[0_24px_70px_rgba(0,0,0,0.35)] overflow-hidden">
-            
+
             {/* Top Linear Highlight Strip */}
             <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-[#e8a020] to-transparent pointer-events-none" />
 
             <div className="p-6 sm:p-8 space-y-5">
-              
+
               {/* Card Inline Branding Meta */}
               <div className="flex items-center gap-3.5">
                 <div className="h-10 w-0.5 rounded-full bg-gradient-to-b from-emerald-600 to-amber-500 shrink-0" />
-                
-                <div className="relative h-11 w-11 rounded-xl bg-white shadow-sm border border-zinc-100 overflow-hidden shrink-0 flex items-center justify-center p-2">
-                  <img src="/amaze-logo.png" alt="Amaze Logotype" className="object-contain max-h-full max-w-full" />
+
+                <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-zinc-100 bg-white p-2 shadow-sm">
+                  <img
+                    src="/amaze-logo.png"
+                    alt="Amaze Ayurveda"
+                    className="max-h-full max-w-full object-contain"
+                  />
                 </div>
 
-                <div className="min-w-0">
-                  <h2 className="text-xl font-black text-[#1c3320] tracking-tight">Welcome Back</h2>
-                  <p className="text-xs text-zinc-400 font-medium truncate">Continue your enterprise legacy</p>
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight text-[#1c3320]">
+                    Welcome back
+                  </h2>
+                  <p className="text-xs text-zinc-500">
+                    Sign in to continue.
+                  </p>
                 </div>
               </div>
 
@@ -163,7 +171,9 @@ const Page = async () => {
       </div>
 
       {/* Persistent App Minimal Footer */}
-      <MinimalFooter />
+      <div className="hidden sm:block">
+        <MinimalFooter />
+      </div>
 
     </div>
   );

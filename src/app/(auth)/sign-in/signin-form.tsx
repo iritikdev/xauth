@@ -113,7 +113,7 @@ const SignInForm = () => {
 
       {/* 💡 Role Selection Tabs Grid layout control matrix */}
       <div className="mb-6 space-y-2 select-none">
-        <label className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 ml-1">
+        <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">
           Select Portal Role
         </label>
         <div className="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl">
@@ -143,8 +143,8 @@ const SignInForm = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-3">
             
             {/* Associate ID - Auto Uppercase */}
             <FormField
@@ -152,7 +152,7 @@ const SignInForm = () => {
               name="username"
               render={({ field }) => (
                 <FormItem className="space-y-1.5">
-                  <FormLabel className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 ml-1">
+                  <FormLabel className="text-[10px] font-black uppercase tracking-wider text-slate-400 ml-1">
                     {selectedRole} Associate ID
                   </FormLabel>
                   <FormControl>
@@ -183,7 +183,7 @@ const SignInForm = () => {
               render={({ field }) => (
                 <FormItem className="space-y-1.5">
                   <div className="flex justify-between items-center px-1">
-                    <FormLabel className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
+                    <FormLabel className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                       Password
                     </FormLabel>
                     <Link href="/forgot-password" className="text-[9px] font-black uppercase text-emerald-600 tracking-tighter hover:underline">
