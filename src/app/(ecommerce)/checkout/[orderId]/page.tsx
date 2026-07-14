@@ -9,15 +9,13 @@ import {
   Package,
   ArrowLeft,
   Info,
-  QrCode,
-  Smartphone,
-  Banknote,
-  Copy,
-  AlertCircle,
+  Lock,
+  Truck,
+  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ConfirmOrderButton } from "@/components/ecommerce/confirm-order-button";
 import CheckoutPaymentSection from "./checkout-payment-section";
 
 export default async function CheckoutSummaryPage({
@@ -41,216 +39,198 @@ export default async function CheckoutSummaryPage({
 
   if (!order) notFound();
 
-  // Amaze Business UPI Credentials
   const upiId = "amazeayurveda@naviaxis";
-  const upiLink = `upi://pay?pa=${upiId}&pn=Amaze%20Ayurveda&am=${order.totalAmount}&cu=INR`;
-  const qrCodeSrc = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
-    upiLink
-  )}`;
+  const SHIPPING_THRESHOLD = 2500;
+  const SHIPPING_FEE = 150;
 
   return (
-    <div className="min-h-screen bg-slate-50/50 pb-24">
-      {/* Header Info Bar */}
-      <div className="bg-white border-b border-slate-200/60 py-4 mb-10">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-50/60 pb-24 font-sans text-slate-900 antialiased">
+      {/* ──────────────── Top Navigation Bar ──────────────── */}
+      <header className="sticky top-15 py-3 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <Link
             href="/shop"
-            className="flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors group"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-emerald-700 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-[10px] font-black uppercase tracking-widest">
-              Back to Shop
-            </span>
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Store</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Order ID:
-            </span>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-slate-400">Order ID:</span>
             <Badge
-              variant="outline"
-              className="font-mono text-[10px] rounded-lg bg-slate-50"
+              variant="secondary"
+              className="font-mono text-xs font-bold rounded-lg bg-slate-100 text-slate-800"
             >
               #{order.id.slice(-8).toUpperCase()}
             </Badge>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Order Items Card */}
-          <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-200/60 overflow-hidden">
-            <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <div className="flex items-center gap-3">
-                <Package className="w-5 h-5 text-emerald-600" />
-                <h2 className="text-xl font-black uppercase tracking-tighter italic">
-                  Order <span className="text-emerald-500">Items</span>
-                </h2>
+      {/* ──────────────── Main Content Container ──────────────── */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          {/* ──────────────── LEFT COLUMN: Items + Payment ──────────────── */}
+          <div className="lg:col-span-7 space-y-6">
+            
+            {/* Order Items Section */}
+            <section className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm">
+              <div className="flex items-center justify-between pb-6 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700">
+                    <Package size={20} />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-slate-900">
+                      Items in Order
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      Review products in your cart
+                    </p>
+                  </div>
+                </div>
+                <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none font-bold text-xs">
+                  {order.items.length} {order.items.length === 1 ? "Product" : "Products"}
+                </Badge>
               </div>
-              <Badge className="bg-emerald-500/10 text-emerald-600 border-none font-bold">
-                {order.items.length} Products
-              </Badge>
-            </div>
 
-            <div className="p-8 space-y-8">
-              {order.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 group"
-                >
-                  <div className="flex gap-5">
-                    <div className="h-20 w-20 bg-slate-50 rounded-[1.5rem] flex-shrink-0 border border-slate-100 p-3 group-hover:bg-white group-hover:shadow-md transition-all">
-                      <img
-                        src={item.product.image}
-                        alt={item.product.name}
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <p className="font-black text-slate-900 leading-tight">
-                        {item.product.name}
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-bold text-slate-400">
-                          Qty: {item.quantity}
-                        </span>
-                        <span className="h-1 w-1 rounded-full bg-slate-200" />
-                        <span className="text-xs font-black text-emerald-600 uppercase tracking-tighter">
-                          +{item.bv * item.quantity} BV
-                        </span>
+              <div className="divide-y divide-slate-100">
+                {order.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="py-4 first:pt-4 last:pb-0 flex items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="h-16 w-16 rounded-2xl bg-slate-50 border border-slate-100 p-2 flex-shrink-0 relative overflow-hidden">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-sm font-bold text-slate-900 line-clamp-1">
+                          {item.product.name}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <span>Qty: {item.quantity}</span>
+                          <span>•</span>
+                          <span className="font-bold text-emerald-600">
+                            +{item.bv * item.quantity} BV
+                          </span>
+                        </div>
                       </div>
                     </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-sm font-bold text-slate-900 font-mono">
+                        ₹{(item.price * item.quantity).toLocaleString()}
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-medium">
+                        ₹{item.price} each
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right w-full sm:w-auto border-t sm:border-none pt-4 sm:pt-0">
-                    <p className="font-black text-lg text-slate-900">
-                      ₹{(item.price * item.quantity).toLocaleString()}
-                    </p>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      ₹{item.price} / unit
-                    </p>
-                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Delivery Address Card */}
+            <section className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm flex items-start justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 shrink-0">
+                  <MapPin size={20} />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Shipping Address Card */}
-          <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-200/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="h-14 w-14 bg-emerald-50 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <MapPin className="text-emerald-600 w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                  Deliver To
-                </p>
-                <p className="text-sm font-black text-slate-800 uppercase tracking-tight">
-                  {order.user.name}
-                </p>
-                <p className="text-xs font-medium text-slate-500 max-w-xs">
-                  {order.address || "Address not provided in profile"}
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="rounded-xl font-bold text-[10px] uppercase tracking-widest h-10 border-slate-200 hover:bg-slate-50"
-            >
-              Change Address
-            </Button>
-          </div>
-        </div>
-
-        {/* Right Column: Checkout Sidebar */}
-        <div className="space-y-6">
-          {/* Business Summary Card */}
-          <div className="bg-[#0f172a] rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/20 relative overflow-hidden group">
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-8 bg-white/5 w-fit px-4 py-1.5 rounded-full border border-white/10">
-                <Zap className="text-emerald-400 fill-emerald-400 w-3 h-3" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">
-                  Growth Rewards
-                </span>
-              </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">
-                  Total Points Earned
-                </span>
-                <div className="text-5xl font-black italic tracking-tighter flex items-baseline gap-2 text-white">
-                  {order.totalBv}{" "}
-                  <span className="text-xl text-emerald-400 not-italic uppercase tracking-widest">
-                    BV
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Shipping Destination
                   </span>
+                  <h3 className="text-sm font-bold text-slate-900 mt-0.5">
+                    {order.user.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 max-w-sm leading-relaxed">
+                    {order.address || "No address saved in profile"}
+                  </p>
                 </div>
               </div>
 
-              <div className="mt-10 pt-8 border-t border-white/10 space-y-5">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-400 font-bold italic">
-                    Cart Total
-                  </span>
-                  <span className="font-bold">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl text-xs font-bold border-slate-200 hover:bg-slate-50 shrink-0"
+              >
+                Edit
+              </Button>
+            </section>
+
+            {/* Interactive Payment Section Component */}
+            <CheckoutPaymentSection
+              orderId={order.id}
+              cartTotal={order.totalAmount}
+              totalBv={order.totalBv}
+              upiId={upiId}
+            />
+          </div>
+
+          {/* ──────────────── RIGHT COLUMN: Sticky Order Summary ──────────────── */}
+          <aside className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+            
+            {/* Sticky Summary Card */}
+            <div className="bg-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="flex items-center justify-between pb-6 border-b border-slate-800">
+                <h2 className="text-base font-bold text-white">
+                  Order Summary
+                </h2>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">
+                  <Zap size={12} className="fill-emerald-400" />
+                  <span>+{order.totalBv} BV Earned</span>
+                </div>
+              </div>
+
+              <div className="py-6 space-y-3.5 text-xs">
+                <div className="flex justify-between text-slate-400">
+                  <span>Items Subtotal</span>
+                  <span className="font-mono text-white font-medium">
                     ₹{order.totalAmount.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-slate-400 font-bold italic">
-                    Delivery
-                  </span>
-                  <span className="text-emerald-400 font-bold uppercase tracking-widest text-[10px]">
-                    Free
+
+                <div className="flex justify-between text-slate-400">
+                  <span>Standard Shipping</span>
+                  <span className="font-bold text-emerald-400">
+                    {order.totalAmount > SHIPPING_THRESHOLD ? "FREE" : `₹${SHIPPING_FEE}`}
                   </span>
                 </div>
-                <Separator className="bg-white/10" />
-                <div className="flex justify-between items-end">
-                  <span className="text-slate-400 font-bold italic">
-                    Total Payable
+
+                <div className="pt-3 border-t border-slate-800 flex justify-between items-baseline">
+                  <span className="text-sm font-bold text-slate-200">
+                    Total Amount
                   </span>
-                  <span className="text-3xl font-black tracking-tighter italic">
-                    ₹{order.totalAmount.toLocaleString()}
+                  <span className="text-2xl font-bold font-mono text-emerald-400">
+                    ₹{(order.totalAmount + (order.totalAmount <= SHIPPING_THRESHOLD ? SHIPPING_FEE : 0)).toLocaleString()}
                   </span>
                 </div>
               </div>
+
+              <div className="pt-4 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center gap-2">
+                <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
+                <span>Encrypted checkout. Guaranteed safe & secure.</span>
+              </div>
             </div>
 
-            {/* Background Decor */}
-            <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl" />
-          </div>
-
-          {/* ══════════════ PAYMENT OPTIONS SELECTION WIDGET ══════════════ */}
-          <CheckoutPaymentSection
-            orderId={order.id}
-            cartTotal={order.totalAmount}
-            upiId="amazeayurveda@naviaxis"
-          />
-
-          {/* Security & Info */}
-          <div className="bg-white rounded-[2rem] p-6 border border-slate-200/60 space-y-4">
-            <div className="flex items-center gap-3 text-slate-500">
-              <ShieldCheck className="w-5 h-5 text-emerald-500" />
-              <p className="text-[10px] font-black uppercase tracking-widest">
-                Secured Business Checkout
+            {/* Business Wallet Notice */}
+            <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm flex items-start gap-3">
+              <Info size={18} className="text-slate-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Accumulated <strong className="text-slate-900 font-bold">{order.totalBv} Business Volume (BV)</strong> points will automatically credit to your member wallet upon confirmation.
               </p>
             </div>
-            <div className="flex gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-              <Info className="w-4 h-4 text-slate-400 flex-shrink-0" />
-              <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
-                BV Points will be credited to your{" "}
-                <span className="text-slate-900 font-bold">
-                  Business Wallet
-                </span>{" "}
-                instantly after order confirmation/delivery.
-              </p>
-            </div>
-          </div>
+          </aside>
+
         </div>
-      </div>
+      </main>
     </div>
   );
-}
-
-function Separator({ className }: { className?: string }) {
-  return <div className={cn("h-[1px] w-full", className)} />;
 }
