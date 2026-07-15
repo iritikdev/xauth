@@ -17,6 +17,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import CheckoutPaymentSection from "./checkout-payment-section";
+import { AddressSelectorSheet } from "./address-selector-sheet";
 
 export default async function CheckoutSummaryPage({
   params,
@@ -38,6 +39,20 @@ export default async function CheckoutSummaryPage({
   });
 
   if (!order) notFound();
+
+  const userAddresses = await prisma.address.findMany({
+    where: { userId: order.userId },
+    orderBy: [
+      { isDefault: "desc" },  // Default home address stays on top
+      { createdAt: "desc" }   // Recent addresses follow sequentially
+    ]
+  });
+  let displayAddress = order.address;
+  if (!displayAddress && userAddresses.length > 0) {
+    // If empty address on order instance, dynamically pick the default one
+    const defaultAddr = userAddresses.find(a => a.isDefault) || userAddresses[0];
+    displayAddress = `${defaultAddr.receiverName} (${defaultAddr.receiverMobile}), ${defaultAddr.addressLine}, ${defaultAddr.district}, ${defaultAddr.state} - ${defaultAddr.pinCode}`;
+  }
 
   const upiId = "amazeayurveda@naviaxis";
   const SHIPPING_THRESHOLD = 2500;
@@ -138,32 +153,32 @@ export default async function CheckoutSummaryPage({
             </section>
 
             {/* Delivery Address Card */}
-            <section className="bg-white rounded-3xl p-6 md:p-8 border border-slate-200/80 shadow-sm flex items-start justify-between gap-4">
-              <div className="flex items-start gap-4">
-                <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 shrink-0">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Shipping Destination
-                  </span>
-                  <h3 className="text-sm font-bold text-slate-900 mt-0.5">
-                    {order.user.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 max-w-sm leading-relaxed">
-                    {order.address || "No address saved in profile"}
-                  </p>
-                </div>
-              </div>
+           
+            <section className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 shrink-0">
+            <MapPin size={20} />
+          </div>
+          <div className="space-y-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Shipping Destination ({userAddresses.length} Saved)
+            </span>
+            <h3 className="text-sm font-bold text-slate-900 mt-0.5">
+              {order.user.name}
+            </h3>
+            <p className="text-xs text-slate-600 leading-relaxed font-medium max-w-sm mt-1">
+              {displayAddress || "No dynamic delivery address mapped to this order checkout pipeline yet."}
+            </p>
+          </div>
+        </div>
 
-              <Button
-                variant="outline"
-                size="sm"
-                className="rounded-xl text-xs font-bold border-slate-200 hover:bg-slate-50 shrink-0"
-              >
-                Edit
-              </Button>
-            </section>
+        {/* 🟢 Interactive address selector overlay injector sheet */}
+        <AddressSelectorSheet
+          orderId={order.id}
+          savedAddresses={userAddresses}
+          currentOrderAddressString={order.address}
+        />
+      </section>
 
             {/* Interactive Payment Section Component */}
             <CheckoutPaymentSection
