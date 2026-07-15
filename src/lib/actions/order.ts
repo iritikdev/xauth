@@ -118,6 +118,105 @@ export async function confirmCodOrder(orderId: string) {
   }
 }
 
+interface ConfirmOnlineOrderResult {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
+export async function confirmOnlinePaidOrder(
+  orderId: string, 
+  transactionId?: string
+): Promise<ConfirmOnlineOrderResult> {
+  try {
+    // 1. Authenticate user session
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, error: "Unauthorized access. Please login again." };
+    }
+
+    if (!orderId) {
+      return { success: false, error: "Order ID is mandatory." };
+    }
+
+    // 2. Fetch order with nested products inside a transactional execution context
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      return { success: false, error: "Order parameters not found." };
+    }
+
+    // Avoid reprocessing if already paid or verified
+    if (order.paymentStatus === "PAID" || order.status === "PROCESSING") {
+      return { success: true, message: "Order is already under processing." };
+    }
+
+    // 3. Atomicity Guard: Verify stock availability across all formulations before mutation
+    for (const item of order.items) {
+      if (item.product.stock < item.quantity) {
+        return {
+          success: false,
+          error: `Insufficient stock for: ${item.product.name}. Stock available: ${item.product.stock}`,
+        };
+      }
+    }
+
+    // 4. Multi-document safe atomic mutation pool
+    await prisma.$transaction(async (tx) => {
+      
+      // A. Loop & loop-level safe decrement parameters execution
+      for (const item of order.items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stock: {
+              decrement: item.quantity,
+            },
+          },
+        });
+      }
+
+      // B. Shift order state engine parameters
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: "PROCESSING", // Shift state safely from PENDING
+          paymentStatus: "PAID", // Marks immediate settlement parameters
+          // Option to log custom runtime tracking parameters if you add them to order schema later:
+          // txnReference: transactionId || null
+        },
+      });
+    });
+
+    // 5. Instantly clear Next.js layout cache pools
+    revalidatePath(`/checkout/${orderId}`);
+    revalidatePath("/admin/orders");
+    revalidatePath("/shop");
+
+    return { 
+      success: true, 
+      message: "Online transaction verified. Processing your inventory dispatch." 
+    };
+
+  } catch (error: any) {
+    console.error("CONFIRM_ONLINE_PAID_ORDER_ERROR:", error);
+    return {
+      success: false,
+      error: error.message || "Failed to confirm online transaction mapping.",
+    };
+  }
+}
+
+
 export async function getMyOrders() {
   try {
     const session = await auth();

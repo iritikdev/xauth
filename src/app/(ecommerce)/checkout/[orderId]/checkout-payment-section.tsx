@@ -25,6 +25,8 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { ConfirmOrderButton } from "@/components/ecommerce/confirm-order-button";
 import { cn } from "@/lib/utils";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ConfirmPaymentButton } from "@/components/ecommerce/confirm-paid-button";
 
 interface CheckoutPaymentSectionProps {
   orderId: string;
@@ -33,7 +35,7 @@ interface CheckoutPaymentSectionProps {
   upiId: string;
 }
 
-type PaymentMethod = "UPI_APP" | "QR_CODE" | "COD";
+type PaymentMethod = "PAY_ONLINE" | "COD";
 type DeliveryType = "HOME_DELIVERY" | "STORE_PICKUP";
 
 const SHIPPING_THRESHOLD = 2500;
@@ -46,7 +48,7 @@ export default function CheckoutPaymentSection({
   upiId,
 }: CheckoutPaymentSectionProps) {
   const [deliveryType, setDeliveryType] = useState<DeliveryType>("HOME_DELIVERY");
-  const [method, setMethod] = useState<PaymentMethod>("UPI_APP");
+  const [method, setMethod] = useState<PaymentMethod>("PAY_ONLINE");
   const [isCopied, setIsCopied] = useState(false);
 
   // Dynamic Shipping Fee Logic
@@ -54,8 +56,8 @@ export default function CheckoutPaymentSection({
     deliveryType === "STORE_PICKUP"
       ? 0
       : cartTotal <= SHIPPING_THRESHOLD
-      ? SHIPPING_FEE
-      : 0;
+        ? SHIPPING_FEE
+        : 0;
 
   const finalPayableAmount = cartTotal + shippingCharge;
   const amountNeededForFreeShipping = Math.max(0, SHIPPING_THRESHOLD - cartTotal + 1);
@@ -223,7 +225,7 @@ export default function CheckoutPaymentSection({
                 Payment Option
               </h2>
               <p className="text-xs text-slate-500">
-                Encrypted & secure checkout powered by Amaze Pay
+                Encrypted & secure checkout powered by UPI
               </p>
             </div>
           </div>
@@ -233,34 +235,21 @@ export default function CheckoutPaymentSection({
         </div>
 
         {/* Radio Tiles */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => setMethod("UPI_APP")}
+            onClick={() => setMethod("PAY_ONLINE")}
             className={cn(
               "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all gap-2 text-center",
-              method === "UPI_APP"
+              method === "PAY_ONLINE"
                 ? "border-emerald-600 bg-emerald-50/40 text-emerald-950 font-bold shadow-sm"
                 : "border-slate-200/80 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
             )}
           >
-            <Smartphone className={cn("w-5 h-5", method === "UPI_APP" ? "text-emerald-600" : "text-slate-400")} />
-            <span className="text-xs font-bold">UPI App</span>
+            <Smartphone className={cn("w-5 h-5", method === "PAY_ONLINE" ? "text-emerald-600" : "text-slate-400")} />
+            <span className="text-xs font-bold">Pay Online</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => setMethod("QR_CODE")}
-            className={cn(
-              "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all gap-2 text-center",
-              method === "QR_CODE"
-                ? "border-emerald-600 bg-emerald-50/40 text-emerald-950 font-bold shadow-sm"
-                : "border-slate-200/80 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-            )}
-          >
-            <QrCode className={cn("w-5 h-5", method === "QR_CODE" ? "text-emerald-600" : "text-slate-400")} />
-            <span className="text-xs font-bold">Scan QR</span>
-          </button>
 
           <button
             type="button"
@@ -279,7 +268,7 @@ export default function CheckoutPaymentSection({
 
         {/* Dynamic Payment Tab Body */}
         <AnimatePresence mode="wait">
-          {method === "UPI_APP" && (
+          {method === "PAY_ONLINE" && (
             <motion.div
               key="upi"
               initial={{ opacity: 0, y: 10 }}
@@ -287,6 +276,38 @@ export default function CheckoutPaymentSection({
               exit={{ opacity: 0, y: -10 }}
               className="mt-6 space-y-4 pt-4 border-t border-slate-100"
             >
+              <motion.div
+                key="qr"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mt-6 text-center space-y-4 pt-4 border-t border-slate-100"
+              >
+                <div className="relative mx-auto w-fit rounded-2xl  bg-white p-3 shadow-md">
+                  <img
+                    src={qrCodeSrc}
+                    alt="Amaze Ayurveda Payment QR Code"
+                    className="h-48 w-48 rounded-xl object-contain"
+                  />
+                </div>
+
+                <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3.5 text-left flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    Scan using GPay, PhonePe, Paytm, or BHIM to complete your transfer of{" "}
+                    <strong className="text-slate-900 font-mono">
+                      ₹{finalPayableAmount.toLocaleString()}
+                    </strong>.
+                  </p>
+                </div>
+              </motion.div>
+              <div className="flex items-center gap-3 py-4">
+                <div className="h-px flex-1 bg-zinc-200" />
+                <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                  OR
+                </span>
+                <div className="h-px flex-1 bg-zinc-200" />
+              </div>
               <Link href={upiLink} target="_blank" className="block">
                 <Button className="h-13 w-full rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm tracking-wide gap-2 shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-transform">
                   <Smartphone className="w-4 h-4" />
@@ -294,6 +315,8 @@ export default function CheckoutPaymentSection({
                   <ArrowRight size={16} />
                 </Button>
               </Link>
+
+              {/*  */}
 
               <div className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-slate-50/80 px-4 py-3">
                 <div className="min-w-0">
@@ -314,36 +337,58 @@ export default function CheckoutPaymentSection({
                   <span>{isCopied ? "Copied" : "Copy"}</span>
                 </Button>
               </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <ConfirmPaymentButton orderId={orderId} payableAmount={cartTotal} />
+                </AlertDialogTrigger>
+
+                <AlertDialogContent className="max-w-md rounded-2xl">
+                  <AlertDialogHeader>
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
+                      <AlertCircle className="h-6 w-6 text-amber-600" />
+                    </div>
+
+                    <AlertDialogTitle className="mt-4 text-center text-xl font-semibold">
+                      Confirm Your Order
+                    </AlertDialogTitle>
+
+                    <AlertDialogDescription className="space-y-3 pt-2 text-center text-sm leading-6 text-muted-foreground">
+                      <p>
+                        You selected <strong>Pay Online</strong> as your payment method.
+                      </p>
+
+                      <p>
+                        Please ensure you have completed the payment using your preferred
+                        UPI app (Google Pay, PhonePe, Paytm, BHIM, etc.) before confirming
+                        your order.
+                      </p>
+
+                      <p>
+                        After confirmation, our team will verify your payment and process
+                        your order.
+                      </p>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter className="mt-6">
+                    <AlertDialogCancel>
+                      Cancel
+                    </AlertDialogCancel>
+
+                    <AlertDialogAction
+                      className="bg-emerald-600 hover:bg-emerald-700"
+                      onClick={() => {
+                        // Confirm Order Logic
+                      }}
+                    >
+                      Yes, I've Paid
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </motion.div>
           )}
 
-          {method === "QR_CODE" && (
-            <motion.div
-              key="qr"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mt-6 text-center space-y-4 pt-4 border-t border-slate-100"
-            >
-              <div className="relative mx-auto w-fit rounded-2xl border border-slate-200/80 bg-white p-3 shadow-md">
-                <img
-                  src={qrCodeSrc}
-                  alt="Amaze Ayurveda Payment QR Code"
-                  className="h-48 w-48 rounded-xl object-contain"
-                />
-              </div>
-
-              <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3.5 text-left flex items-start gap-2.5">
-                <AlertCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <p className="text-xs leading-relaxed text-slate-600">
-                  Scan using GPay, PhonePe, Paytm, or BHIM to complete your transfer of{" "}
-                  <strong className="text-slate-900 font-mono">
-                    ₹{finalPayableAmount.toLocaleString()}
-                  </strong>.
-                </p>
-              </div>
-            </motion.div>
-          )}
 
           {method === "COD" && (
             <motion.div
@@ -356,11 +401,11 @@ export default function CheckoutPaymentSection({
               <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/80 text-xs text-slate-600 leading-relaxed">
                 {deliveryType === "STORE_PICKUP"
                   ? "Pay ₹" +
-                    finalPayableAmount.toLocaleString() +
-                    " directly at the store counter upon collecting your package."
+                  finalPayableAmount.toLocaleString() +
+                  " directly at the store counter upon collecting your package."
                   : "Pay ₹" +
-                    finalPayableAmount.toLocaleString() +
-                    " via cash or UPI upon delivery at your provided address."}
+                  finalPayableAmount.toLocaleString() +
+                  " via cash or UPI upon delivery at your provided address."}
               </div>
 
               <ConfirmOrderButton orderId={orderId} />
