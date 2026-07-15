@@ -159,7 +159,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <SessionProvider>
             <SessionWatcher />
             <AppLoader>
-              <Toaster position="bottom-right" richColors />
+              <Toaster position="bottom-right" mobileOffset={75} richColors  />
               {children}
             </AppLoader>
           </SessionProvider>
